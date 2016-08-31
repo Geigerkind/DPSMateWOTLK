@@ -16,6 +16,7 @@ if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary") end
 if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end
 
 local Dewdrop = {}
+Dewdrop.assert = assert
 
 local table_setn
 do

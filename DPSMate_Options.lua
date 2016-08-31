@@ -1041,13 +1041,13 @@ function DPSMate.Options:UpdateConfigModes(obj, o, p)
 	local TL = DPSMate:TableLength(DPSMate.ModuleNames)
 	local path, t = obj:GetName().."_Button", {}
 	if p then
-		for cat, val in DPSMate.ModuleNames do
+		for cat, val in pairs(DPSMate.ModuleNames) do
 			if not DPSMate:TContains(DPSMateSettings["hiddenmodes"], val) then
 				tinsert(t, 1, cat)
 			end
 		end
 	else
-		for cat, val in DPSMate.ModuleNames do
+		for cat, val in pairs(DPSMate.ModuleNames) do
 			if DPSMate:TContains(DPSMateSettings["hiddenmodes"], val) then
 				tinsert(t, 1, cat)
 			end
