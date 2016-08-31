@@ -2169,11 +2169,11 @@ function lib:DrawBarNew(C, sx, sy, ex, ey, color, level, label)
 
 		Bar:SetParent(C.GraphLib_Frames[level])
 	end
-
+	
 	Bar.Texture:SetVertexColor(color[1], color[2], color[3], color[4])
 	
 	
-		MinY = ey
+	MinY = ey
 	
 	--Has to be at least 1 wide
 	if MinY <= 1 then

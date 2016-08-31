@@ -430,6 +430,21 @@ local _G = getfenv(0)
 local string_find = string.find
 local UL = UnitLevel
 local t = {}
+local spellSchoolToString = {
+	[1] = "physical",
+	[2] = "holy",
+	[4] = "fire",
+	[8] = "nature",
+	[16] = "frost",
+	[32] = "shadow",
+	[64] = "arcane",
+}
+local strupper = string.upper
+local strsub = string.sub
+local strlower = string.lower
+local FixCaps = function(capsstr)
+	return strupper(strsub(capsstr,1,1))..strlower(strsub(capsstr,2))
+end
 
 -- Begin Functions
 
@@ -503,6 +518,7 @@ function DPSMate.Parser:OnEvent(event)
 	end
 end
 
+-- Deprecated
 function DPSMate.Parser:GetUnitByName(target)
 	local unit = self.TargetParty[target]
 	if not unit then
@@ -514,13 +530,13 @@ function DPSMate.Parser:GetUnitByName(target)
 	end
 	return unit
 end
-
+-- Deprecated
 function DPSMate.Parser:GetOverhealByName(amount, target)
 	local result, unit = 0, self:GetUnitByName(target)
 	if unit then result = amount-(UnitHealthMax(unit)-UnitHealth(unit)) end
 	if result<0 then return 0 else return result end 
 end
-
+-- Deprecated
 -- The totem aura just reports a removed event in the chat.
 -- Maybe we can guess here?
 function DPSMate.Parser:UnitAuraDispels(unit)
@@ -572,9 +588,69 @@ function DPSMate.Parser:SwingMissed(timestamp, eventtype, srcGUID, srcName, srcF
 	end
 end
 
+function DPSMate.Parser:SpellDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, amount, school, resisted, blocked, absorbed, critical, glancing, crushing)
+	t = {}
+	if critical then t[1]=0;t[2]=critical end
+	if resisted then t[1]=0;t[3]=resisted end
+	if blocked then t[1]=0;t[4]=blocked end
+	if glancing then t[1]=0;t[5]=glancing end
+	if crushing then t[1]=0;t[6]=crushing end
+	if eventtype == "SPELL_PERIODIC_DAMAGE" then
+		spellName = spellName..DPSMate.L["periodic"]
+	end
+	if DPSMate:IsNPC(srcGUID) then
+		DB:EnemyDamage(false, DPSMateEDD, dstName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, 0, amount, srcName, t[4] or 0, t[6] or 0)
+		DB:DamageTaken(dstName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, 0, amount, srcName, t[6] or 0)
+	else
+		DB:EnemyDamage(true, DPSMateEDT, srcName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, t[3] or 0, amount, dstName, t[4] or 0, t[6] or 0)
+		DB:DamageDone(srcName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, t[3] or 0, amount, t[4] or 0, t[5] or 0)
+		if DPSMate.Parser.TargetParty[dstName] and DPSMate.Parser.TargetParty[srcName] then DB:BuildFail(1, dstName, srcName, spellName, amount) end
+	end
+	DB:AddSpellSchool(spellName,spellSchoolToString[spellSchool])
+	DB:DeathHistory(dstName, srcName, spellName, amount, t[1] or 1, t[2] or 0, 0, t[6] or 0)
+end
+
+function DPSMate.Parser:SpellMissed(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, missType)
+	t = {}
+	if missType == DPSMate.L["pmiss"] then t[2]=1 end
+	if missType == DPSMate.L["pdodge"] then t[3]=1 end
+	if missType == DPSMate.L["pparry"] then t[4]=1 end
+	if missType == DPSMate.L["presist"] then t[5]=1 end -- TO CONFIRM
+	if missType == DPSMate.L["pblock"] then t[6]=1 end -- TO CONFIRM
+	if DPSMate:IsNPC(srcGUID) then
+		DB:EnemyDamage(false, DPSMateEDD, dstName, spellName, 0, 0, t[2] or 0, t[4] or 0, t[3] or 0, t[5] or 0, 0, srcName, t[6] or 0, 0)
+		DB:DamageTaken(dstName, spellName, 0, 0, t[2] or 0, t[4] or 0, t[3] or 0, t[5] or 0, 0, srcName, 0)
+	else
+		DB:EnemyDamage(true, DPSMateEDT, srcName, spellName, 0, 0, t[2] or 0, t[4] or 0, t[3] or 0, t[5] or 0, 0, dstName, t[6] or 0, 0)
+		DB:DamageDone(srcName, spellName, 0, 0, t[2] or 0, t[4] or 0, t[3] or 0, t[5] or 0, 0, 0, t[6] or 0)
+	end
+end
+
+function DPSMate.Parser:EnvironmentalDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,enviromentalType, amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing)
+	t = {}
+	if critical then t[1]=0;t[2]=critical end
+	if resisted then t[1]=0;t[3]=resisted end
+	if blocked then t[1]=0;t[4]=blocked end
+	if glancing then t[1]=0;t[5]=glancing end
+	if crushing then t[1]=0;t[6]=crushing end
+	DB:EnemyDamage(false, DPSMateEDD, dstName, FixCaps(enviromentalType), t[1] or 1, t[2] or 0, 0, 0, 0, 0, amount, DPSMate.L["penvironment"], t[4] or 0, t[6] or 0)
+	DB:DamageTaken(dstName, FixCaps(enviromentalType), t[1] or 1, t[2] or 0, 0, 0, 0, 0, amount, DPSMate.L["penvironment"], t[6] or 0)
+	DB:DeathHistory(dstName, DPSMate.L["penvironment"], FixCaps(enviromentalType), amount, t[1] or 1, t[2] or 0, 0, t[6] or 0)
+end
+
 Execute = {
 	["SWING_DAMAGE"] = DPSMate.Parser.SwingDamage, 
-	["SWING_MISSED"] = DPSMate.Parser.SwingMissed
+	["SWING_MISSED"] = DPSMate.Parser.SwingMissed,
+	["SPELL_DAMAGE"] = DPSMate.Parser.SpellDamage,
+	["RANGE_DAMAGE"] = DPSMate.Parser.SpellDamage,
+	["SPELL_PERIODIC_DAMAGE"] = DPSMate.Parser.SpellDamage,
+	["DAMAGE_SHIELD"] = DPSMate.Parser.SpellDamage,
+	["DAMAGE_SPLIT"] = DPSMate.Parser.SpellDamage,
+	["ENVIRONMENTAL_DAMAGE"] = DPSMate.Parser.EnvironmentalDamage,
+	["SPELL_MISSED"] = DPSMate.Parser.SpellMissed,
+	["RANGE_MISSED"] = DPSMate.Parser.SpellMissed,
+	["SPELL_PERIODIC_MISSED"] = DPSMate.Parser.SpellMissed,
+	["DAMAGE_SHIELD_MISSED"] = DPSMate.Parser.SpellMissed,
 }
 
 --[[

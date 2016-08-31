@@ -159,12 +159,12 @@ function DPSMate.Modules.DetailsDamage:UpdateSumGraph()
 	g7:SetXLabels(true)
 	
 	local ata={{0,0}}
-	for cat, val in DPSMate:ScaleDown(sumTable, min) do
+	for cat, val in pairs(DPSMate:ScaleDown(sumTable, min)) do
 		tinsert(ata, {val[1],val[2], self:CheckProcs(DPSMate_Details_CompareDamage.proc, val[1]+min+1, DetailsUserComp)})
 	end
 	
 	local Data2={{0,0}}
-	for cat, val in DPSMate:ScaleDown(sumTableTwo, minT) do
+	for cat, val in pairs(DPSMate:ScaleDown(sumTableTwo, minT)) do
 		tinsert(Data2, {val[1],val[2], self:CheckProcs(DPSMate_Details.proc, val[1]+minT+1)})
 	end
 
@@ -176,10 +176,10 @@ end
 function DPSMate.Modules.DetailsDamage:EvalToggleTable(comp)
 	local a,b = {},{}
 	local d = 0
-	for cat, val in db2 do
+	for cat, val in pairs(db2) do
 		if val[DPSMateUser[comp or DetailsUser][1]] then
 			local c = {[1] = 0,[2] = {},[3] = {}}
-			for p, v in val[DPSMateUser[comp or DetailsUser][1]] do
+			for p, v in pairs(val[DPSMateUser[comp or DetailsUser][1]]) do
 				if p ~= "i" then
 					local i = 1
 					while true do
@@ -518,7 +518,7 @@ function DPSMate.Modules.DetailsDamage:UpdatePie(gg, cname)
 		dTot = DetailsTotalComp
 	end
 	gg:ResetPie()
-	for cat, val in uArr do
+	for cat, val in pairs(uArr) do
 		if (dArr[cat][2]) then user=DPSMateUser[DPSMateUser[cname or DetailsUser][5]][1] else user=DPSMateUser[cname or DetailsUser][1] end
 		local percent = (db[user][val][13]*100/dTot)
 		gg:AddPie(percent, 0, DPSMate:GetAbilityById(val))
@@ -559,7 +559,7 @@ function DPSMate.Modules.DetailsDamage:UpdateLineGraph(gg, comp, cname)
 	gg:SetXLabels(true)
 
 	local Data1={{0,0}}
-	for cat, val in DPSMate:ScaleDown(sumTable, min) do
+	for cat, val in pairs(DPSMate:ScaleDown(sumTable, min)) do
 		tinsert(Data1, {val[1],val[2], self:CheckProcs(_G("DPSMate_Details"..comp).proc, val[1]+(min-1), cname)})
 	end
 	local colorT = {{1.0,0.0,0.0,0.8}, {1.0,1.0,0.0,0.8}}
@@ -597,9 +597,9 @@ function DPSMate.Modules.DetailsDamage:UpdateStackedGraph(gg, comp, cname)
 	local temp = {}
 	local temp2 = {}
 	if toggle3 then
-		for cat, val in db2[d1[d4]][DPSMateUser[cname or DetailsUser][1]] do
+		for cat, val in pairs(db2[d1[d4]][DPSMateUser[cname or DetailsUser][1]]) do
 			if cat~="i" and val["i"] then
-				for c, v in val["i"] do
+				for c, v in pairs(val["i"]) do
 					local key = tonumber(strformat("%.1f", c))
 					if not temp[cat] then
 						temp[cat] = {}
@@ -628,13 +628,13 @@ function DPSMate.Modules.DetailsDamage:UpdateStackedGraph(gg, comp, cname)
 			end
 		end
 		local min
-		for cat, val in temp do
+		for cat, val in pairs(temp) do
 			local pmin = DPSMate:GetMinValue(val, 1)
 			if not min or pmin<min then
 				min = pmin
 			end
 		end
-		for cat, val in temp do
+		for cat, val in pairs(temp) do
 			local i = 1
 			while true do
 				if not b[i] then
@@ -651,17 +651,17 @@ function DPSMate.Modules.DetailsDamage:UpdateStackedGraph(gg, comp, cname)
 				i = i + 1
 			end
 		end
-		for cat, val in Data1 do
+		for cat, val in pairs(Data1) do
 			Data1[cat] = DPSMate:ScaleDown(val, min)
 		end
 	
 		gg:ResetData()
 		gg:SetGridSpacing((maxX-min)/7,maxY/7)
 	else
-		for cat, val in db[DPSMateUser[cname or DetailsUser][1]] do
+		for cat, val in pairs(db[DPSMateUser[cname or DetailsUser][1]]) do
 			if cat~="i" and val["i"] then
 				local temp = {}
-				for c, v in val["i"] do
+				for c, v in pairs(val["i"]) do
 					local key = tonumber(strformat("%.1f", c))
 					if p[key] then
 						p[key] = p[key] + v
@@ -813,9 +813,9 @@ end
 function DPSMate.Modules.DetailsDamage:SortLineTable(t, b, cname)
 	local newArr = {}
 	if b then
-		for cat, val in t[b][DPSMateUser[cname or DetailsUser][1]] do
+		for cat, val in pairs(t[b][DPSMateUser[cname or DetailsUser][1]]) do
 			if cat~="i" and val["i"] then
-				for ca, va in val["i"] do
+				for ca, va in pairs(val["i"]) do
 					local i=1
 					while true do
 						if (not newArr[i]) then 
@@ -834,9 +834,9 @@ function DPSMate.Modules.DetailsDamage:SortLineTable(t, b, cname)
 		-- Pet
 		if DPSMateUser[cname or DetailsUser][5] then
 			if t[DPSMateUser[DPSMateUser[cname or DetailsUser][5]][1]] then
-				for cat, val in t[b][DPSMateUser[DPSMateUser[cname or DetailsUser][5]][1]] do
+				for cat, val in pairs(t[b][DPSMateUser[DPSMateUser[cname or DetailsUser][5]][1]]) do
 					if cat~="i" and val["i"] then
-						for ca, va in val["i"] do
+						for ca, va in pairs(val["i"]) do
 							local i=1
 							while true do
 								if (not newArr[i]) then 
@@ -855,9 +855,9 @@ function DPSMate.Modules.DetailsDamage:SortLineTable(t, b, cname)
 			end
 		end
 	else
-		for cat, val in t[DPSMateUser[cname or DetailsUser][1]] do
+		for cat, val in pairs(t[DPSMateUser[cname or DetailsUser][1]]) do
 			if cat~="i" and val["i"] then
-				for ca, va in val["i"] do
+				for ca, va in pairs(val["i"]) do
 					local i=1
 					while true do
 						if (not newArr[i]) then 
@@ -876,9 +876,9 @@ function DPSMate.Modules.DetailsDamage:SortLineTable(t, b, cname)
 		-- Pet
 		if DPSMateUser[cname or DetailsUser][5] then
 			if t[DPSMateUser[DPSMateUser[cname or DetailsUser][5]][1]] then
-				for cat, val in t[DPSMateUser[DPSMateUser[cname or DetailsUser][5]][1]] do
+				for cat, val in pairs(t[DPSMateUser[DPSMateUser[cname or DetailsUser][5]][1]]) do
 					if cat~="i" and val["i"] then
-						for ca, va in val["i"] do
+						for ca, va in pairs(val["i"]) do
 							local i=1
 							while true do
 								if (not newArr[i]) then 

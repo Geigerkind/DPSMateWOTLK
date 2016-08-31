@@ -477,3 +477,4 @@ DPSMate.L["pparry"] = "PARRY"
 DPSMate.L["pdodge"] = "DODGE"
 DPSMate.L["presist"] = "RESIST" -- TO CONFIRM
 DPSMate.L["pblock"] = "BLOCK" -- TO CONFRIM
+DPSMate.L["penvironment"] = "Environment"

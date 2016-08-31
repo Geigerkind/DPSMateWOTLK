@@ -894,7 +894,7 @@ function DPSMate.DB:AddSpellSchool(ab, school)
 	if spellSchoolNames[school] then
 		sc = school
 	else
-		for c, _ in spellSchoolNames do
+		for c, _ in pairs(spellSchoolNames) do
 			if strfind(school, c) then
 				sc = c
 				break
