@@ -471,3 +471,9 @@ DPSMate.L["aurassum"] = "Auras summary"
 DPSMate.L["absorbssum"] = "Absorbs summary"
 DPSMate.L["absorbeddmg"] = "absorbs"
 DPSMate.L["absorbstakensum"] = "Absorbs taken summary"
+
+DPSMate.L["pmiss"] = "MISS"
+DPSMate.L["pparry"] = "PARRY"
+DPSMate.L["pdodge"] = "DODGE"
+DPSMate.L["presist"] = "RESIST" -- TO CONFIRM
+DPSMate.L["pblock"] = "BLOCK" -- TO CONFRIM

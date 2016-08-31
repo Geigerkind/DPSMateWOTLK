@@ -1563,7 +1563,7 @@ function GraphFunctions:RefreshLineGraph()
 	
 	self.ppoints = {}
 	if self.DataPoints then
-		for uuu, zzz in self.DataPoints do
+		for uuu, zzz in pairs(self.DataPoints) do
 			if zzz[2] then
 				for k3, p2 in pairs(zzz[2]) do
 					-- Needs fine tuning
@@ -1737,7 +1737,7 @@ function GraphFunctions:RefreshStackedGraph()
 	local Height=self:GetHeight()
 	
 	for k1, series in pairs(self.Data) do
-		for c,v in series.Points do
+		for c,v in pairs(series.Points) do
 			local LastPoint
 			LastPoint=nil
 			for k2, point in pairs(v) do
@@ -2090,7 +2090,7 @@ function lib:HideBars(C)
 	if not C.GraphLib_Bars_Used then
 		return
 	end
-	for cat, val in C.GraphLib_Bars_Used do
+	for cat, val in pairs(C.GraphLib_Bars_Used) do
 		val:Hide()
 	end
 end
@@ -2222,7 +2222,7 @@ function GraphFunctions:RefreshStackedBarGraph()
 	local space, mX, mN
 	-- Step 1: Get Highest Number of Bars
 	for k1, series in pairs(self.Data) do
-		for c,v in series.Points do
+		for c,v in pairs(series.Points) do
 			local num = 0
 			for k2, point in pairs(v) do
 				num = num + 1
@@ -2250,7 +2250,7 @@ function GraphFunctions:RefreshStackedBarGraph()
 			DataTable[k1] = {}
 			taken[k1] = {}
 		end
-		for c,v in series.Points do
+		for c,v in pairs(series.Points) do
 			if not DataTable[k1][c] then
 				DataTable[k1][c] = {}
 				taken[k1][c] = {}
@@ -2282,9 +2282,9 @@ function GraphFunctions:RefreshStackedBarGraph()
 	if self.AutoScale and self.Data then -- math_huge not implemented
 		local MinX, MaxX, MinY, MaxY
 		local temp = {}
-		for k1, series in DataTable do
-			for c,v in series do
-				for k2, point in v do
+		for k1, series in pairs(DataTable) do
+			for c,v in pairs(series) do
+				for k2, point in pairs(v) do
 					if temp[k2] then
 						temp[k2] = temp[k2] + point[2]
 					else
@@ -2323,8 +2323,8 @@ function GraphFunctions:RefreshStackedBarGraph()
 	
 	self:CreateGridlines()
 	
-	for k1, series in DataTable do
-		for c,v in series do
+	for k1, series in pairs(DataTable) do
+		for c,v in pairs(series) do
 			if v[1] then
 				local LastPoint = {x=50,y=0}
 				local num = getn(v)
