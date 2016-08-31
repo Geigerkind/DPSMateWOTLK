@@ -96,6 +96,7 @@ local tinsert = table.insert
 local strgsub = string.gsub
 local func = function(c) tinsert(t, c) end
 local strformat = string.format
+local tonumber = tonumber
 
 -- Begin functions
 
@@ -331,7 +332,7 @@ end
 function DPSMate:GetUserById(id)
 	if not self.UserId then
 		self.UserId = {}
-		for cat, val in DPSMateUser do
+		for cat, val in pairs(DPSMateUser) do
 			self.UserId[val[1]] = cat
 		end
 	end
@@ -341,7 +342,7 @@ end
 function DPSMate:GetAbilityById(id)
 	if not self.AbilityId then
 		self.AbilityId = {}
-		for cat, val in DPSMateAbility do
+		for cat, val in pairs(DPSMateAbility) do
 			self.AbilityId[val[1]] = cat
 		end
 	end
@@ -361,7 +362,7 @@ end
 
 function DPSMate:GetMaxValue(arr, key)
 	local max = 0
-	for _, val in arr do
+	for _, val in pairs(arr) do
 		if val[key]>max then
 			max=val[key]
 		end
@@ -371,7 +372,7 @@ end
 
 function DPSMate:GetMinValue(arr, key)
 	local min
-	for _, val in arr do
+	for _, val in pairs(arr) do
 		if not min or val[key]<min then
 			min = val[key]
 		end
@@ -381,24 +382,34 @@ end
 
 function DPSMate:ScaleDown(arr, start)
 	local t = {}
-	for cat, val in arr do
+	for cat, val in pairs(arr) do
 		t[cat] = {(val[1]-start+1), val[2]}
 	end
 	return t
+end
+
+function DPSMate:GetNPCID(guid)
+	return tonumber(guid:sub(-10, -7), 16)
+end
+
+function DPSMate:IsNPC(guid)
+	if self:GetNPCID(guid)>0 then
+		return true
+	end
+	return false
 end
 
 function DPSMate:SetStatusBarValue()
 	if not self:WindowsExist() or self.Options.TestMode then return end
 	self:HideStatusBars()
 	--DPSMate:SendMessage("Hidden!")
-	for k,c in DPSMateSettings.windows do
+	for k,c in pairs(DPSMateSettings["windows"]) do
 		local arr, cbt, ecbt = self:GetMode(k)
 		local user, val, perc, strt = self:GetSettingValues(arr,cbt,k,ecbt)
 		if DPSMateSettings["showtotals"] then
 			_G("DPSMate_"..c["name"].."_ScrollFrame_Child_Total_Name"):SetText(self.L["total"])
 			_G("DPSMate_"..c["name"].."_ScrollFrame_Child_Total_Value"):SetText(strt[1]..strt[2])
 		end
-		--DPSMate:SendMessage(c["name"])
 		if (user[1]) then
 			for i=1, 40 do
 				--DPSMate:SendMessage("Test 1")
@@ -443,14 +454,14 @@ function DPSMate:ApplyFilter(key, name)
 	end
 	-- Certain people
 	strgsub(path["filterpeople"], "(.-),", func)
-	for cat, val in t do
+	for cat, val in pairs(t) do
 		if name == val then
 			return true
 		end
 	end
 	if path["filterpeople"] == "" then
 		-- classes
-		for cat, val in path["filterclasses"] do
+		for cat, val in pairs(path["filterclasses"]) do
 			if val then
 				if cat == class then
 					return true

@@ -33,11 +33,11 @@ local Arrays = {
 	[2] = {}, -- Damage Taken
 	[3] = {}, -- EDD
 	[4] = {}, -- EDT
-	[5] = {}, -- Healing done
-	[6] = {}, -- E Healing done
+	[5] = {}, -- Healing) done
+	[6] = {}, -- E Healing) done
 	[7] = {}, -- Healing taken
 	[8] = {}, -- E Healing taken
-	[9] = {}, -- Overhealing done
+	[9] = {}, -- Overhealing) done
 	[10] = {}, -- Absorbs
 	[11] = {}, -- Deaths
 	[12] = {}, -- Interrupts
@@ -193,12 +193,12 @@ function DPSMate.Sync:GetSummarizedTable(arr)
 	local newArr, i, dmg, time, dis = {}, 1, 0, nil, 1
 	local TL = DPSMate:TableLength(arr)
 	if TL>100 then dis = floor(TL/100) end
-	for cat, val in arr do
+	for cat, val in pairs(arr) do
 		if dis>1 then
 			dmg=dmg+val[2]
 			if time then
 				if i>dis and (val[1]-time)>0 then
-					tinsert(newArr, {(val[1]+time)/2, dmg/(val[1]-time)}) -- last time val // subtracting from each other to get the time in which the damage is being done
+					tinsert(newArr, {(val[1]+time)/2, dmg/(val[1]-time)}) -- last time val // subtracting from each other to get the time in pairs(which the damage is being) done
 					time, dmg, i = nil, 0, 1
 				end
 			else
@@ -323,7 +323,7 @@ function DPSMate.Sync:ReceiveGreet(arg2, arg4)
 end
 
 ----------------------------------------------------------------------------------
---------------                       SYNC IN                        --------------                                  
+--------------                       SYNC in pairs(                       --------------                                  
 ----------------------------------------------------------------------------------
 
 local UN = UnitName
@@ -357,13 +357,13 @@ function DPSMate.Sync:SyncStatus(arg2, arg4)
 		local usid = DPSMateUser[arg4][1]
 		if Arrays[1][usid] then DPSMateDamageDone[1][usid] = Arrays[1][usid] end
 		if Arrays[2][usid] then DPSMateDamageTaken[1][usid] = Arrays[2][usid] end
-		for cat, val in Arrays[3] do
+		for cat, val in pairs(Arrays[3]) do
 			if val[usid] then
 				if not DPSMateEDD[1][cat] then DPSMateEDD[1][cat] = {} end
 				DPSMateEDD[1][cat][usid] = val[usid]
 			end
 		end
-		for cat, val in Arrays[4] do
+		for cat, val in pairs(Arrays[4]) do
 			if val[usid] then
 				if not DPSMateEDT[1][cat] then DPSMateEDT[1][cat] = {} end
 				DPSMateEDT[1][cat][usid] = val[usid]
@@ -392,7 +392,7 @@ function DPSMate.Sync:SyncStatus(arg2, arg4)
 end
 
 ----------------------------------------------------------------------------------
---------------                    DAMAGE DONE                       --------------                                  
+--------------                    DAMAGE) doNE                       --------------                                  
 ----------------------------------------------------------------------------------
 
 function DPSMate.Sync:DMGDoneAllIn(arg2, arg4)
@@ -942,7 +942,10 @@ function DPSMate.Parser:GetTarget()
 	return target
 end
 
--- Hooking useaction function in order to get the owner of the spell.
+--[[
+Assuming it is not required anymore in pairs(tbc
+
+-- Hooking useaction function in pairs(order to get the owner of the spell.
 local OverTimeDispels = {
 	[DPSMate.BabbleSpell:GetTranslation("Abolish Poison")] = true,
 	[DPSMate.BabbleSpell:GetTranslation("Abolish Disease")] = true,
@@ -1004,7 +1007,7 @@ DPSMate.Parser.UseAction = function(slot, checkCursor, onSelf)
 end
 UseAction = DPSMate.Parser.UseAction
 
--- Hooking CastSpellByName function in order to get the owner of the spell.
+-- Hooking CastSpellByName function in pairs(order to get the owner of the spell.
 local oldCastSpellByName = CastSpellByName
 DPSMate.Parser.CastSpellByName = function(spellName, onSelf)
 	local target = DPSMate.Parser:GetTarget()
@@ -1021,7 +1024,7 @@ DPSMate.Parser.CastSpellByName = function(spellName, onSelf)
 end
 CastSpellByName = DPSMate.Parser.CastSpellByName
 
--- Hooking CastSpell function in order to get the owner of the spell.
+-- Hooking CastSpell function in pairs(order to get the owner of the spell.
 local oldCastSpell = CastSpell
 DPSMate.Parser.CastSpell = function(spellID, spellbookType)
 	local spellName, spellRank = GetSpellName(spellID, spellbookType)
@@ -1039,8 +1042,9 @@ DPSMate.Parser.CastSpell = function(spellID, spellbookType)
 end
 CastSpell = DPSMate.Parser.CastSpell
 
+--]]
 ----------------------------------------------------------------------------------
---------------                     DAMAGE DONE                      --------------                                  
+--------------                     DAMAGE) doNE                      --------------                                  
 ----------------------------------------------------------------------------------
 
 function DPSMate.Sync:DMGDoneAllOut()
@@ -1053,10 +1057,10 @@ end
 
 function DPSMate.Sync:DMGDoneStatOut()
 	if not DPSMateDamageDone[1][pid] then return end
-	for cat, val in DPSMateDamageDone[1][pid] do
+	for cat, val in pairs(DPSMateDamageDone[1][pid]) do
 		if cat~="i" and val["i"] then
 			local ab, arr = DPSMate:GetAbilityById(cat), {}
-			for ca, va in val["i"] do
+			for ca, va in pairs(val["i"]) do
 				local i = 1
 				while true do
 					if (not arr[i]) then
@@ -1071,7 +1075,7 @@ function DPSMate.Sync:DMGDoneStatOut()
 					i=i+1
 				end
 			end
-			for ca, va in self:GetSummarizedTable(arr) do
+			for ca, va in pairs(self:GetSummarizedTable(arr)) do
 				Buffer[cou] = {"DPSMate_DMGDoneStat", va[1]..","..va[2]..","..ab..","}
 				cou = cou + 1
 			end
@@ -1081,7 +1085,7 @@ end
 
 function DPSMate.Sync:DMGDoneAbilityOut()
 	if not DPSMateDamageDone[1][pid] then return end
-	for cat, val in (DPSMateDamageDone[1][pid]) do
+	for cat, val in pairs((DPSMateDamageDone[1][pid])) do
 		if cat~="i" then
 			Buffer[cou] = {"DPSMate_DMGDoneAbility", DPSMate:GetAbilityById(cat)..","..val[1]..","..val[2]..","..val[3]..","..ceil(val[4])..","..val[5]..","..val[6]..","..val[7]..","..ceil(val[8])..","..val[9]..","..val[10]..","..val[11]..","..val[12]..","..val[13]..","..val[14]..","..val[15]..","..val[16]..","..ceil(val[17])..","..val[18]..","..val[19]..","..val[20]..","..ceil(val[21])..","..val[22]..","}
 			cou = cou + 1
@@ -1104,13 +1108,13 @@ end
 
 function DPSMate.Sync:DMGTakenStatOut()
 	if not DPSMateDamageTaken[1][pid] then return end
-	for cat, val in DPSMateDamageTaken[1][pid] do
+	for cat, val in pairs(DPSMateDamageTaken[1][pid]) do
 		if cat~="i" then
 			local enemy = DPSMate:GetUserById(cat)
-			for c,v in val do
+			for c,v in pairs(val) do
 				if v["i"] then
 					local ab, arr = DPSMate:GetAbilityById(c), {}
-					for ca, va in v["i"] do
+					for ca, va in pairs(v["i"]) do
 						local i = 1
 						while true do
 							if (not arr[i]) then
@@ -1125,7 +1129,7 @@ function DPSMate.Sync:DMGTakenStatOut()
 							i=i+1
 						end
 					end
-					for ca, va in self:GetSummarizedTable(arr) do
+					for ca, va in pairs(self:GetSummarizedTable(arr)) do
 						Buffer[cou] = {"DPSMate_DMGTakenStat", va[1]..","..va[2]..","..ab..","..enemy..","}
 						cou = cou + 1
 					end
@@ -1137,7 +1141,7 @@ end
 
 function DPSMate.Sync:DMGTakenAbilityOut()
 	if not DPSMateDamageTaken[1][pid] then return end
-	for cat, val in (DPSMateDamageTaken[1][pid]) do
+	for cat, val in pairs((DPSMateDamageTaken[1][pid])) do
 		if cat~="i" then
 			for ca, va in pairs(val) do
 				Buffer[cou] = {"DPSMate_DMGTakenAbility", DPSMate:GetUserById(cat)..","..DPSMate:GetAbilityById(ca)..","..va[1]..","..va[2]..","..va[3]..","..ceil(va[4])..","..va[5]..","..va[6]..","..va[7]..","..ceil(va[8])..","..va[9]..","..va[10]..","..va[11]..","..va[12]..","..va[13]..","..ceil(va[14])..","..va[15]..","..va[16]..","..va[17]..","..ceil(va[18])..","..va[19]..","}
@@ -1153,7 +1157,7 @@ end
 ----------------------------------------------------------------------------------
 
 function DPSMate.Sync:EDAllOut(arr, prefix)
-	for cat, val in arr[1] do
+	for cat, val in pairs(arr[1]) do
 		if val[pid] then
 			Buffer[cou] = {"DPSMate_ED"..prefix.."All", DPSMate:GetUserById(cat)..","..val[pid]["i"]..","}
 			cou = cou + 1
@@ -1163,13 +1167,13 @@ function DPSMate.Sync:EDAllOut(arr, prefix)
 end
 
 function DPSMate.Sync:EDStatOut(arr, prefix)
-	for cat, val in arr[1] do
+	for cat, val in pairs(arr[1]) do
 		if val[pid] then
 			local npc = DPSMate:GetUserById(cat)
-			for ca, va in val[pid] do
+			for ca, va in pairs(val[pid]) do
 				if ca~="i" and va["i"] then
 					local a, ab = {}, DPSMate:GetAbilityById(ca)
-					for c,v in va["i"] do
+					for c,v in pairs(va["i"]) do
 						local i = 1
 						while true do
 							if (not a[i]) then
@@ -1184,7 +1188,7 @@ function DPSMate.Sync:EDStatOut(arr, prefix)
 							i=i+1
 						end
 					end
-					for q, s in self:GetSummarizedTable(a) do
+					for q, s in pairs(self:GetSummarizedTable(a)) do
 						Buffer[cou] = {"DPSMate_ED"..prefix.."Stat", npc..","..s[1]..","..s[2]..","..ab..","}
 						cou = cou + 1
 						--SDM("DPSMate_ED"..prefix.."Stat", DPSMate:GetUserById(cat)..","..va[1]..","..va[2]..",", "RAID")
@@ -1196,7 +1200,7 @@ function DPSMate.Sync:EDStatOut(arr, prefix)
 end
 
 function DPSMate.Sync:EDAbilityOut(arr, prefix)
-	for cat, val in (arr[1]) do
+	for cat, val in pairs((arr[1])) do
 		local npc = DPSMate:GetUserById(cat)
 		if val[pid] then
 			for ca, va in pairs(val[pid]) do
@@ -1224,10 +1228,10 @@ end
 
 function DPSMate.Sync:HealingStatOut(arr, prefix)
 	if not arr[1][pid] then return end
-	for cat, val in arr[1][pid] do
+	for cat, val in pairs(arr[1][pid]) do
 		if cat~="i" and val["i"] then
 			local ab, a = DPSMate:GetAbilityById(cat), {}
-			for ca, va in val["i"] do
+			for ca, va in pairs(val["i"]) do
 				local i = 1
 				while true do
 					if (not a[i]) then
@@ -1242,7 +1246,7 @@ function DPSMate.Sync:HealingStatOut(arr, prefix)
 					i=i+1
 				end
 			end
-			for ca, va in self:GetSummarizedTable(a) do
+			for ca, va in pairs(self:GetSummarizedTable(a)) do
 				Buffer[cou] = {"DPSMate_"..prefix.."HealingStat", va[1]..","..va[2]..","..ab..","}
 				cou = cou + 1
 			end
@@ -1252,7 +1256,7 @@ end
 
 function DPSMate.Sync:HealingAbilityOut(arr, prefix)
 	if not arr[1][pid] then return end
-	for cat, val in arr[1][pid] do
+	for cat, val in pairs(arr[1][pid]) do
 		if cat~="i" then
 			Buffer[cou] = {"DPSMate_"..prefix.."HealingAbility", DPSMate:GetAbilityById(cat)..","..val[1]..","..val[2]..","..val[3]..","..ceil(val[4])..","..ceil(val[5])..","..val[6]..","..val[7]..","..val[8]..","..val[9]..","}
 			cou = cou + 1
@@ -1267,13 +1271,13 @@ end
 
 function DPSMate.Sync:HealingTakenStatOut(arr, prefix)
 	if not arr[1][pid] then return end
-	for cat, val in arr[1][pid] do
+	for cat, val in pairs(arr[1][pid]) do
 		if cat~="i" then
 			local npc = DPSMate:GetUserById(cat)
-			for ca, va in val do
+			for ca, va in pairs(val) do
 				if va["i"] then
 					local ab, a = DPSMate:GetAbilityById(ca), {}
-					for c,v in va["i"] do
+					for c,v in pairs(va["i"]) do
 						local i = 1
 						while true do
 							if (not a[i]) then
@@ -1288,7 +1292,7 @@ function DPSMate.Sync:HealingTakenStatOut(arr, prefix)
 							i=i+1
 						end
 					end
-					for q,s in self:GetSummarizedTable(a) do
+					for q,s in pairs(self:GetSummarizedTable(a)) do
 						Buffer[cou] = {"DPSMate_"..prefix.."HealingStat", s[1]..","..s[2]..","..ab..","..npc..","}
 						cou = cou + 1
 					end
@@ -1300,9 +1304,9 @@ end
 
 function DPSMate.Sync:HealingTakenAbilityOut(arr, prefix)
 	if not arr[1][pid] then return end
-	for cat, val in arr[1][pid] do
+	for cat, val in pairs(arr[1][pid]) do
 		if cat~="i" then
-			for ca, va in val do
+			for ca, va in pairs(val) do
 				Buffer[cou] = {"DPSMate_"..prefix.."HealingTakenAbility", DPSMate:GetUserById(cat)..","..DPSMate:GetAbilityById(ca)..","..va[1]..","..va[2]..","..va[3]..","..ceil(va[4])..","..ceil(va[5])..","..va[6]..","..va[7]..","..va[8]..","..va[9]..","}
 				cou = cou + 1
 				--SDM("DPSMate_"..prefix.."HealingTakenAbility", DPSMate:GetUserById(cat)..","..DPSMate:GetAbilityById(ca)..","..va[1]..","..va[2]..","..va[3]..","..ceil(va[4])..","..ceil(va[5])..","..va[6]..","..va[7]..","..va[8]..","..va[9]..",", "RAID")
@@ -1327,7 +1331,7 @@ function DPSMate.Sync:AbsorbsOut()
 							cou = cou + 1
 							--SDM("DPSMate_iAbsorbs", DPSMate:GetUserById(cat)..","..DPSMate:GetAbilityById(ca)..","..c..","..ve[1]..","..ve[2]..","..ve[3]..","..ve[4]..",", "RAID")
 						else
-							for cet, vel in ve do
+							for cet, vel in pairs(ve) do
 								Buffer[cou] = {"DPSMate_Absorbs", DPSMate:GetUserById(cat)..","..DPSMate:GetAbilityById(ca)..","..c..","..DPSMate:GetUserById(ce)..","..cet..","..vel..","}
 								cou = cou + 1
 							end
@@ -1342,8 +1346,8 @@ end
 
 function DPSMate.Sync:AbsorbsStatOut()
 	if not DPSMateAbsorbs[1][pid] then return end
-	for cat, val in DPSMateAbsorbs[1][pid] do -- owner
-		for ca, va in val["i"] do
+	for cat, val in pairs(DPSMateAbsorbs[1][pid]) do -- owner
+		for ca, va in pairs(val["i"]) do
 			if va[4] then
 				Buffer[cou] = {"DPSMate_AbsorbsStat", DPSMate:GetUserById(cat)..","..va[1]..","..va[2]..","..va[3]..","..va[4]..","}
 				cou = cou + 1
@@ -1469,9 +1473,9 @@ end
 ----------------------------------------------------------------------------------
 
 function DPSMate.Sync:ThreatIn(arg2,arg4)
-	for cat, val in loadstring("return {"..arg2.."}")() do
-		for ca, va in val do
-			for c,v in va do
+	for cat, val in pairs(loadstring("return {"..arg2.."}")()) do
+		for ca, va in pairs(val) do
+			for c,v in pairs(va) do
 				DB:Threat(arg4, cat, ca, v, 1)
 			end
 		end
@@ -1480,9 +1484,9 @@ end
 
 function DPSMate.Sync:ThreatOut()
 	if not DPSMateThreat[1][pid] then return end
-	for cat, val in DPSMateThreat[1][pid] do
+	for cat, val in pairs(DPSMateThreat[1][pid]) do
 		local tar = DPSMate:GetUserById(cat)
-		for ca, va in val do
+		for ca, va in pairs(val) do
 			Buffer[cou] = {"DPSMate_Threat", tar..","..DPSMate:GetAbilityById(ca)..","..va[1]..","..va[2]..","..va[3]..","..va[4]..","}
 			cou = cou + 1
 		end
@@ -1491,11 +1495,11 @@ end
 
 function DPSMate.Sync:ThreatStatsOut()
 	if not DPSMateThreat[1][pid] then return end
-	for cat, val in DPSMateThreat[1][pid] do
+	for cat, val in pairs(DPSMateThreat[1][pid]) do
 		local tar = DPSMate:GetUserById(cat)
-		for ca, va in val do
+		for ca, va in pairs(val) do
 			local ability, a = DPSMate:GetAbilityById(ca), {}
-			for c,v in va["i"] do
+			for c,v in pairs(va["i"]) do
 				local i = 1
 				while true do
 					if (not a[i]) then
@@ -1510,7 +1514,7 @@ function DPSMate.Sync:ThreatStatsOut()
 					i=i+1
 				end
 			end
-			for c, v in self:GetSummarizedTable(a) do
+			for c, v in pairs(self:GetSummarizedTable(a)) do
 				Buffer[cou] = {"DPSMate_ThreatStats", tar..","..ability..","..v[1]..","..v[2]..","}
 				cou = cou + 1
 			end

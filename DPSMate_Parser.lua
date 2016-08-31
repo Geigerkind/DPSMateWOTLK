@@ -429,6 +429,7 @@ local DB = DPSMate.DB
 local _G = getfenv(0)
 local string_find = string.find
 local UL = UnitLevel
+local t = {}
 
 -- Begin Functions
 
@@ -495,9 +496,10 @@ function DPSMate.Parser:GetPlayerValues()
 end
 
 function DPSMate.Parser:OnEvent(event)
-	if Execute[event] then
-	--	DPSMate:SendMessage(event..": "..arg1)
-		Execute[event](arg1)
+	if arg2 and Execute[arg2] then
+		--DPSMate:SendMessage(event..": "..(arg1 or "NONE").."/"..(arg2 or "NONE").."/"..(arg3 or "NONE").."/"..(arg4 or "NONE").."/"..(arg5 or "NONE").."/"..(arg6 or "NONE").."/")
+		--DPSMate:SendMessage(arg1)
+		Execute[arg2](nil,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,arg10,arg11,arg12,arg13,arg14,arg15,arg16,arg17,arg18,arg19,arg20,arg21,arg22)
 	end
 end
 
@@ -536,6 +538,24 @@ function DPSMate.Parser:UnitAuraDispels(unit)
 	end
 end
 
+function DPSMate.Parser:SwingDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,amount, school, resisted, blocked, absorbed, critical, glancing, crushing)
+	t = {}
+	if critical then t[1]=0;t[2]=critical end
+	if resisted then t[1]=0;t[3]=resisted end
+	if blocked then t[1]=0;t[4]=blocked end
+	if glancing then t[1]=0;t[5]=glancing end
+	if DPSMate:IsNPC(srcGUID) then
+		DPSMate:SendMessage("IS NPC!")
+	else
+		DB:DamageDone(srcName, DPSMate.L["AutoAttack"], t[1] or 1, t[2] or 0, 0, 0, 0, t[3] or 0, amount, t[4] or 0, t[5] or 0)
+	end
+end
+
+Execute = {
+	["SWING_DAMAGE"] = DPSMate.Parser.SwingDamage, 
+}
+
+--[[
 Execute = {
 	["CHAT_MSG_COMBAT_HOSTILE_DEATH"] = function(arg1) DPSMate.Parser:CombatHostileDeaths(arg1) end,
 	["CHAT_MSG_COMBAT_FRIENDLY_DEATH"] = function(arg1) DPSMate.Parser:CombatFriendlyDeath(arg1) end,
@@ -585,4 +605,4 @@ Execute = {
 	["CHAT_MSG_COMBAT_PET_MISSES"] = function(arg1) DPSMate.Parser:PetMisses(arg1) end,
 	--["CHAT_MSG_SPELL_PET_BUFF"] = function(arg1) DPSMate:SendMessage(arg1.."Test 3"); end,
 	["CHAT_MSG_SPELL_PET_DAMAGE"] = function(arg1) DPSMate.Parser:PetSpellDamage(arg1) end
-}
+}--]]

@@ -1073,7 +1073,7 @@
 				<Scripts>
 					<OnClick>
 						DPSMate_Logout:Hide()
-						DPSMate.Options.Logout()
+						DPSMate.Options:Logout()
 					</OnClick>
 				</Scripts>
 				<NormalTexture file="Interface\Buttons\UI-DialogBox-Button-Up"/>
@@ -5762,73 +5762,14 @@
 				this:RegisterEvent("PARTY_MEMBERS_CHANGED")
 				this:RegisterEvent("RAID_ROSTER_UPDATE")
 				
-				this:RegisterEvent("CHAT_MSG_COMBAT_PET_HITS")
-				this:RegisterEvent("CHAT_MSG_COMBAT_PET_MISSES")
-				this:RegisterEvent("CHAT_MSG_SPELL_PET_BUFF")
-				this:RegisterEvent("CHAT_MSG_SPELL_PET_DAMAGE")
-				
-				this:RegisterEvent("CHAT_MSG_COMBAT_SELF_HITS")
-				this:RegisterEvent("CHAT_MSG_COMBAT_SELF_MISSES")
-				this:RegisterEvent("CHAT_MSG_SPELL_SELF_DAMAGE")
-				this:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_HOSTILEPLAYER_DAMAGE") --
-				this:RegisterEvent("CHAT_MSG_SPELL_HOSTILEPLAYER_DAMAGE") --
-				this:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_CREATURE_DAMAGE")
-				this:RegisterEvent("CHAT_MSG_COMBAT_PARTY_HITS")
-				this:RegisterEvent("CHAT_MSG_SPELL_PARTY_DAMAGE")
-				this:RegisterEvent("CHAT_MSG_COMBAT_PARTY_MISSES")
-				this:RegisterEvent("CHAT_MSG_SPELL_FRIENDLYPLAYER_DAMAGE")
-				this:RegisterEvent("CHAT_MSG_COMBAT_FRIENDLYPLAYER_HITS")
-				this:RegisterEvent("CHAT_MSG_COMBAT_FRIENDLYPLAYER_MISSES")
-				
-				this:RegisterEvent("CHAT_MSG_COMBAT_HOSTILEPLAYER_HITS")
-				this:RegisterEvent("CHAT_MSG_COMBAT_HOSTILEPLAYER_MISSES")
-				
-				--this:RegisterEvent("COMBAT_TEXT_UPDATE")
-				
-				this:RegisterEvent("CHAT_MSG_COMBAT_CREATURE_VS_SELF_HITS")
-				this:RegisterEvent("CHAT_MSG_COMBAT_CREATURE_VS_SELF_MISSES")
-				this:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_SELF_DAMAGE")
-				this:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE")
-				this:RegisterEvent("CHAT_MSG_COMBAT_CREATURE_VS_PARTY_HITS")
-				this:RegisterEvent("CHAT_MSG_COMBAT_CREATURE_VS_PARTY_MISSES")
-				this:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_PARTY_DAMAGE")
-				this:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_PARTY_DAMAGE")
-				this:RegisterEvent("CHAT_MSG_COMBAT_CREATURE_VS_CREATURE_HITS")
-				this:RegisterEvent("CHAT_MSG_COMBAT_CREATURE_VS_CREATURE_MISSES")
-				this:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE")
-				this:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE") 
-				
-				this:RegisterEvent("CHAT_MSG_SPELL_SELF_BUFF")
-				this:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_BUFFS")
-				this:RegisterEvent("CHAT_MSG_SPELL_FRIENDLYPLAYER_BUFF")
-				this:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_BUFFS")
-				this:RegisterEvent("CHAT_MSG_SPELL_HOSTILEPLAYER_BUFF")
-				this:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_HOSTILEPLAYER_BUFFS")
-				this:RegisterEvent("CHAT_MSG_SPELL_PARTY_BUFF")
-				this:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_PARTY_BUFFS")
-				
-				this:RegisterEvent("CHAT_MSG_SPELL_DAMAGESHIELDS_ON_SELF")
-				this:RegisterEvent("CHAT_MSG_SPELL_DAMAGESHIELDS_ON_OTHERS")
-				this:RegisterEvent("CHAT_MSG_SPELL_BREAK_AURA")
-				this:RegisterEvent("CHAT_MSG_SPELL_AURA_GONE_SELF")
-				this:RegisterEvent("CHAT_MSG_SPELL_AURA_GONE_OTHER")
-				this:RegisterEvent("CHAT_MSG_SPELL_AURA_GONE_PARTY")
-				
-				this:RegisterEvent("CHAT_MSG_COMBAT_FRIENDLY_DEATH")
-				this:RegisterEvent("CHAT_MSG_COMBAT_HOSTILE_DEATH")
+				this:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 				
 				this:RegisterEvent("CHAT_MSG_ADDON")
 				
 				this:RegisterEvent("PLAYER_REGEN_DISABLED")
 				this:RegisterEvent("PLAYER_REGEN_ENABLED")
 				
-				--this:RegisterEvent("SPELLCAST_CHANNEL_START")
-				--this:RegisterEvent("SPELLCAST_STOP")
-				--this:RegisterEvent("SPELLCAST_FAILED")
-				--this:RegisterEvent("SPELLCAST_INTERRUPTED")
-				
 				this:RegisterEvent("PLAYER_AURAS_CHANGED")
-				--this:RegisterEvent("UNIT_AURA")
 				this:RegisterEvent("PLAYER_TARGET_CHANGED")
 			</OnLoad>
 			<OnEvent>

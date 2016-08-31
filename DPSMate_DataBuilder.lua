@@ -499,77 +499,6 @@ function DPSMate.DB:OnEvent(event)
 		DPSMate.Modules.OHPS.DB = DPSMateOverhealing
 		DPSMate.Modules.OHealingTaken.DB = DPSMateOverhealingTaken
 		
-		if not DPSMateSettings["columnsprocs"] then
-			DPSMateSettings["columnsprocs"] = {
-				[1] = true,
-				[2] = true,
-			}
-		end
-		if not DPSMateSettings["columnscasts"] then
-			DPSMateSettings["columnscasts"] = {
-				[1] = true,
-				[2] = true,
-			}
-		end
-		if not DPSMateSettings["columnsfails"] then
-			DPSMateSettings["columnsfails"] = {
-				[1] = true,
-				[2] = true,
-			}
-		end
-		if not DPSMateSettings["columnsthreat"] then
-			DPSMateSettings["columnsthreat"] = {
-				[1] = true,
-				[2] = false,
-				[3] = true,
-				[4] = false
-			}
-		end
-		if not DPSMateSettings["columnstps"] then
-			DPSMateSettings["columnstps"] = {
-				[1] = false,
-				[2] = true,
-				[3] = true,
-				[4] = false
-			}
-		end
-		if not DPSMateSettings["columnsohps"] then
-			DPSMateSettings["columnsohps"] = {
-				[1] = false,
-				[2] = true,
-				[3] = true,
-				[4] = false
-			}
-		end
-		if not DPSMateSettings["columnsohealingtaken"] then
-			DPSMateSettings["columnsohealingtaken"] = {
-				[1] = true,
-				[2] = false,
-				[3] = true,
-				[4] = false
-			}
-		end
-		if not DPSMateSettings["columnsccbreaker"] then
-			DPSMateSettings["columnsccbreaker"] = {
-				[1] = true,
-				[2] = true
-			}
-		end
-		if not DPSMateSettings["mergepets"] then
-			DPSMateSettings["mergepets"] = true
-		end
-		if not DPSMateSettings["columnsfriendlyfiretaken"] then 
-			DPSMateSettings["columnsfriendlyfiretaken"] = {
-				[1] = true,
-				[2] = false,
-				[3] = true,
-				[4] = false
-			}
-		end
-		if not DPSMateSettings["targetscale"] then
-			DPSMateSettings["targetscale"] = 0.58
-		end
-		
 		if DPSMateCombatTime == nil then
 			DPSMateCombatTime = {
 				total = 1,
@@ -581,6 +510,7 @@ function DPSMate.DB:OnEvent(event)
 				},
 			}
 		end
+		
 		
 		DPSMate:OnLoad()
 		DPSMate.Sync:OnLoad()
@@ -857,7 +787,7 @@ end
 function DPSMate.DB:UpdateThreat()
 	if self.KTMHOOK ~= {} then
 		local str
-		for cat, val in self.KTMHOOK do
+		for cat, val in pairs(self.KTMHOOK) do
 			local curNpc, curNpcNum = {}, 0
 			if str then
 				str = str..',["'..cat..'"]={'
@@ -1708,7 +1638,7 @@ function DPSMate.DB:RegisterHotDispel(target, ability)
 end
 
 function DPSMate.DB:ClearAwaitHotDispel()
-	for cat, val in AwaitHotDispel do
+	for cat, val in pairs(AwaitHotDispel) do
 		if (GetTime()-val[4])>=10 then
 			tremove(AwaitHotDispel, cat)
 		end
@@ -1726,8 +1656,8 @@ end
 
 function DPSMate.DB:ApplyRemainingDispels()
 	local num = 0
-	for cat, val in ConfirmedDispel do
-		for ca, va in val do
+	for cat, val in pairs(ConfirmedDispel) do
+		for ca, va in pairs(val) do
 			num = num + 1
 			if (GetTime()-va[2])>2 then
 				local type = "party"
@@ -1772,12 +1702,12 @@ end
 
 -- Deprecated time component
 function DPSMate.DB:EvaluateDispel()
-	for cat, val in ActiveHotDispel do
-		for ca, va in val do
+	for cat, val in pairs(ActiveHotDispel) do
+		for ca, va in pairs(val) do
 			if ConfirmedDispel[cat] then
 				if va[2]~=Restor or (va[2]==Restor and va[1]==cat) then
 					local check = nil
-					for q, t in ConfirmedDispel[cat] do
+					for q, t in pairs(ConfirmedDispel[cat]) do
 						if DPSMate.Parser.HotDispels[va[2]] then
 							if not check then
 								check = t[1]
@@ -1794,8 +1724,8 @@ function DPSMate.DB:EvaluateDispel()
 			end
 		end
 	end
-	for cat, val in AwaitDispel do
-		for ca, va in val do
+	for cat, val in pairs(AwaitDispel) do
+		for ca, va in pairs(val) do
 			if (GetTime()-(va[3] or 0))<=2 then
 				if ConfirmedDispel[cat] then
 					if va[2]~=Restor then
@@ -1921,7 +1851,7 @@ end
 local AwaitKick = {}
 local AfflictedStun = {}
 function DPSMate.DB:AwaitAfflicted(cause, ability, target, time)
-	for cat, val in AfflictedStun do
+	for cat, val in pairs(AfflictedStun) do
 		if val[1]==cause and ((val[4]+0.5)<=time or (val[4]-0.5)>=time) then
 			--DPSMate:SendMessage("That happened!")
 			return
@@ -1934,7 +1864,7 @@ end
 
 function DPSMate.DB:ConfirmAfflicted(target, ability, time)
 	--DPSMate:SendMessage("Try to confirm: "..ability)
-	for cat, val in AfflictedStun do	
+	for cat, val in pairs(AfflictedStun) do	
 		--DPSMate:SendMessage(val[2].."=="..(ability or "").." and "..val[3].."=="..(target or "").." AND "..val[4].."<="..(time or ""))
 		if val[2]==ability and val[3]==target and val[4]<=time then
 			if DPSMate.Parser.Kicks[ability] then self:AssignPotentialKick(val[1], val[2], val[3], time) end
@@ -1951,7 +1881,7 @@ function DPSMate.DB:RegisterPotentialKick(cause, ability, time)
 end
 
 function DPSMate.DB:UnregisterPotentialKick(cause, ability, time)
-	for cat, val in AwaitKick do
+	for cat, val in pairs(AwaitKick) do
 		if val[1]==cause and val[2]==ability and val[3]<=time then
 			tremove(AwaitKick, cat)
 			--DPSMate:SendMessage("Potential Kick has been unregistered! "..ability)
@@ -1961,7 +1891,7 @@ function DPSMate.DB:UnregisterPotentialKick(cause, ability, time)
 end
 
 function DPSMate.DB:AssignPotentialKick(cause, ability, target, time)
-	for cat, val in AwaitKick do
+	for cat, val in pairs(AwaitKick) do
 		if val[3]<=time then
 			if not val[4] and val[1]==target then
 				val[4] = {cause, ability}
@@ -1972,7 +1902,7 @@ function DPSMate.DB:AssignPotentialKick(cause, ability, target, time)
 end
 
 function DPSMate.DB:UpdateKicks()
-	for cat, val in AwaitKick do
+	for cat, val in pairs(AwaitKick) do
 		if (GetTime()-val[3])>=2.5 then
 			if val[4] then
 				self:Kick(val[4][1], val[1], val[4][2], val[2])
@@ -2016,7 +1946,7 @@ end
 
 -- deprecated function cause of gettime??
 function DPSMate.DB:ClearAwaitBuffs()
-	for cat, val in AwaitBuff do
+	for cat, val in pairs(AwaitBuff) do
 		if (GetTime()-(val[4] or 0))>=5 then
 			tremove(AwaitBuff, cat)
 		end
@@ -2025,7 +1955,7 @@ end
 
 -- deprecated function cause of gettime??
 function DPSMate.DB:ConfirmBuff(target, ability, time)
-	for cat, val in AwaitBuff do
+	for cat, val in pairs(AwaitBuff) do
 		if val[4]<=(time or 0) then
 			if val[2]==ability and val[3]==target then
 				self:BuildBuffs(val[1], target, ability, false)
@@ -2193,11 +2123,12 @@ function DPSMate.DB:CombatTime()
 					notInCombat = DPSMate.DB:UpdatePlayerCBT(LastUpdate)
 					
 					-- Check NPC E CBT Time (May be inaccurate) -> Can be used as active time later
-					for cat, _ in ActiveMob do
+					for cat, _ in pairs(ActiveMob) do
 						DPSMateCombatTime["effective"][1][cat] = (DPSMateCombatTime["effective"][1][cat] or 0) + LastUpdate
 						DPSMateCombatTime["effective"][2][cat] = (DPSMateCombatTime["effective"][2][cat] or 0) + LastUpdate
 					end
 					ActiveMob = {}
+					
 					
 					DPSMate.Parser.SendSpell = {}
 					CastsBuffer = {[1]={[1]={},[2]={}},[2]={[1]={},[2]={}},[3]={[1]={},[2]={}}}
@@ -2219,6 +2150,7 @@ function DPSMate.DB:CombatTime()
 						TotemDispelTimer = 0
 					end
 				end
+				
 			else
 				DPSMate.DB.MainUpdate = DPSMate.DB.MainUpdate + arg1
 				DPSMate.Sync:SendAddonMessages(arg1)
@@ -2238,7 +2170,6 @@ function DPSMate.DB:CombatTime()
 				DPSMate.DB:ClearAwaitAbsorb()
 				DPSMate.DB:ClearAwaitHotDispel()
 				DPSMate.DB.MainUpdate = 0
-				--DPSMate:SendMessage("150 !!")
 				DPSMate.Sync.Async = true
 			end
 			if DPSMate.Sync.Async then

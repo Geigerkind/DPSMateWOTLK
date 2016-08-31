@@ -1,4 +1,4 @@
-## Interface: 11200
+## Interface: 20400
 ## Title: DPSMate |cFFFF8080-Shino-|r
 ## Title-deDE: DPSMate |cFFFF8080-Shino-|r
 ## Notes: DPSMate tracks the fight and provides statistics [TO BE EDITED]
@@ -7,7 +7,7 @@
 ## SavedVariables: DPSMateSettings
 ## SavedVariablesPerCharacter: DPSMateUser, DPSMateAbility, DPSMateDamageDone, DPSMateEDT, DPSMateEDD, DPSMateDamageTaken, DPSMateDispels, DPSMateInterrupts, DPSMateDeaths, DPSMateEHealing, DPSMateTHealing, DPSMateHealingTaken, DPSMateEHealingTaken, DPSMateOverhealing, DPSMateOverhealingTaken, DPSMateAbsorbs, DPSMateThreat, DPSMateAurasGained, DPSMateCombatTime, DPSMateHistory, DPSMateAttempts, DPSMatePlayer, DPSMateLoot, DPSMateFails, DPSMateCCBreaker
 ## OptionalDeps: KLHThreatMeter
-## Version: 23
+## Version: 1
 
 libs\AceLibrary\AceLibrary.lua
 libs\Dewdrop-2.0\Dewdrop-2.0.lua

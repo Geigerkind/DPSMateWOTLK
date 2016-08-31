@@ -531,7 +531,7 @@ function DPSMate.Options:InitializeConfigMenu()
 	DPSMate_ConfigMenu_Tab_Broadcasting_RaidWarning:SetChecked(DPSMateSettings["bcrw"])
 	
 	-- Mode menu
-	for cat, _ in DPSMateSettings["hiddenmodes"] do
+	for cat, _ in pairs(DPSMateSettings["hiddenmodes"]) do
 		DPSMate.Options.Options[1]["args"][cat] = nil
 	end
 end
@@ -547,7 +547,6 @@ function DPSMate.Options:Logout()
 	else
 		DPSMate.Options:PopUpAccept(true, true)
 	end
-	--self:SumGraphData()
 	DPSMate.Options.OldLogout()
 end
 Logout = function() 
@@ -1011,26 +1010,28 @@ end
 function DPSMate.Options:DropDownStyleReset()
 	for i=1, 20 do
 		local button = _G("DropDownList1Button"..i)
-		_G("DropDownList1Button"..i.."NormalText"):SetFont(STANDARD_TEXT_FONT, UIDROPDOWNMENU_DEFAULT_TEXT_HEIGHT)
-		button:SetScript("OnEnter", function()
-			 if ( this.hasArrow ) then
-			  ToggleDropDownMenu(this:GetParent():GetID() + 1, this.value);
-			else
-			  CloseDropDownMenus(this:GetParent():GetID() + 1);
+		if button then
+			_G("DropDownList1Button"..i.."NormalText"):SetFont(STANDARD_TEXT_FONT, UIDROPDOWNMENU_DEFAULT_TEXT_HEIGHT)
+			button:SetScript("OnEnter", function()
+				 if ( this.hasArrow ) then
+				  ToggleDropDownMenu(this:GetParent():GetID() + 1, this.value);
+				else
+				  CloseDropDownMenus(this:GetParent():GetID() + 1);
+				end
+				getglobal(this:GetName().."Highlight"):Show();
+				UIDropDownMenu_StopCounting(this:GetParent());
+				if ( this.tooltipTitle ) then
+				  GameTooltip_AddNewbieTip(this.tooltipTitle, 1.0, 1.0, 1.0, this.tooltipText, 1);
+				end
+			end)
+			_G("DropDownList1Backdrop"):SetBackdrop({ 
+				bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background", 
+				edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", tile = true, tileSize = 32, edgeSize = 32, 
+				insets = { left = 11, right = 12, top = 12, bottom = 11 }
+			})
+			if button.tex then
+				button.tex:Hide()
 			end
-			getglobal(this:GetName().."Highlight"):Show();
-			UIDropDownMenu_StopCounting(this:GetParent());
-			if ( this.tooltipTitle ) then
-			  GameTooltip_AddNewbieTip(this.tooltipTitle, 1.0, 1.0, 1.0, this.tooltipText, 1);
-			end
-		end)
-		_G("DropDownList1Backdrop"):SetBackdrop({ 
-			bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background", 
-			edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", tile = true, tileSize = 32, edgeSize = 32, 
-			insets = { left = 11, right = 12, top = 12, bottom = 11 }
-		})
-		if button.tex then
-			button.tex:Hide()
 		end
 	end
 end
