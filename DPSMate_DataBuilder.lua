@@ -1669,7 +1669,7 @@ end
 
 function DPSMate.DB:RegisterPotentialKick(cause, ability, time)
 	tinsert(AwaitKick, {cause, ability, time})
-	--DPSMate:SendMessage("Potential kick registered!")
+	--DPSMate:SendMessage("Potential kick registered! "..ability)
 end
 
 function DPSMate.DB:UnregisterPotentialKick(cause, ability, time)
@@ -1683,23 +1683,28 @@ function DPSMate.DB:UnregisterPotentialKick(cause, ability, time)
 end
 
 function DPSMate.DB:AssignPotentialKick(cause, ability, target, time)
+	--DPSMate:SendMessage("Assigning potential kick: "..ability.."/"..target.."/"..cause)
 	for cat, val in pairs(AwaitKick) do
 		if val[3]<=time then
+			--DPSMate:SendMessage("Test 2")
 			if not val[4] and val[1]==target then
 				val[4] = {cause, ability}
-			--	DPSMate:SendMessage("Kick assigned! "..ability)
+				--DPSMate:SendMessage("Kick assigned! "..ability)
 			end
 		end
 	end
 end
 
 function DPSMate.DB:UpdateKicks()
+	--DPSMate:SendMessage("Attempting to update kicks!")
 	for cat, val in pairs(AwaitKick) do
 		if (GetTime()-val[3])>=2.5 then
 			if val[4] then
+				--DPSMate:SendMessage("Updated Kick!")
 				self:Kick(val[4][1], val[1], val[4][2], val[2])
 			end
 			tremove(AwaitKick, cat)
+			break
 		end
 	end
 end

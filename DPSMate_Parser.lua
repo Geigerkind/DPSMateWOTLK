@@ -365,16 +365,16 @@ DPSMate.Parser.HotDispels = {
 DPSMate.Parser.Kicks = {
 	-- Interrupts
 	-- Rogue
-	[DPSMate.BabbleSpell:GetTranslation("Kick")] = true,
+	--[DPSMate.BabbleSpell:GetTranslation("Kick")] = true,
 	-- Warrior
-	[DPSMate.BabbleSpell:GetTranslation("Pummel")] = true,
-	[DPSMate.BabbleSpell:GetTranslation("Shield Bash")] = true,
+	--[DPSMate.BabbleSpell:GetTranslation("Pummel")] = true,
+	--[DPSMate.BabbleSpell:GetTranslation("Shield Bash")] = true,
 	
 	-- Mage
-	[DPSMate.BabbleSpell:GetTranslation("Counterspell")] = true,
+	--[DPSMate.BabbleSpell:GetTranslation("Counterspell")] = true,
 	
 	-- Shaman
-	[DPSMate.BabbleSpell:GetTranslation("Earth Shock")] = true,
+	--[DPSMate.BabbleSpell:GetTranslation("Earth Shock")] = true,
 	
 	-- Priest
 	[DPSMate.BabbleSpell:GetTranslation("Silence")] = true,
@@ -407,6 +407,7 @@ DPSMate.Parser.Kicks = {
 	
 	-- Paladin
 	[DPSMate.BabbleSpell:GetTranslation("Repentance")] = true,
+	[DPSMate.BabbleSpell:GetTranslation("Hammer of Justice")] = true,
 	
 	-- Warlock
 	[DPSMate.BabbleSpell:GetTranslation("Pyroclasm")] = true,
@@ -418,6 +419,7 @@ DPSMate.Parser.Kicks = {
 	-- General
 	[DPSMate.BabbleSpell:GetTranslation("Tidal Charm")] = true,
 	[DPSMate.BabbleSpell:GetTranslation("Reckless Charge")] = true,
+	["Arcane Torrent"] = true,
 }
 DPSMate.Parser.player = UnitName("player")
 DPSMate.Parser.playerclass = nil
@@ -447,6 +449,7 @@ local FixCaps = function(capsstr)
 	return strupper(strsub(capsstr,1,1))..strlower(strsub(capsstr,2))
 end
 local overheal = 0
+local GetTime = GetTime
 
 -- Begin Functions
 
@@ -592,18 +595,22 @@ end
 
 function DPSMate.Parser:SpellDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, amount, school, resisted, blocked, absorbed, critical, glancing, crushing)
 	t = {}
-	if critical then t[1]=0;t[2]=critical end
-	if resisted then t[1]=0;t[3]=resisted end
-	if blocked then t[1]=0;t[4]=blocked end
-	if glancing then t[1]=0;t[5]=glancing end
-	if crushing then t[1]=0;t[6]=crushing end
+	if critical then t[1]=0;t[2]=1 end
+	if resisted then t[1]=0;t[3]=1 end
+	if blocked then t[1]=0;t[4]=1 end
+	if glancing then t[1]=0;t[5]=1 end
+	if crushing then t[1]=0;t[6]=1 end
 	if eventtype == "SPELL_PERIODIC_DAMAGE" then
 		spellName = spellName..DPSMate.L["periodic"]
 	end
 	if DPSMate:IsNPC(srcGUID) then
+		DB:UnregisterPotentialKick(srcName, spellName, GetTime())
+		if DPSMate.Parser.FailDT[spellName] then DB:BuildFail(2, spellName, dstName, srcName, amount) end
 		DB:EnemyDamage(false, DPSMateEDD, dstName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, 0, amount, srcName, t[4] or 0, t[6] or 0)
 		DB:DamageTaken(dstName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, 0, amount, srcName, t[6] or 0)
 	else
+		if DPSMate.Parser.Kicks[spellName] then DB:AssignPotentialKick(srcName, spellName, dstName, GetTime()) end
+		if DPSMate.Parser.DmgProcs[spellName] then DB:BuildBuffs(srcName, srcName, spellName, true) end
 		DB:EnemyDamage(true, DPSMateEDT, srcName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, t[3] or 0, amount, dstName, t[4] or 0, t[6] or 0)
 		DB:DamageDone(srcName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, t[3] or 0, amount, t[4] or 0, t[5] or 0)
 		if DPSMate.Parser.TargetParty[dstName] and DPSMate.Parser.TargetParty[srcName] then DB:BuildFail(1, dstName, srcName, spellName, amount) end
@@ -630,11 +637,11 @@ end
 
 function DPSMate.Parser:EnvironmentalDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,enviromentalType, amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing)
 	t = {}
-	if critical then t[1]=0;t[2]=critical end
-	if resisted then t[1]=0;t[3]=resisted end
-	if blocked then t[1]=0;t[4]=blocked end
-	if glancing then t[1]=0;t[5]=glancing end
-	if crushing then t[1]=0;t[6]=crushing end
+	if critical then t[1]=0;t[2]=1 end
+	if resisted then t[1]=0;t[3]=1 end
+	if blocked then t[1]=0;t[4]=1 end
+	if glancing then t[1]=0;t[5]=1 end
+	if crushing then t[1]=0;t[6]=1 end
 	DB:EnemyDamage(false, DPSMateEDD, dstName, FixCaps(enviromentalType), t[1] or 1, t[2] or 0, 0, 0, 0, 0, amount, DPSMate.L["penvironment"], t[4] or 0, t[6] or 0)
 	DB:DamageTaken(dstName, FixCaps(enviromentalType), t[1] or 1, t[2] or 0, 0, 0, 0, 0, amount, DPSMate.L["penvironment"], t[6] or 0)
 	DB:DeathHistory(dstName, DPSMate.L["penvironment"], FixCaps(enviromentalType), amount, t[1] or 1, t[2] or 0, 0, t[6] or 0)
@@ -663,14 +670,18 @@ function DPSMate.Parser:SpellAuraDispelled(timestamp, eventtype, srcGUID, srcNam
 end
 
 function DPSMate.Parser:SpellAuraApplied(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, auraType)
-	if not srcName then srcName = dstName end
-	if not DPSMate:IsNPC(dstGUID) then
+	if not srcName then srcName = DPSMate.Parser.player end
+	if DPSMate:IsNPC(dstGUID) then
+		if DPSMate.Parser.CC[spellName] then DB:BuildActiveCC(dstName, spellName) end
+		if DPSMate.Parser.Kicks[spellName] then DB:AssignPotentialKick(srcName, spellName, dstName, GetTime()) end
+	else
 		DPSMate.DB:BuildBuffs(srcName, dstName, spellName, false)
 	end
 end
 
 function DPSMate.Parser:SpellAuraRemoved(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, auraType)
 	if not DPSMate:IsNPC(dstGUID) then
+		DB:UnregisterPotentialKick(dstName, spellName, GetTime())
 		DPSMate.DB:DestroyBuffs(dstName, spellName)
 	end
 end
@@ -691,8 +702,10 @@ function DPSMate.Parser:Test(timestamp, eventtype, srcGUID, srcName, srcFlags, d
 	DPSMate:SendMessage("EXTRA ATTACKS: "..srcName.."/"..dstName.."/"..spellName.."/"..amount)
 end
 
-function DPSMate.Parser:Test2(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, failedType)
-	DPSMate:SendMessage("SpellFailed: "..(srcName or "NONE").."/"..(dstName or "NONE").."/"..(spellName or "NONE").."/"..(failedType  or "NONE"))
+function DPSMate.Parser:SpellCastStart(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool)
+	if DPSMate:IsNPC(srcGUID) then
+		DB:RegisterPotentialKick(srcName, spellName, GetTime())
+	end
 end
 
 Execute = {
@@ -717,9 +730,9 @@ Execute = {
 	["SPELL_INTERRUPT"] = DPSMate.Parser.Interrupt, -- Not taking stuns into account // Also not taking silences into account (atleast not aoe silence)
 	["UNIT_DIED"] = DPSMate.Parser.UnitDied,
 	["UNIT_DESTROYED"] = DPSMate.Parser.UnitDied,
+	["SPELL_CAST_START"] = DPSMate.Parser.SpellCastStart,
 	
 	--["SPELL_CAST_FAILED"] = DPSMate.Parser.Test2,
-	--["SPELL_CAST_SUCCESS"] = DPSMate.Parser.Test2,
 	
 	-- TO BE FOUND OUT
 	["SPELL_EXTRA_ATTACKS"] = DPSMate.Parser.Test -- Will find out what that is 
