@@ -38,7 +38,7 @@ end
 
 function DPSMate.Modules.DetailsDeaths:EvalTable(cname)
 	local arr = {}
-	for cat, val in db[DPSMateUser[cname or DetailsUser][1]] do -- user
+	for cat, val in pairs(db[DPSMateUser[cname or DetailsUser][1]]) do -- user
 		if val["i"][1] == 1 then
 			tinsert(arr, {val[1][1], val["i"][2], val})
 		end
@@ -107,7 +107,7 @@ function DPSMate.Modules.DetailsDeaths:SelectDetailsButton(i, comp)
 		_G("DPSMate_Details_"..comp.."Deaths_LogDetails_Child_Row"..i.."_HealIn"):SetText()
 		_G("DPSMate_Details_"..comp.."Deaths_LogDetails_Child_Row"..i.."_DamageIn"):SetText()
 	end
-	for cat, val in uArr[i][3] do
+	for cat, val in pairs(uArr[i][3]) do
 		if cat~="i" then
 			local name = DPSMate:GetUserById(val[1])
 			local type,r,g,b = "HIT", DPSMate:GetClassColor(DPSMateUser[name][2])

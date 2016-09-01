@@ -58,7 +58,7 @@ function DPSMate.Modules.Procs:GetSortedTable(arr,k)
 			for ca, va in pairs(val) do -- 3 ability
 				local name = DPSMate:GetAbilityById(ca)
 				if va[4] or nonProcProcs[name] or DPSMate.Parser.DmgProcs[name] then
-					for c, v in va[1] do -- 1 Ability
+					for c, v in pairs(va[1]) do -- 1 Ability
 						CV=CV+1
 					end
 				end
@@ -91,7 +91,7 @@ function DPSMate.Modules.Procs:EvalTable(user, k)
 		local name = DPSMate:GetAbilityById(cat)
 		if val[4] or nonProcProcs[name] or DPSMate.Parser.DmgProcs[name] then
 			local CV = 0
-			for c, v in val[1] do -- 1 Ability
+			for c, v in pairs(val[1]) do -- 1 Ability
 				CV=CV+1
 			end
 			if temp[cat] then temp[cat]=temp[cat]+CV else temp[cat]=CV end

@@ -36,10 +36,10 @@ function DPSMate.Modules.HealingAndAbsorbs:GetSortedTable(arr, k)
 								for cet, vel in pairs(ve) do
 									if cet~="i" then
 										local totalHits = 0
-										for qq,ss in vel do
+										for qq,ss in pairs(vel) do
 											totalHits = totalHits + ss
 										end
-										for qq,ss in vel do
+										for qq,ss in pairs(vel) do
 											local p = 5
 											if DPSMateDamageTaken[1][cat] then
 												if DPSMateDamageTaken[1][cat][cet] then
@@ -96,11 +96,11 @@ function DPSMate.Modules.HealingAndAbsorbs:GetSortedTable(arr, k)
 		
 		-- Merge tables
 		total=total+total2
-		for cat, val in b do
+		for cat, val in pairs(b) do
 			g[cat] = val
 			--if d[cat] then g[cat] = g[cat] + d[cat] end
 		end
-		for cat, val in d do
+		for cat, val in pairs(d) do
 			if g[cat] then
 				g[cat] = g[cat] + val
 			else
@@ -108,7 +108,7 @@ function DPSMate.Modules.HealingAndAbsorbs:GetSortedTable(arr, k)
 			end
 			--if b[cat] then g[cat] = g[cat] + b[cat] end
 		end
-		for cat, val in g do
+		for cat, val in pairs(g) do
 			local i = 1
 			while true do
 				if (not f[i]) then
@@ -145,10 +145,10 @@ function DPSMate.Modules.HealingAndAbsorbs:EvalTable(user, k)
 							for cet, vel in pairs(ve) do
 								if cet~="i" then
 									local totalHits = 0
-									for qq,ss in vel do
+									for qq,ss in pairs(vel) do
 										totalHits = totalHits + ss
 									end
-									for qq,ss in vel do
+									for qq,ss in pairs(vel) do
 										local p = 5
 										if DPSMateDamageTaken[1][cat] then
 											if DPSMateDamageTaken[1][cat][cet] then

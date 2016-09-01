@@ -34,10 +34,10 @@ function DPSMate.Modules.AbsorbsTaken:GetSortedTable(arr,k)
 							for cet, vel in pairs(ve) do
 								if cet~="i" then
 									local totalHits = 0
-									for qq,ss in vel do
+									for qq,ss in pairs(vel) do
 										totalHits = totalHits + ss
 									end
-									for qq,ss in vel do
+									for qq,ss in pairs(vel) do
 										local p = 5
 										if DPSMateDamageTaken[1][cat] then
 											--DPSMate:SendMessage("VTEST: 1")
@@ -104,7 +104,7 @@ end
 function DPSMate.Modules.AbsorbsTaken:EvalTable(user, k)
 	local arr = DPSMate:GetMode(k)
 	local b, a, total = {}, {}, 0
-	for cat, val in arr[user[1]] do -- 28 Target
+	for cat, val in pairs(arr[user[1]]) do -- 28 Target
 		local ownername = DPSMate:GetUserById(cat)
 		local PerTargetAbsorb, ta, tb = 0, {}, {}
 		for ca, va in pairs(val) do -- Power Word Shield
@@ -116,10 +116,10 @@ function DPSMate.Modules.AbsorbsTaken:EvalTable(user, k)
 					for ce, ve in pairs(v) do
 						if ce~="i" then
 							local totalHits = 0
-							for qq,ss in ve do
+							for qq,ss in pairs(ve) do
 								totalHits = totalHits + ss
 							end
-							for qq,ss in ve do
+							for qq,ss in pairs(ve) do
 								local p = 5
 								if DPSMateDamageTaken[1][user[1]] then
 									if DPSMateDamageTaken[1][user[1]][ce] then
@@ -155,9 +155,9 @@ function DPSMate.Modules.AbsorbsTaken:EvalTable(user, k)
 					PerAbilityAbsorb=PerAbilityAbsorb+PerShieldAbsorb
 				end
 				PerTargetAbsorb=PerTargetAbsorb+PerAbilityAbsorb
-				for ut, utt in temp do
+				for ut, utt in pairs(temp) do
 					local CVV, qa, qd = 0, {}, {}
-					for qt, qtt in utt do
+					for qt, qtt in pairs(utt) do
 						CVV = CVV + qtt
 						if qtt>0 then
 							local i = 1

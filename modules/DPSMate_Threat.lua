@@ -18,10 +18,10 @@ local strformat = string.format
 
 function DPSMate.Modules.Threat:GetSortedTable(arr, k)
 	local b, a, total = {}, {}, 0
-	for cat, val in arr do
+	for cat, val in pairs(arr) do
 		local CV = 0
-		for ca, va in val do
-			for c, v in va do
+		for ca, va in pairs(val) do
+			for c, v in pairs(va) do
 				CV = CV + v[1]
 			end
 		end
@@ -50,9 +50,9 @@ function DPSMate.Modules.Threat:EvalTable(user, k)
 	local a,d, total = {}, {}, 0
 	local arr = DPSMate:GetMode(k)
 	if not arr[user[1]] then return end
-	for cat, val in arr[user[1]] do -- targets
+	for cat, val in pairs(arr[user[1]]) do -- targets
 		local CV, e, q = 0, {}, {}
-		for ca, va in val do -- ability
+		for ca, va in pairs(val) do -- ability
 			CV = CV + va[1]
 			local t = 1
 			while true do
@@ -90,7 +90,7 @@ function DPSMate.Modules.Threat:GetSettingValues(arr, cbt, k,ecbt)
 	local name, value, perc, sortedTable, total, a, p, strt = {}, {}, {}, {}, 0, 0, "", {[1]="",[2]=""}
 	if DPSMateSettings["windows"][k]["numberformat"] == 2 then p = "K" end
 	sortedTable, total, a = DPSMate.Modules.Threat:GetSortedTable(arr, k)
-	for cat, val in sortedTable do
+	for cat, val in pairs(sortedTable) do
 		local dmg, tot, sort = DPSMate:FormatNumbers(val, total, sortedTable[1], k)
 		if dmg==0 then break end
 		local str = {[1]="",[2]="",[3]="",[4]=""}

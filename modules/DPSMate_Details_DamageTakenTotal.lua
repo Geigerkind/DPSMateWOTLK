@@ -123,14 +123,14 @@ function DPSMate.Modules.DetailsDamageTakenTotal:UpdateStackedGraph()
 	local label = {}
 	local maxX, maxY = 0,0
 	local p = {}
-	for cat, val in db do
+	for cat, val in pairs(db) do
 		local temp = {}
 		local user = DPSMate:GetUserById(cat)
 		if DPSMate:ApplyFilter(curKey, user) then
-			for ca, va in val do
+			for ca, va in pairs(val) do
 				if ca~="i" then
-					for q,s in va do
-						for c,v in s["i"] do
+					for q,s in pairs(va) do
+						for c,v in pairs(s["i"]) do
 							local i = 1
 							while true do
 								if not temp[i] then
@@ -158,7 +158,7 @@ function DPSMate.Modules.DetailsDamageTakenTotal:UpdateStackedGraph()
 			tinsert(Data1, 1, temp)
 		end
 	end
-	for cat, val in p do
+	for cat, val in pairs(p) do
 		if maxY<val then
 			maxY = val
 		end
@@ -210,15 +210,15 @@ function DPSMate.Modules.DetailsDamageTakenTotal:AddTotalDataSeries()
 	local sumTable, newArr = {[0]=0}, {}
 	
 	local temp = {}
-	for cat, val in db do
+	for cat, val in pairs(db) do
 		local user = DPSMate:GetUserById(cat)
 		if DPSMate:ApplyFilter(curKey, user) then
 			temp[user] = true
-			for ca, va in val do
+			for ca, va in pairs(val) do
 				if ca~="i" then
-					for c,v in va do
+					for c,v in pairs(va) do
 						if v["i"] then
-							for q,s in v["i"] do
+							for q,s in pairs(v["i"]) do
 								if sumTable[q] then
 									sumTable[q] = sumTable[q] + s
 								else
@@ -235,7 +235,7 @@ function DPSMate.Modules.DetailsDamageTakenTotal:AddTotalDataSeries()
 	local tl = DPSMate:TableLength(temp)
 	tl = floor(tl-0.5*tl)
 	
-	for cat, val in sumTable do
+	for cat, val in pairs(sumTable) do
 		local i=1
 		while true do
 			if (not newArr[i]) then 
@@ -263,7 +263,7 @@ end
 -- crushes?
 function DPSMate.Modules.DetailsDamageTakenTotal:GetTableValues()
 	local arr, total = {}, 0
-	for cat, val in db do
+	for cat, val in pairs(db) do
 		local name = DPSMate:GetUserById(cat)
 		if DPSMate:ApplyFilter(curKey, name) then
 			local CV, crit, totCrit, miss, totMiss, hit, totHit, crush, totOverall = 0, 0, 0.000001, 0, 0.000001, 0, 0.000001, 0, 0
@@ -295,7 +295,7 @@ function DPSMate.Modules.DetailsDamageTakenTotal:GetTableValues()
 		end
 	end
 	local newArr = {}
-	for cat, val in arr do
+	for cat, val in pairs(arr) do
 		local i = 1
 		while true do
 			if (not newArr[i]) then
@@ -337,11 +337,11 @@ function DPSMate.Modules.DetailsDamageTakenTotal:SortLineTable(uid)
 	local user = DPSMate:GetUserById(uid)
 	local newArr = {}
 	-- user
-	for cat, val in db[DPSMateUser[user][1]] do
+	for cat, val in pairs(db[DPSMateUser[user][1]]) do
 		if cat~="i" then
-			for ca, va in val do
+			for ca, va in pairs(val) do
 				if va["i"] then
-					for c,v in va["i"] do
+					for c,v in pairs(va["i"]) do
 						local i = 1
 						while true do
 							if not newArr[i] then
@@ -390,7 +390,7 @@ function DPSMate.Modules.DetailsDamageTakenTotal:RemoveLinesButton(uid, obj)
 	DPSMate_Details_DamageTakenTotal_DiagramLegend:Show()
 	
 	g:Show()
-	for cat, val in buttons do
+	for cat, val in pairs(buttons) do
 		if val[2]==uid then
 			tinsert(ColorTable, 1, val[1])
 			tremove(buttons, cat)

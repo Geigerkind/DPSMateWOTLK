@@ -119,13 +119,13 @@ function DPSMate.Modules.DetailsAbsorbsTaken:UpdateSumGraph()
 	g7:SetXLabels(true)
 	
 	local ata={{0,0}}
-	for cat, val in DPSMate:ScaleDown(sumTable, min) do
+	for cat, val in pairs(DPSMate:ScaleDown(sumTable, min)) do
 		--tinsert(ata, {val[1],val[2], self:CheckProcs(DPSMate_Details_CompareEDD.proc, val[1]+min, DetailsUserComp)})
 		tinsert(ata, {val[1],val[2], {}})
 	end
 	
 	local Data2={{0,0}}
-	for cat, val in DPSMate:ScaleDown(sumTableTwo, minT) do
+	for cat, val in pairs(DPSMate:ScaleDown(sumTableTwo, minT)) do
 		--tinsert(Data2, {val[1],val[2], self:CheckProcs(DPSMate_Details_EDD.proc, val[1]+minT)})
 		tinsert(Data2, {val[1],val[2], {}})
 	end
@@ -396,7 +396,7 @@ function DPSMate.Modules.DetailsAbsorbsTaken:UpdateLineGraph(gg,comp, cname)
 	gg:SetXLabels(true)
 
 	local Data1={{0,0}}
-	for cat, val in sumTable do
+	for cat, val in pairs(sumTable) do
 		tinsert(Data1, {val[1],val[2], {}})
 	end
 	
@@ -437,7 +437,7 @@ function DPSMate.Modules.DetailsAbsorbsTaken:UpdateStackedGraph(gg, comp, cname)
 		if db[DPSMateUser[cname or DetailsUser][1]] then
 			if db[DPSMateUser[cname or DetailsUser][1]][uArr[dSel]] then
 				local ownername = DPSMate:GetUserById(uArr[dSel])
-				for ca, va in db[DPSMateUser[cname or DetailsUser][1]][uArr[dSel]]["i"] do
+				for ca, va in pairs(db[DPSMateUser[cname or DetailsUser][1]][uArr[dSel]]["i"]) do
 					local i, dmg = 1, 5
 					if DPSMateDamageTaken[1][DPSMateUser[cname or DetailsUser][1]] then
 						if DPSMateDamageTaken[1][DPSMateUser[cname or DetailsUser][1]][va[2]] then
@@ -470,19 +470,19 @@ function DPSMate.Modules.DetailsAbsorbsTaken:UpdateStackedGraph(gg, comp, cname)
 				end
 			end
 		end
-		for cat, val in temp do
+		for cat, val in pairs(temp) do
 			tinsert(label, 1, DPSMate:GetAbilityById(cat))
 			tinsert(Data1, 1, val)
 		end
 		
 		local min
-		for cat, val in Data1 do
+		for cat, val in pairs(Data1) do
 			local pmin = DPSMate:GetMinValue(val, 1)
 			if not min or pmin<min then
 				min = pmin
 			end
 		end
-		for cat, val in Data1 do
+		for cat, val in pairs(Data1) do
 			Data1[cat] = DPSMate:ScaleDown(val, min)
 		end
 		
@@ -490,9 +490,9 @@ function DPSMate.Modules.DetailsAbsorbsTaken:UpdateStackedGraph(gg, comp, cname)
 	else
 		-- Add absorbs points
 		local temp = {}
-		for cat, val in db[DPSMateUser[cname or DetailsUser][1]] do
+		for cat, val in pairs(db[DPSMateUser[cname or DetailsUser][1]]) do
 			local ownername = DPSMate:GetUserById(cat)
-			for ca, va in val["i"] do
+			for ca, va in pairs(val["i"]) do
 				local i, dmg = 1, 5
 				if DPSMateDamageTaken[1][DPSMateUser[cname or DetailsUser][1]] then
 					if DPSMateDamageTaken[1][DPSMateUser[cname or DetailsUser][1]][va[2]] then
@@ -524,7 +524,7 @@ function DPSMate.Modules.DetailsAbsorbsTaken:UpdateStackedGraph(gg, comp, cname)
 				end
 			end
 		end
-		for cat, val in temp do
+		for cat, val in pairs(temp) do
 			tinsert(label, 1, DPSMate:GetAbilityById(cat))
 			tinsert(Data1, 1, val)
 		end
@@ -541,7 +541,7 @@ function DPSMate.Modules.DetailsAbsorbsTaken:SortLineTable(arr, b, cname)
 	local newArr = {}
 	if b then
 		local ownername = DPSMate:GetUserById(b)
-		for ca, va in arr[DPSMateUser[cname or DetailsUser][1]][b]["i"] do
+		for ca, va in pairs(arr[DPSMateUser[cname or DetailsUser][1]][b]["i"]) do
 			local i, dmg = 1, 5
 			if DPSMateDamageTaken[1][DPSMateUser[cname or DetailsUser][1]] then
 				if DPSMateDamageTaken[1][DPSMateUser[cname or DetailsUser][1]][va[2]] then
@@ -572,7 +572,7 @@ function DPSMate.Modules.DetailsAbsorbsTaken:SortLineTable(arr, b, cname)
 			end
 		end	
 	else
-		for cat, val in arr[DPSMateUser[cname or DetailsUser][1]] do
+		for cat, val in pairs(arr[DPSMateUser[cname or DetailsUser][1]]) do
 			local ownername = DPSMate:GetUserById(cat)
 			for ca, va in pairs(val["i"]) do
 				local i, dmg = 1, 5

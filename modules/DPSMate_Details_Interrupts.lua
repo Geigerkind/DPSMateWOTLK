@@ -40,12 +40,12 @@ end
 
 function DPSMate.Modules.DetailsInterrupts:EvalTable(cname)
 	local a, b, total = {}, {}, 0
-	for cat, val in db[DPSMateUser[cname or DetailsUser][1]] do -- 41 Ability
+	for cat, val in pairs(db[DPSMateUser[cname or DetailsUser][1]]) do -- 41 Ability
 		if cat~="i" then
 			local CV, ta, tb = 0, {}, {}
-			for ca, va in val do
+			for ca, va in pairs(val) do
 				local taa, tbb = {}, {}
-				for c, v in va do
+				for c, v in pairs(va) do
 					CV = CV + v
 					local i = 1
 					while true do

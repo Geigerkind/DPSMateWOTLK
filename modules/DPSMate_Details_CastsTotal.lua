@@ -26,11 +26,11 @@ end
 
 function DPSMate.Modules.DetailsCastsTotal:EvalTable()
 	local z, b = {}, {}
-	for cat, _ in DPSMateDamageDone[curKey] do
+	for cat, _ in pairs(DPSMateDamageDone[curKey]) do
 		local user = DPSMate:GetUserById(cat)
 		if DPSMate:ApplyFilter(curKey, user) then
 			local a,_,c = DPSMate.Modules.Casts:EvalTable(DPSMateUser[DPSMate:GetUserById(cat)], curKey)
-			for ca, va in a do
+			for ca, va in pairs(a) do
 				if z[c[ca]] then
 					z[c[ca]] = z[c[ca]] + va
 				else
@@ -39,7 +39,7 @@ function DPSMate.Modules.DetailsCastsTotal:EvalTable()
 			end
 		end
 	end
-	for cat, val in z do
+	for cat, val in pairs(z) do
 		local i=1
 		while true do
 			if not b[i] then

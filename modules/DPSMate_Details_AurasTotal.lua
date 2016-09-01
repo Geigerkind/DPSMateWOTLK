@@ -343,13 +343,13 @@ function DPSMate.Modules.DetailsAurasTotal:UpdateStackedGraph(gg, cname)
 	local label = {}
 	local temp = {}
 	
-	for cat, val in db do -- ability
+	for cat, val in pairs(db) do -- ability
 		local user = DPSMate:GetUserById(cat)
 		if DPSMate:ApplyFilter(curKey, user) then
-			for ca,va in val do 
+			for ca,va in pairs(val) do 
 				local abname = DPSMate:GetAbilityById(ca)
 				if not temp[abname] then temp[abname]={} end
-				for c, v in va[1] do
+				for c, v in pairs(va[1]) do
 					local time = floor(v) -- Performance
 					if temp[abname][time] then 
 						temp[abname][time]=temp[abname][time]+1
@@ -360,9 +360,9 @@ function DPSMate.Modules.DetailsAurasTotal:UpdateStackedGraph(gg, cname)
 			end
 		end
 	end
-	for cat, val in temp do
+	for cat, val in pairs(temp) do
 		local arr = {}
-		for ca, va in val do
+		for ca, va in pairs(val) do
 			tinsert(arr, {ca,va})
 		end
 		tinsert(Data1, arr)
@@ -379,11 +379,11 @@ end
 -- Making an average uptime
 function DPSMate.Modules.DetailsAurasTotal:SortTable()
 	local t, u = {}, {}
-	for cat, _ in db do
+	for cat, _ in pairs(db) do
 		local user = DPSMate:GetUserById(cat)
 		if DPSMate:ApplyFilter(curKey, user) then
 			local a,_,b,c = DPSMate.Modules.AurasUptimers:EvalTable(DPSMateUser[user], curKey)
-			for ca,va in a do
+			for ca,va in pairs(a) do
 				local name = DPSMate:GetAbilityById(va)
 				if Debuffs[name] then
 					if t[name] then
@@ -405,7 +405,7 @@ function DPSMate.Modules.DetailsAurasTotal:SortTable()
 	end
 	-- Sorting it by amount
 	local z,y = {}, {}
-	for cat, val in t do
+	for cat, val in pairs(t) do
 		local i=1
 		while true do
 			if not z[i] then
@@ -418,7 +418,7 @@ function DPSMate.Modules.DetailsAurasTotal:SortTable()
 			i=i+1
 		end
 	end
-	for cat, val in u do
+	for cat, val in pairs(u) do
 		local i=1
 		while true do
 			if not y[i] then
@@ -436,7 +436,7 @@ function DPSMate.Modules.DetailsAurasTotal:SortTable()
 end
 
 function DPSMate.Modules.DetailsAurasTotal:CleanTables()
-	for _, val in {"Buffs", "Debuffs"} do
+	for _, val in pairs({"Buffs", "Debuffs"}) do
 		local path = "DPSMate_Details_AurasTotal_"..val.."_Row"
 		for i=1, 6 do
 			_G(path..i.."_Icon"):SetTexture()

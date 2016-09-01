@@ -38,10 +38,10 @@ end
 
 function DPSMate.Modules.DetailsCCBreakerTotal:EvalTable()
 	local a = {}
-	for cat, val in db do -- each user
+	for cat, val in pairs(db) do -- each user
 		local user = DPSMate:GetUserById(cat)
 		if DPSMate:ApplyFilter(curKey, user) then
-			for ca, va in val do -- each ab?
+			for ca, va in pairs(val) do -- each ab?
 				local ab = DPSMate:GetAbilityById(va[1])
 				local i=1
 				while true do

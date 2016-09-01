@@ -277,7 +277,7 @@ end
 function DPSMate:TableLength(t)
 	local count = 0
 	if (t) then
-		for _,_ in pairs(t) do
+		for _ in pairs(t) do
 			count = count + 1
 		end
 	end
@@ -392,8 +392,11 @@ function DPSMate:GetNPCID(guid)
 	return tonumber(guid:sub(-10, -7), 16)
 end
 
+local savedNPCS = {}
 function DPSMate:IsNPC(guid)
+	if savedNPCS[guid] then return true end
 	if self:GetNPCID(guid)>0 then
+		savedNPCS[guid] = true
 		return true
 	end
 	return false

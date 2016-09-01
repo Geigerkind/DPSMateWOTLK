@@ -430,6 +430,7 @@ local _G = getfenv(0)
 local string_find = string.find
 local UL = UnitLevel
 local t = {}
+local UnitName = UnitName
 local spellSchoolToString = {
 	[1] = "physical",
 	[2] = "holy",
@@ -445,6 +446,7 @@ local strlower = string.lower
 local FixCaps = function(capsstr)
 	return strupper(strsub(capsstr,1,1))..strlower(strsub(capsstr,2))
 end
+local overheal = 0
 
 -- Begin Functions
 
@@ -522,7 +524,7 @@ end
 function DPSMate.Parser:GetUnitByName(target)
 	local unit = self.TargetParty[target]
 	if not unit then
-		if target==UnitName("player") then
+		if target==self.player then
 			unit="player"
 		elseif target==UnitName("target") then
 			unit="target"
@@ -638,6 +640,61 @@ function DPSMate.Parser:EnvironmentalDamage(timestamp, eventtype, srcGUID, srcNa
 	DB:DeathHistory(dstName, DPSMate.L["penvironment"], FixCaps(enviromentalType), amount, t[1] or 1, t[2] or 0, 0, t[6] or 0)
 end
 
+function DPSMate.Parser:SpellHeal(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName, spellSchool, amount, critical)
+	t = {}
+	if critical then t[1]=0;t[2]=critical end
+	if eventtype == "SPELL_PERIODIC_HEAL" then
+		spellName = spellName..DPSMate.L["periodic"]
+	end
+	overheal = DPSMate.Parser:GetOverhealByName(amount, dstName) -- Gotta localize those functions
+	DB:HealingTaken(DPSMateHealingTaken, dstName, spellName, t[1] or 1, t[2] or 0, amount, srcName)
+	DB:HealingTaken(DPSMateEHealingTaken, dstName, spellName, t[1] or 1, t[2] or 0, amount-overheal, srcName)
+	DB:Healing(0, DPSMateEHealing, srcName, spellName, t[1] or 1, t[2] or 0, amount-overheal, dstName)
+	DB:Healing(1, DPSMateTHealing, srcName, spellName, t[1] or 1, t[2] or 0, amount, dstName)
+	DB:DeathHistory(dstName, srcName, spellName, amount, t[1] or 1, t[2] or 0, 1, 0)
+	if overheal>0 then
+		DB:Healing(2, DPSMateOverhealing, srcName, spellName, t[1] or 1, t[2] or 0, overheal, dstName)
+		DB:HealingTaken(DPSMateOverhealingTaken, dstName, spellName, t[1] or 1, t[2] or 0, overheal, srcName)
+	end
+end
+
+function DPSMate.Parser:SpellAuraDispelled(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, extraSpellId, extraSpellName, extraSpellSchool)
+	DPSMate.DB:Dispels(srcName, spellName, dstName, extraSpellName)
+end
+
+function DPSMate.Parser:SpellAuraApplied(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, auraType)
+	if not srcName then srcName = dstName end
+	if not DPSMate:IsNPC(dstGUID) then
+		DPSMate.DB:BuildBuffs(srcName, dstName, spellName, false)
+	end
+end
+
+function DPSMate.Parser:SpellAuraRemoved(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, auraType)
+	if not DPSMate:IsNPC(dstGUID) then
+		DPSMate.DB:DestroyBuffs(dstName, spellName)
+	end
+end
+
+function DPSMate.Parser:Interrupt(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, extraSpellId, extraSpellName, extraSpellSchool)
+	DPSMate.DB:Kick(srcName, dstName, spellName, extraSpellName)
+end
+
+function DPSMate.Parser:UnitDied(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags) -- Killingblows :D
+	if DPSMate:IsNPC(dstGUID) then
+		DB:Attempt(false, true, dstName)
+	else
+		DB:UnregisterDeath(dstName)
+	end
+end
+
+function DPSMate.Parser:Test(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, amount)
+	DPSMate:SendMessage("EXTRA ATTACKS: "..srcName.."/"..dstName.."/"..spellName.."/"..amount)
+end
+
+function DPSMate.Parser:Test2(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, failedType)
+	DPSMate:SendMessage("SpellFailed: "..(srcName or "NONE").."/"..(dstName or "NONE").."/"..(spellName or "NONE").."/"..(failedType  or "NONE"))
+end
+
 Execute = {
 	["SWING_DAMAGE"] = DPSMate.Parser.SwingDamage, 
 	["SWING_MISSED"] = DPSMate.Parser.SwingMissed,
@@ -651,56 +708,44 @@ Execute = {
 	["RANGE_MISSED"] = DPSMate.Parser.SpellMissed,
 	["SPELL_PERIODIC_MISSED"] = DPSMate.Parser.SpellMissed,
 	["DAMAGE_SHIELD_MISSED"] = DPSMate.Parser.SpellMissed,
+	["SPELL_HEAL"] = DPSMate.Parser.SpellHeal,
+	["SPELL_PERIODIC_HEAL"] = DPSMate.Parser.SpellHeal,
+	["SPELL_DISPEL"] = DPSMate.Parser.SpellAuraDispelled,
+	["SPELL_STOLEN"] = DPSMate.Parser.SpellAuraDispelled, -- Merging purge and dispel for now
+	["SPELL_AURA_APPLIED"] = DPSMate.Parser.SpellAuraApplied,
+	["SPELL_AURA_REMOVED"] = DPSMate.Parser.SpellAuraRemoved,
+	["SPELL_INTERRUPT"] = DPSMate.Parser.Interrupt, -- Not taking stuns into account // Also not taking silences into account (atleast not aoe silence)
+	["UNIT_DIED"] = DPSMate.Parser.UnitDied,
+	["UNIT_DESTROYED"] = DPSMate.Parser.UnitDied,
+	
+	--["SPELL_CAST_FAILED"] = DPSMate.Parser.Test2,
+	--["SPELL_CAST_SUCCESS"] = DPSMate.Parser.Test2,
+	
+	-- TO BE FOUND OUT
+	["SPELL_EXTRA_ATTACKS"] = DPSMate.Parser.Test -- Will find out what that is 
+	
+	-- TO BE TESTED
+	--["SPELL_DRAIN"] = Recount.SpellDrainLeech, -- Elsia: Drains and leeches.
+	--["SPELL_LEECH"] = Recount.SpellDrainLeech,
+	--["SPELL_PERIODIC_DRAIN"] = Recount.SpellDrainLeech,
+	--["SPELL_PERIODIC_LEECH"] = Recount.SpellDrainLeech,
+	--["SPELL_ENERGIZE"] = Recount.SpellEnergize, -- Elsia: Energize
+	--["SPELL_PERIODIC_ENERGIZE"] = Recount.SpellEnergize,
+	
+	-- TO BE IMPLEMENTED
+	--["SPELL_AURA_APPLIED_DOSE"] = DPSMate.Parser.Test,  -- Getting a stack more of Vengeance for example
+	--["SPELL_AURA_REMOVED_DOSE"] = DPSMate.Parser.Test,
+	
+	-- Maybe for shields?
+	--["SPELL_AURA_BROKEN"] = Recount.SpellAuraBroken, -- New with 2.4.3
+	--["SPELL_AURA_BROKEN_SPELL"] = Recount.SpellAuraBroken, -- New with 2.4.3
+	--["SPELL_AURA_REFRESH"] = Recount.SpellAuraAppliedRemoved, -- New with 2.4.3
+	
+	-- Maybe I can do sth with this
+	--["SPELL_CAST_START"] = Recount.SpellCastStartSuccess, -- Elsia: Spell casts
+	--["SPELL_CAST_SUCCESS"] = Recount.SpellCastStartSuccess,
+	--["SPELL_INSTAKILL"] = Recount.SpellCastStartSuccess,
+	--["SPELL_DURABILITY_DAMAGE"] = Recount.SpellCastStartSuccess,
+	--["SPELL_DURABILITY_DAMAGE_ALL"] = Recount.SpellCastStartSuccess,
+	--["SPELL_CAST_FAILED"] = Recount.SpellCastFailed, -- Elsia: Spell aborts/fails
 }
-
---[[
-Execute = {
-	["CHAT_MSG_COMBAT_HOSTILE_DEATH"] = function(arg1) DPSMate.Parser:CombatHostileDeaths(arg1) end,
-	["CHAT_MSG_COMBAT_FRIENDLY_DEATH"] = function(arg1) DPSMate.Parser:CombatFriendlyDeath(arg1) end,
-	["PLAYER_AURAS_CHANGED"] = function(arg1) DPSMate.Parser:UnitAuraDispels(arg1) end, -- !
-	["CHAT_MSG_SPELL_BREAK_AURA"] = function(arg1) DPSMate.Parser:SpellBreakAura(arg1) end,
-	["CHAT_MSG_SPELL_AURA_GONE_PARTY"] = function(arg1) DPSMate.Parser:SpellAuraGoneParty(arg1) end,
-	["CHAT_MSG_SPELL_AURA_GONE_OTHER"] = function(arg1) DPSMate.Parser:SpellAuraGoneOther(arg1) end,
-	["CHAT_MSG_SPELL_AURA_GONE_SELF"] = function(arg1) DPSMate.Parser:SpellAuraGoneSelf(arg1) end,
-	["CHAT_MSG_SPELL_PERIODIC_PARTY_BUFFS"] = function(arg1) DPSMate.Parser:SpellPeriodicFriendlyPlayerBuffs(arg1);DPSMate.Parser:SpellPeriodicFriendlyPlayerBuffsAbsorb(arg1) end,
-	["CHAT_MSG_SPELL_PARTY_BUFF"] = function(arg1) DPSMate.Parser:SpellHostilePlayerBuff(arg1);DPSMate.Parser:SpellHostilePlayerBuffDispels(arg1) end,
-	["CHAT_MSG_SPELL_PERIODIC_HOSTILEPLAYER_BUFFS"] = function(arg1) DPSMate.Parser:SpellPeriodicFriendlyPlayerBuffs(arg1);DPSMate.Parser:SpellPeriodicFriendlyPlayerBuffsAbsorb(arg1) end,
-	["CHAT_MSG_SPELL_HOSTILEPLAYER_BUFF"] = function(arg1) DPSMate.Parser:SpellHostilePlayerBuff(arg1);DPSMate.Parser:SpellHostilePlayerBuffDispels(arg1);DPSMate.Parser:HostilePlayerSpellDamageInterrupts(arg1);DPSMate.Parser:SpellPeriodicFriendlyPlayerBuffsAbsorb(arg1) end,
-	["CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_BUFFS"] = function(arg1) DPSMate.Parser:SpellPeriodicFriendlyPlayerBuffs(arg1);DPSMate.Parser:SpellPeriodicFriendlyPlayerBuffsAbsorb(arg1) end,
-	["CHAT_MSG_SPELL_FRIENDLYPLAYER_BUFF"] = function(arg1) DPSMate.Parser:SpellHostilePlayerBuff(arg1);DPSMate.Parser:SpellHostilePlayerBuffDispels(arg1) end,
-	["CHAT_MSG_SPELL_PERIODIC_SELF_BUFFS"] = function(arg1) DPSMate.Parser:SpellPeriodicSelfBuff(arg1);DPSMate.Parser:SpellPeriodicSelfBuffAbsorb(arg1) end,
-	["CHAT_MSG_SPELL_SELF_BUFF"] = function(arg1) DPSMate.Parser:SpellSelfBuff(arg1);DPSMate.Parser:SpellSelfBuffDispels(arg1) end,
-	["CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE"] = function(arg1) DPSMate.Parser:SpellPeriodicDamageTaken(arg1) end,
-	["CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE"] = function(arg1) DPSMate.Parser:CreatureVsCreatureSpellDamage(arg1);DPSMate.Parser:CreatureVsCreatureSpellDamageAbsorb(arg1);DPSMate.Parser:CreatureVsCreatureSpellDamageInterrupts(arg1) end,
-	["CHAT_MSG_COMBAT_CREATURE_VS_CREATURE_MISSES"] = function(arg1) DPSMate.Parser:CreatureVsCreatureMisses(arg1) end,
-	["CHAT_MSG_COMBAT_CREATURE_VS_CREATURE_HITS"] = function(arg1) DPSMate.Parser:CreatureVsCreatureHits(arg1);DPSMate.Parser:CreatureVsCreatureHitsAbsorb(arg1) end,
-	["CHAT_MSG_SPELL_CREATURE_VS_PARTY_DAMAGE"] = function(arg1) DPSMate.Parser:CreatureVsCreatureSpellDamage(arg1);DPSMate.Parser:CreatureVsCreatureSpellDamageAbsorb(arg1) end,
-	["CHAT_MSG_SPELL_PERIODIC_PARTY_DAMAGE"] = function(arg1) DPSMate.Parser:SpellPeriodicDamageTaken(arg1) end,
-	["CHAT_MSG_COMBAT_CREATURE_VS_PARTY_MISSES"] = function(arg1) DPSMate.Parser:CreatureVsCreatureMisses(arg1) end,
-	["CHAT_MSG_COMBAT_CREATURE_VS_PARTY_HITS"] = function(arg1) DPSMate.Parser:CreatureVsCreatureHits(arg1);DPSMate.Parser:CreatureVsCreatureHitsAbsorb(arg1) end,
-	["CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE"] = function(arg1) DPSMate.Parser:PeriodicSelfDamage(arg1) end,
-	["CHAT_MSG_SPELL_CREATURE_VS_SELF_DAMAGE"] = function(arg1) DPSMate.Parser:CreatureVsSelfSpellDamage(arg1);DPSMate.Parser:CreatureVsSelfSpellDamageAbsorb(arg1) end,
-	["CHAT_MSG_COMBAT_CREATURE_VS_SELF_MISSES"] = function(arg1) DPSMate.Parser:CreatureVsSelfMisses(arg1) end,
-	["CHAT_MSG_COMBAT_CREATURE_VS_SELF_HITS"] = function(arg1) DPSMate.Parser:CreatureVsSelfHits(arg1);DPSMate.Parser:CreatureVsSelfHitsAbsorb(arg1) end,
-	["CHAT_MSG_SPELL_DAMAGESHIELDS_ON_OTHERS"] = function(arg1) DPSMate.Parser:SpellDamageShieldsOnOthers(arg1) end,
-	["CHAT_MSG_SPELL_DAMAGESHIELDS_ON_SELF"] = function(arg1) DPSMate.Parser:SpellDamageShieldsOnSelf(arg1) end,
-	["CHAT_MSG_COMBAT_HOSTILEPLAYER_MISSES"] = function(arg1) DPSMate.Parser:FriendlyPlayerMisses(arg1) end,
-	["CHAT_MSG_COMBAT_FRIENDLYPLAYER_MISSES"] = function(arg1) DPSMate.Parser:FriendlyPlayerMisses(arg1) end,
-	["CHAT_MSG_COMBAT_HOSTILEPLAYER_HITS"] = function(arg1) DPSMate.Parser:FriendlyPlayerHits(arg1) end,
-	["CHAT_MSG_COMBAT_FRIENDLYPLAYER_HITS"] = function(arg1) DPSMate.Parser:FriendlyPlayerHits(arg1) end,
-	["CHAT_MSG_SPELL_FRIENDLYPLAYER_DAMAGE"] = function(arg1) DPSMate.Parser:FriendlyPlayerDamage(arg1) end,
-	["CHAT_MSG_SPELL_PARTY_DAMAGE"] = function(arg1) DPSMate.Parser:FriendlyPlayerDamage(arg1) end,
-	["CHAT_MSG_COMBAT_PARTY_MISSES"] = function(arg1) DPSMate.Parser:FriendlyPlayerMisses(arg1) end,
-	["CHAT_MSG_COMBAT_PARTY_HITS"] = function(arg1) DPSMate.Parser:FriendlyPlayerHits(arg1) end,
-	["CHAT_MSG_SPELL_PERIODIC_CREATURE_DAMAGE"] = function(arg1) DPSMate.Parser:PeriodicDamage(arg1) end,
-	["CHAT_MSG_SPELL_HOSTILEPLAYER_DAMAGE"] = function(arg1) DPSMate.Parser:FriendlyPlayerDamage(arg1) end,
-	["CHAT_MSG_SPELL_PERIODIC_HOSTILEPLAYER_DAMAGE"] = function(arg1) DPSMate.Parser:PeriodicDamage(arg1) end, -- To be tested
-	["CHAT_MSG_SPELL_SELF_DAMAGE"] = function(arg1) DPSMate.Parser:SelfSpellDMG(arg1) end,
-	["CHAT_MSG_COMBAT_SELF_MISSES"] = function(arg1) DPSMate.Parser:SelfMisses(arg1) end,
-	["CHAT_MSG_COMBAT_SELF_HITS"] = function(arg1) DPSMate.Parser:SelfHits(arg1) end,
-	["CHAT_MSG_LOOT"] = function(arg1) DPSMate.Parser:Loot(arg1) end,
-	["CHAT_MSG_COMBAT_PET_HITS"] = function(arg1) DPSMate.Parser:PetHits(arg1) end,
-	["CHAT_MSG_COMBAT_PET_MISSES"] = function(arg1) DPSMate.Parser:PetMisses(arg1) end,
-	--["CHAT_MSG_SPELL_PET_BUFF"] = function(arg1) DPSMate:SendMessage(arg1.."Test 3"); end,
-	["CHAT_MSG_SPELL_PET_DAMAGE"] = function(arg1) DPSMate.Parser:PetSpellDamage(arg1) end
-}--]]

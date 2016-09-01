@@ -18,7 +18,7 @@ local strformat = string.format
 
 function DPSMate.Modules.Fails:GetSortedTable(arr, k)
 	local b, a, total = {}, {}, 0
-	for cat, val in arr do
+	for cat, val in pairs(arr) do
 		local name = DPSMate:GetUserById(cat)
 		local amount = DPSMate:TableLength(val)
 		local i = 1
@@ -46,11 +46,11 @@ function DPSMate.Modules.Fails:EvalTable(user, k)
 	local temp = {}
 	local arr = DPSMate:GetMode(k)
 	if not arr[user[1]] then return end
-	for _, v in arr[user[1]] do
+	for _, v in pairs(arr[user[1]]) do
 		if temp[v[1]] then temp[v[1]] = temp[v[1]] + 1 else temp[v[1]] = 1 end
 		total=total+1
 	end
-	for cat, val in temp do
+	for cat, val in pairs(temp) do
 		local i = 1
 		while true do
 			if (not b[i]) then
@@ -74,7 +74,7 @@ function DPSMate.Modules.Fails:GetSettingValues(arr, cbt, k)
 	local name, value, perc, sortedTable, total, a, p, strt = {}, {}, {}, {}, 0, 0, "", {[1]="",[2]=""}
 	if DPSMateSettings["windows"][k]["numberformat"] == 2 then p = "K" end
 	sortedTable, total, a = DPSMate.Modules.Fails:GetSortedTable(arr, k)
-	for cat, val in sortedTable do
+	for cat, val in pairs(sortedTable) do
 		local dmg, tot, sort = DPSMate:FormatNumbers(val, total, sortedTable[1], k)
 		if dmg==0 then break end
 		local str = {[1]="",[2]="",[3]=""}

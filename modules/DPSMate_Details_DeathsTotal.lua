@@ -54,11 +54,11 @@ end
 
 function DPSMate.Modules.DetailsDeathsTotal:EvalTable()
 	local a = {}
-	for cat, val in db do -- user
+	for cat, val in pairs(db) do -- user
 		local temp = {}
 		local name = DPSMate:GetUserById(cat)
 		if DPSMate:ApplyFilter(curKey, name) then
-			for ca, va in val do -- individual death
+			for ca, va in pairs(val) do -- individual death
 				if va["i"][1]==1 then
 					if not temp[ca] then
 						temp[ca] = {}
@@ -94,7 +94,7 @@ function DPSMate.Modules.DetailsDeathsTotal:EvalTable()
 					end
 				end
 			end
-			for ca,va in temp do
+			for ca,va in pairs(temp) do
 				local i=1
 				while true do
 					if not a[i] then

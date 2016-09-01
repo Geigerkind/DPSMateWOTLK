@@ -123,14 +123,14 @@ function DPSMate.Modules.DetailsEDDTotal:UpdateStackedGraph()
 	local label = {}
 	local maxX, maxY = 0,0
 	local p = {}
-	for cat, val in db do -- npc
+	for cat, val in pairs(db) do -- npc
 		local temp = {}
 		if cat~="i" then
-			for ca, va in val do
+			for ca, va in pairs(val) do
 				if ca~="i" then -- user
-					for q,s in va do -- abid
+					for q,s in pairs(va) do -- abid
 						if q~="i" and s["i"] then
-							for c,v in s["i"] do
+							for c,v in pairs(s["i"]) do
 								local i = 1
 								while true do
 									if not temp[i] then
@@ -159,7 +159,7 @@ function DPSMate.Modules.DetailsEDDTotal:UpdateStackedGraph()
 			tinsert(Data1, 1, temp)
 		end
 	end
-	for cat, val in p do
+	for cat, val in pairs(p) do
 		if maxY<val then
 			maxY = val
 		end
@@ -212,13 +212,13 @@ function DPSMate.Modules.DetailsEDDTotal:AddTotalDataSeries()
 	local tl = DPSMate:TableLength(db)
 	tl = floor(tl-0.5*tl)
 	
-	for cat, val in db do -- cause 
+	for cat, val in pairs(db) do -- cause 
 		if cat~="i" then
-			for ca, va in val do -- user
+			for ca, va in pairs(val) do -- user
 				if ca~="i" then
-					for c, v in va do
+					for c, v in pairs(va) do
 						if c~="i" and v["i"] then
-							for q,s in v["i"] do
+							for q,s in pairs(v["i"]) do
 								if sumTable[q] then
 									sumTable[q] = sumTable[q] + s
 								else
@@ -231,7 +231,7 @@ function DPSMate.Modules.DetailsEDDTotal:AddTotalDataSeries()
 			end
 		end
 	end
-	for cat, val in sumTable do
+	for cat, val in pairs(sumTable) do
 		local i=1
 		while true do
 			if (not newArr[i]) then 
@@ -259,7 +259,7 @@ end
 -- crushes?
 function DPSMate.Modules.DetailsEDDTotal:GetTableValues()
 	local arr, total = {}, 0
-	for cat, val in db do -- cause
+	for cat, val in pairs(db) do -- cause
 		local CV, crit, totCrit, miss, totMiss, hit, totHit, crush, totOverall = 0, 0, 0.000001, 0, 0.000001, 0, 0.000001, 0, 0
 		local name = DPSMate:GetUserById(cat)
 		for ca, va in pairs(val) do -- user
@@ -289,7 +289,7 @@ function DPSMate.Modules.DetailsEDDTotal:GetTableValues()
 		total = total + CV
 	end
 	local newArr = {}
-	for cat, val in arr do
+	for cat, val in pairs(arr) do
 		local i = 1
 		while true do
 			if (not newArr[i]) then
@@ -330,11 +330,11 @@ end
 function DPSMate.Modules.DetailsEDDTotal:SortLineTable(uid)
 	local newArr = {}
 	-- user
-	for cat, val in db[uid] do -- user
+	for cat, val in pairs(db[uid]) do -- user
 		if cat~="i" then
-			for ca, va in val do -- abid
+			for ca, va in pairs(val) do -- abid
 				if ca~="i" and va["i"] then
-					for c,v in va["i"] do
+					for c,v in pairs(va["i"]) do
 						local i = 1
 						while true do
 							if not newArr[i] then
@@ -383,7 +383,7 @@ function DPSMate.Modules.DetailsEDDTotal:RemoveLinesButton(uid, obj)
 	DPSMate_Details_EDDTotal_DiagramLegend:Show()
 	
 	g:Show()
-	for cat, val in buttons do
+	for cat, val in pairs(buttons) do
 		if val[2]==uid then
 			tinsert(ColorTable, 1, val[1])
 			tremove(buttons, cat)

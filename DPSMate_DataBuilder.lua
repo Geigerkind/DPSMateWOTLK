@@ -862,8 +862,8 @@ function DPSMate.DB:GetAlpha(k)
 	if DPSMateSettings["windows"][k]["realtime"] then
 		local p = savedValue[DPSMateSettings["windows"][k]["realtime"]] or 0
 		savedValue[DPSMateSettings["windows"][k]["realtime"]] = 0
-		if p > 50000 then -- That may solve the freeze issue
-			p = 50000
+		if p > 300000 then -- That may solve the freeze issue
+			p = 300000
 		end
 		return p
 	end
@@ -889,24 +889,10 @@ local spellSchoolNames = {
 	["heilig"] = true
 }
 function DPSMate.DB:AddSpellSchool(ab, school)
-	school = slower(school)
-	local sc
-	if spellSchoolNames[school] then
-		sc = school
+	if DPSMateAbility[ab] then
+		DPSMateAbility[ab][3] = sc
 	else
-		for c, _ in pairs(spellSchoolNames) do
-			if strfind(school, c) then
-				sc = c
-				break
-			end
-		end
-	end
-	if sc then
-		if DPSMateAbility[ab] then
-			DPSMateAbility[ab][3] = sc
-		else
-			self:BuildAbility(ab,nil,sc)
-		end
+		self:BuildAbility(ab,nil,sc)
 	end
 end
 
@@ -1578,199 +1564,6 @@ function DPSMate.DB:Absorb(ability, abilityTarget, incTarget)
 	end
 end
 
-local AwaitDispel = {}
-local NextTotemDispel = false
-local TotemDispelTimer = 0
-function DPSMate.DB:AwaitDispel(ability, target, cause, time)
-	if not AwaitDispel[target] then AwaitDispel[target] = {} end
-	tinsert(AwaitDispel[target], {cause, ability, time})
-	--DPSMate:SendMessage("Awaiting Dispel! - "..cause.." - "..target.." - "..ability.." - "..time)
-	self:EvaluateDispel()
-end
-
--- /script DPSMate.Parser.DebuffTypes["Frostbolt"] = "Magic"
--- /script DPSMate.DB:AwaitDispel("Cleanse", "Shino", "Shino", 1)
--- /script DPSMate.DB:ConfirmDispel("Frostbolt", "Shino", 1.2)
-
-local AwaitHotDispel = {}
-local Restor = DPSMate.BabbleSpell:GetTranslation("Restoration")
-local RPotion = DPSMate.BabbleSpell:GetTranslation("Restorative Potion")
-local PFication = DPSMate.BabbleSpell:GetTranslation("Purification")
-local PPotion = DPSMate.BabbleSpell:GetTranslation("Purification Potion")
-function DPSMate.DB:AwaitHotDispel(ability, target, cause, time)
-	if ability == RPotion then
-		ability = Restor
-		target = cause
-	end
-	if ability == PPotion then
-		ability = PFication
-		target = cause
-	end
-	tinsert(AwaitHotDispel, {cause, target, ability, time})
-	--DPSMate:SendMessage("Awaiting Dispel! - "..cause.." - "..target.." - "..ability.." - "..time)
-end
-
-function DPSMate.DB:RemoveActiveHotDispel(target, ability)
-	if ActiveHotDispel[target] then
-		for ca, va in ActiveHotDispel[target] do -- Overwriting old active hot dispel
-			if va[2]==ability then
-				tremove(ActiveHotDispel[target], ca)
-				self:RemoveActiveHotDispel(target, ability)
-				break
-			end
-		end
-	end
-end
-
-local ActiveHotDispel = {}
-local lastDispel = nil;
-function DPSMate.DB:RegisterHotDispel(target, ability)
-	for cat, val in AwaitHotDispel do
-		if val[2]==target and val[3]==ability then
-			if not ActiveHotDispel[val[2]] then ActiveHotDispel[val[2]] = {} end
-			lastDispel = target;
-			self:RemoveActiveHotDispel(val[2], val[3]) -- Overwrite active dispels
-			tinsert(ActiveHotDispel[val[2]], {val[1], val[3]})
-			self:EvaluateDispel()
-			break
-		end
- 	end
-end
-
-function DPSMate.DB:ClearAwaitHotDispel()
-	for cat, val in pairs(AwaitHotDispel) do
-		if (GetTime()-val[4])>=10 then
-			tremove(AwaitHotDispel, cat)
-		end
-	end
-end
-
-local ConfirmedDispel = {}
-function DPSMate.DB:ConfirmRealDispel(ability, target, time)
-	if not ConfirmedDispel[target] then ConfirmedDispel[target] = {} end
-	tinsert(ConfirmedDispel[target], {ability, time})
-	lastDispel = target;
-	self:EvaluateDispel()
-	NextTotemDispel = true
-end
-
-function DPSMate.DB:ApplyRemainingDispels()
-	local num = 0
-	for cat, val in pairs(ConfirmedDispel) do
-		for ca, va in pairs(val) do
-			num = num + 1
-			if (GetTime()-va[2])>2 then
-				local type = "party"
-				local num = GetNumPartyMembers()
-				if num <= 0 then
-					type="raid"
-					num=GetNumRaidMembers()
-				end
-				if type=="party" then
-					for i=1, num do
-						if UnitClass(type..i)==DPSMate.L["shaman"] then
-							self:Dispels(UnitName(type..i), DPSMate.L["poisoncleansingtotem"], cat, va[1])
-							tremove(ConfirmedDispel[cat], ca)
-							return
-						end
-					end
-				else
-					local subGRP = {}
-					local PSGRP = nil
-					for i=1, num do
-						local a,b,c = GetRaidRosterInfo(i)
-						if UnitClass(type..i)==DPSMate.L["shaman"] then
-							subGRP[c] = UnitName(type..i)
-						end
-						if UnitName(type..i)==cat then
-							PSGRP = c
-						end
-						if PSGRP and subGRP[PSGRP] then
-							self:Dispels(subGRP[PSGRP], DPSMate.L["poisoncleansingtotem"], cat, va[1])
-							tremove(ConfirmedDispel[cat], ca)
-							return
-						end
-					end
-				end
-			end
-		end
-	end
-	if num == 0 then
-		NextTotemDispel = false
-	end
-end
-
--- Deprecated time component
-function DPSMate.DB:EvaluateDispel()
-	for cat, val in pairs(ActiveHotDispel) do
-		for ca, va in pairs(val) do
-			if ConfirmedDispel[cat] then
-				if va[2]~=Restor or (va[2]==Restor and va[1]==cat) then
-					local check = nil
-					for q, t in pairs(ConfirmedDispel[cat]) do
-						if DPSMate.Parser.HotDispels[va[2]] then
-							if not check then
-								check = t[1]
-								tremove(ConfirmedDispel[cat], q)
-							end
-						end
-					end
-					if check then
-						self:Dispels(va[1], va[2], cat, check)
-						lastDispel = nil;
-						return
-					end
-				end
-			end
-		end
-	end
-	for cat, val in pairs(AwaitDispel) do
-		for ca, va in pairs(val) do
-			if (GetTime()-(va[3] or 0))<=2 then
-				if ConfirmedDispel[cat] then
-					if va[2]~=Restor then
-						local q = DPSMate:TableLength(ConfirmedDispel[cat])
-						if q>0 then
-							self:Dispels(va[1], va[2], cat, ConfirmedDispel[cat][q][1])
-							tremove(ConfirmedDispel[cat], q)
-							self:EvaluateDispel()
-							--tremove(AwaitDispel[cat], ca)
-							--lastDispel = nil;
-							return
-						end
-					end
-				end
-				--DPSMate:SendMessage("Test 1")
-				if cat == DPSMate.L["unknown"] and lastDispel then
-					--DPSMate:SendMessage("Test 2")
-					if ConfirmedDispel[lastDispel] then
-						local q = DPSMate:TableLength(ConfirmedDispel[lastDispel])
-						if q>0 then
-							self:Dispels(va[1], va[2], lastDispel, ConfirmedDispel[lastDispel][q][1])
-							tremove(ConfirmedDispel[lastDispel], q)
-							self:EvaluateDispel()
-							--tremove(AwaitDispel[cat], ca)
-							--lastDispel = nil;
-							return
-						end
-					end
-				end
-			end
-		end
-	end
-end
-
-function DPSMate.DB:UnregisterHotDispel(target, ability)
-	if not ActiveHotDispel[target] then return end
-	for cat, val in pairs(ActiveHotDispel[target]) do
-		if val[2]==ability then
-			tremove(ActiveHotDispel[target], cat)
-			--DPSMate:SendMessage("Unregistered!")
-			break
-		end
-	end
-end
-
 function DPSMate.DB:Dispels(cause, Dname, target, ability)
 	if self:BuildUser(cause, nil) or self:BuildUser(target, nil) or self:BuildAbility(Dname, nil) or self:BuildAbility(ability, nil) then return end
 	--DPSMate:SendMessage("Cause: "..cause.." Dname: "..Dname.." Target: "..target.." Ability: "..ability)
@@ -1801,7 +1594,6 @@ end
 
 function DPSMate.DB:UnregisterDeath(target)
 	if self:BuildUser(target, nil) then return end
-	if strfind(target, "%s") then return end
 	for cat, val in pairs({[1]="total", [2]="current"}) do 
 		if DPSMateDeaths[cat][DPSMateUser[target][1]] then
 			DPSMateDeaths[cat][DPSMateUser[target][1]][1]["i"][1]=1
@@ -1938,37 +1730,6 @@ function DPSMate.DB:Kick(cause, target, causeAbility, targetAbility)
 	end
 end
 
-local AwaitBuff = {}
-function DPSMate.DB:AwaitingBuff(cause, ability, target, time)
-	tinsert(AwaitBuff, {cause, ability, target, time})
-	--DPSMate:SendMessage("Awaiting buff!"..ability)
-end
-
--- deprecated function cause of gettime??
-function DPSMate.DB:ClearAwaitBuffs()
-	for cat, val in pairs(AwaitBuff) do
-		if (GetTime()-(val[4] or 0))>=5 then
-			tremove(AwaitBuff, cat)
-		end
-	end
-end
-
--- deprecated function cause of gettime??
-function DPSMate.DB:ConfirmBuff(target, ability, time)
-	for cat, val in pairs(AwaitBuff) do
-		if val[4]<=(time or 0) then
-			if val[2]==ability and val[3]==target then
-				self:BuildBuffs(val[1], target, ability, false)
-				--DPSMate:SendMessage("Fired 2: "..time)
-				--DPSMate:SendMessage("Confirmed Buff!")
-				return
-			end
-		end
-	end
-	--DPSMate:SendMessage("Fired 1: "..time)
-	self:BuildBuffs("Unknown", target, ability, false)
-end
-
 -- Sometimes the fade event is not fired.
 -- What if the fade event is fired after a gain event for some reason
 local windfuryab = {
@@ -1978,7 +1739,7 @@ local windfuryab = {
 
 function DPSMate.DB:BuildBuffs(cause, target, ability, bool)
 	if self:BuildUser(target, nil) or self:BuildUser(cause, nil) or self:BuildAbility(ability, nil) then return end
-	if windfuryab[ability] then
+	if windfuryab[ability] then -- DEPRECATED?
 		self.NextSwing[target] = {
 			[1] = 1,
 			[2] = ability
@@ -2143,14 +1904,6 @@ function DPSMate.DB:CombatTime()
 					end
 				end
 				
-				if NextTotemDispel then
-					TotemDispelTimer = TotemDispelTimer + arg1
-					if TotemDispelTimer>2 then
-						DPSMate.DB:ApplyRemainingDispels()
-						TotemDispelTimer = 0
-					end
-				end
-				
 			else
 				DPSMate.DB.MainUpdate = DPSMate.DB.MainUpdate + arg1
 				DPSMate.Sync:SendAddonMessages(arg1)
@@ -2166,9 +1919,7 @@ function DPSMate.DB:CombatTime()
 				end
 			end
 			if DPSMate.DB.MainUpdate>=150 then
-				DPSMate.DB:ClearAwaitBuffs()
 				DPSMate.DB:ClearAwaitAbsorb()
-				DPSMate.DB:ClearAwaitHotDispel()
 				DPSMate.DB.MainUpdate = 0
 				DPSMate.Sync.Async = true
 			end
@@ -2270,7 +2021,7 @@ function DPSMate.DB:BuildFail(type, user, cause, ability, amount)
 	self:BuildUser(user)
 	self:BuildUser(cause)
 	self:BuildAbility(ability)
-	for cat, val in {[1] = "total", [2] = "current"} do
+	for cat, val in pairs({[1] = "total", [2] = "current"}) do
 		if not DPSMateFails[cat][DPSMateUser[cause][1]] then
 			DPSMateFails[cat][DPSMateUser[cause][1]] = {}
 		end
@@ -2306,9 +2057,9 @@ end
 
 function DPSMate.DB:CheckActiveCC(cause, target)
 	if ActiveCC[target] then
-		for cat, val in ActiveCC[target] do
+		for cat, val in pairs(ActiveCC[target]) do
 			if val then
-				for c, v in ActiveCC[target] do
+				for c, v in pairs(ActiveCC[target]) do
 					ActiveCC[target][c] = false
 				end
 				self:CCBreaker(target, cat, cause)
@@ -2321,7 +2072,7 @@ end
 
 function DPSMate.DB:CCBreaker(target, ability, cause)
 	self:BuildAbility(ability)
-	for cat, val in {[1]="total",[2]="current"} do
+	for cat, val in pairs({[1]="total",[2]="current"}) do
 		if not DPSMateCCBreaker[cat][DPSMateUser[cause][1]] then
 			DPSMateCCBreaker[cat][DPSMateUser[cause][1]] = {}
 		end

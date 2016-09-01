@@ -115,16 +115,16 @@ function DPSMate.Modules.DetailsFFTTotal:UpdateStackedGraph()
 	local maxX, maxY = 0,0
 	local p = {}
 	
-	for cat, val in db do
+	for cat, val in pairs(db) do
 		local name = DPSMate:GetUserById(cat)
 		local temp = {}
-		for q, s in val do
+		for q, s in pairs(val) do
 			local catName = DPSMate:GetUserById(q)
 			if DPSMate:ApplyFilter(curKey, catName) and  DPSMateUser[catName] and  DPSMateUser[name] then
 				if DPSMateUser[name][3] == DPSMateUser[catName][3] and DPSMateUser[catName][3] and DPSMateUser[name][3] then
-					for ca, va in s do
+					for ca, va in pairs(s) do
 						if ca~="i" and va["i"] then
-							for c,v in va["i"] do
+							for c,v in pairs(va["i"]) do
 								local i = 1
 								while true do
 									if not temp[i] then
@@ -156,7 +156,7 @@ function DPSMate.Modules.DetailsFFTTotal:UpdateStackedGraph()
 		end
 	end
 	
-	for cat, val in p do
+	for cat, val in pairs(p) do
 		if maxY<val then
 			maxY = val
 		end
@@ -216,16 +216,16 @@ function DPSMate.Modules.DetailsFFTTotal:AddTotalDataSeries()
 	local tl = 0
 	local temp = {}
 	
-	for cat, val in db do
+	for cat, val in pairs(db) do
 		local name = DPSMate:GetUserById(cat)
-		for q, s in val do
+		for q, s in pairs(val) do
 			local catName = DPSMate:GetUserById(q)
 			if DPSMate:ApplyFilter(curKey, catName) and  DPSMateUser[catName] and  DPSMateUser[name] then
 				if DPSMateUser[name][3] == DPSMateUser[catName][3] and DPSMateUser[catName][3] and DPSMateUser[name][3] then
 					temp[name] = true
-					for ca, va in s do
+					for ca, va in pairs(s) do
 						if ca~="i" and va["i"] then
-							for c,v in va["i"] do
+							for c,v in pairs(va["i"]) do
 								if sumTable[c] then
 									sumTable[c] = sumTable[c] + v
 								else
@@ -242,7 +242,7 @@ function DPSMate.Modules.DetailsFFTTotal:AddTotalDataSeries()
 	tl = DPSMate:TableLength(temp)
 	tl = ceil(tl-0.3*tl)
 	
-	for cat, val in sumTable do
+	for cat, val in pairs(sumTable) do
 		local i=1
 		while true do
 			if (not newArr[i]) then 
@@ -271,15 +271,15 @@ end
 function DPSMate.Modules.DetailsFFTTotal:GetTableValues()
 	local total = 0
 	local temp = {}
-	for cat, val in db do
+	for cat, val in pairs(db) do
 		local crit, totCrit, miss, totMiss, time, last = 0, 0.000001, 0, 0.000001, 0, 0
 		local name = DPSMate:GetUserById(cat)
-		for q, s in val do
+		for q, s in pairs(val) do
 			local CV = 0
 			local catName = DPSMate:GetUserById(q)
 			if DPSMate:ApplyFilter(curKey, catName) and  DPSMateUser[catName] and  DPSMateUser[name] then
 				if DPSMateUser[name][3] == DPSMateUser[catName][3] and DPSMateUser[catName][3] and DPSMateUser[name][3] then
-					for ca, va in s do
+					for ca, va in pairs(s) do
 						if ca~="i" then
 							totCrit=totCrit+va[1]+va[5]+va[9]+va[10]+va[11]+va[12]+va[14]
 							crit=crit+va[5]
@@ -304,7 +304,7 @@ function DPSMate.Modules.DetailsFFTTotal:GetTableValues()
 		end
 	end
 	local newArr = {}
-	for cat, val in temp do
+	for cat, val in pairs(temp) do
 		local i = 1
 		while true do
 			if (not newArr[i]) then
@@ -348,15 +348,15 @@ function DPSMate.Modules.DetailsFFTTotal:SortLineTable(uid)
 	local user = DPSMate:GetUserById(uid)
 	local newArr = {}
 	-- user
-	for cat, val in db do
+	for cat, val in pairs(db) do
 		if cat~="i" then
 			local name = DPSMate:GetUserById(cat)
-			for q, s in val do
+			for q, s in pairs(val) do
 				if q==uid and q~="i" and DPSMate:ApplyFilter(curKey, user) and  DPSMateUser[user] and  DPSMateUser[name] then
 					if DPSMateUser[name][3] == DPSMateUser[user][3] and DPSMateUser[user][3] and DPSMateUser[name][3] then
-						for ca, va in s do
+						for ca, va in pairs(s) do
 							if ca~="i" and va["i"] then
-								for c,v in va["i"] do
+								for c,v in pairs(va["i"]) do
 									local i = 1
 									while true do
 										if not newArr[i] then
@@ -434,7 +434,7 @@ function DPSMate.Modules.DetailsFFTTotal:LoadLegendButtons()
 	for i=1, 30 do
 		_G("DPSMate_Details_FFTTotal_DiagramLegend_Child_C"..i):Hide()
 	end
-	for cat, val in buttons do
+	for cat, val in pairs(buttons) do
 		local name = DPSMate:GetUserById(val[2])
 		local font = _G("DPSMate_Details_FFTTotal_DiagramLegend_Child_C"..cat.."_Font")
 		font:SetText(name)
@@ -466,7 +466,7 @@ function DPSMate.Modules.DetailsFFTTotal:LoadTable()
 		_G("DPSMate_Details_FFTTotal_PlayerList_Child_R"..i.."_CB"):SetChecked(false)
 		_G("DPSMate_Details_FFTTotal_PlayerList_Child_R"..i.."_CB").act = false
 	end
-	for cat, val in arr do
+	for cat, val in pairs(arr) do
 		if DPSMateUser[val[1]][4] then
 			i=i+1
 		else

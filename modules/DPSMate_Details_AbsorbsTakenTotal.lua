@@ -113,13 +113,13 @@ function DPSMate.Modules.DetailsAbsorbsTakenTotal:UpdateStackedGraph()
 	local label = {}
 	local maxX, maxY = 0,0
 	local p = {}
-	for cat, val in db do
+	for cat, val in pairs(db) do
 		local tarname = DPSMate:GetUserById(cat)
 		local temp = {}
 		if DPSMate:ApplyFilter(curKey, tarname) then
-			for qq, uu in val do
+			for qq, uu in pairs(val) do
 				local ownername = DPSMate:GetUserById(qq)
-				for ca, va in uu["i"] do
+				for ca, va in pairs(uu["i"]) do
 					local i, dmg = 1, 5
 					if DPSMateDamageTaken[1][cat] then
 						if DPSMateDamageTaken[1][cat][va[2]] then
@@ -153,7 +153,7 @@ function DPSMate.Modules.DetailsAbsorbsTakenTotal:UpdateStackedGraph()
 			tinsert(Data1, 1, temp)
 		end
 	end
-	for cat, val in p do
+	for cat, val in pairs(p) do
 		if maxY<val then
 			maxY = val
 		end
@@ -218,13 +218,13 @@ function DPSMate.Modules.DetailsAbsorbsTakenTotal:AddTotalDataSeries()
 	local sumTable, newArr = {[0]=0}, {}
 	local temp = {}
 	local tempDat = {}
-	for cat, val in db do
+	for cat, val in pairs(db) do
 		local user = DPSMate:GetUserById(cat)
 		if DPSMate:ApplyFilter(curKey, user) then
 			tempDat[user] = true
-			for qq, uu in val do
+			for qq, uu in pairs(val) do
 				local ownername = DPSMate:GetUserById(qq)
-				for ca, va in uu["i"] do
+				for ca, va in pairs(uu["i"]) do
 					local i, dmg = 1, 5
 					if DPSMateDamageTaken[1][cat] then
 						if DPSMateDamageTaken[1][cat][va[2]] then
@@ -255,7 +255,7 @@ function DPSMate.Modules.DetailsAbsorbsTakenTotal:AddTotalDataSeries()
 	tl = ceil(tl-0.3*tl)
 	temp = nil
 	
-	for cat, val in sumTable do
+	for cat, val in pairs(sumTable) do
 		local i=1
 		while true do
 			if (not newArr[i]) then 
@@ -284,7 +284,7 @@ end
 function DPSMate.Modules.DetailsAbsorbsTakenTotal:GetTableValues()
 	local arr, total = {}, 0
 	local temp = {}
-	for cat, val in db do -- 28 Target
+	for cat, val in pairs(db) do -- 28 Target
 		local PerPlayerAbsorb = 0
 		local abAbsorb = {}
 		local totHits = 0
@@ -302,10 +302,10 @@ function DPSMate.Modules.DetailsAbsorbsTakenTotal:GetTableValues()
 							for cet, vel in pairs(ve) do
 								if cet~="i" then
 									local totalHits = 0
-									for qq,ss in vel do
+									for qq,ss in pairs(vel) do
 										totalHits = totalHits + ss
 									end
-									for qq,ss in vel do
+									for qq,ss in pairs(vel) do
 										local p = 5
 										if DPSMateDamageTaken[1][cat] then
 											if DPSMateDamageTaken[1][cat][cet] then
@@ -364,7 +364,7 @@ function DPSMate.Modules.DetailsAbsorbsTakenTotal:GetTableValues()
 		end
 	end
 	
-	for ca, va in temp do
+	for ca, va in pairs(temp) do
 		if va then
 			tinsert(arr, va)
 			total = total + va[2]
@@ -373,7 +373,7 @@ function DPSMate.Modules.DetailsAbsorbsTakenTotal:GetTableValues()
 	temp = nil
 	
 	local newArr = {}
-	for cat, val in arr do
+	for cat, val in pairs(arr) do
 		local i = 1
 		while true do
 			if (not newArr[i]) then
@@ -415,9 +415,9 @@ end
 
 function DPSMate.Modules.DetailsAbsorbsTakenTotal:SortLineTable(uid)
 	local newArr = {}
-	for cat, val in db[uid] do
+	for cat, val in pairs(db[uid]) do
 		local ownername = DPSMate:GetUserById(cat)
-		for ca, va in val["i"] do
+		for ca, va in pairs(val["i"]) do
 			local i, dmg = 1, 5
 			if DPSMateDamageTaken[1][cat] then
 				if DPSMateDamageTaken[1][cat][va[2]] then
@@ -506,7 +506,7 @@ function DPSMate.Modules.DetailsAbsorbsTakenTotal:LoadLegendButtons()
 	for i=1, 30 do
 		_G("DPSMate_Details_AbsorbsTakenTotal_DiagramLegend_Child_C"..i):Hide()
 	end
-	for cat, val in buttons do
+	for cat, val in pairs(buttons) do
 		local name = DPSMate:GetUserById(val[2])
 		local font = _G("DPSMate_Details_AbsorbsTakenTotal_DiagramLegend_Child_C"..cat.."_Font")
 		font:SetText(name)
@@ -538,7 +538,7 @@ function DPSMate.Modules.DetailsAbsorbsTakenTotal:LoadTable()
 		_G("DPSMate_Details_AbsorbsTakenTotal_PlayerList_Child_R"..i.."_CB"):SetChecked(false)
 		_G("DPSMate_Details_AbsorbsTakenTotal_PlayerList_Child_R"..i.."_CB").act = false
 	end
-	for cat, val in arr do
+	for cat, val in pairs(arr) do
 		if DPSMateUser[val[1]][4] then
 			i=i+1
 		else

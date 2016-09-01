@@ -123,13 +123,13 @@ function DPSMate.Modules.DetailsEHealingTaken:UpdateSumGraph()
 	g7:SetXLabels(true)
 	
 	local ata={{0,0}}
-	for cat, val in DPSMate:ScaleDown(sumTable, min) do
+	for cat, val in pairs(DPSMate:ScaleDown(sumTable, min)) do
 		--tinsert(ata, {val[1],val[2], self:CheckProcs(DPSMate_Details_CompareEDD.proc, val[1]+min, DetailsUserComp)})
 		tinsert(ata, {val[1],val[2], {}})
 	end
 	
 	local Data2={{0,0}}
-	for cat, val in DPSMate:ScaleDown(sumTableTwo, minT) do
+	for cat, val in pairs(DPSMate:ScaleDown(sumTableTwo, minT)) do
 		--tinsert(Data2, {val[1],val[2], self:CheckProcs(DPSMate_Details_EDD.proc, val[1]+minT)})
 		tinsert(Data2, {val[1],val[2], {}})
 	end
@@ -347,7 +347,7 @@ function DPSMate.Modules.DetailsEHealingTaken:UpdateLineGraph(gg, comp, cname)
 	gg:SetXLabels(true)
 
 	local Data1={{0,0}}
-	for cat, val in DPSMate:ScaleDown(sumTable, min) do
+	for cat, val in pairs(DPSMate:ScaleDown(sumTable, min)) do
 		tinsert(Data1, {val[1],val[2], {}})
 	end
 	local colorT = {{1.0,0.0,0.0,0.8}, {1.0,0.0,0.0,0.8}}
@@ -381,9 +381,9 @@ function DPSMate.Modules.DetailsEHealingTaken:UpdateStackedGraph(gg, comp, cname
 	end
 	
 	if toggle3 then
-		for cat, val in db[DPSMateUser[cname or DetailsUser][1]][uArr[dSel]] do
+		for cat, val in pairs(db[DPSMateUser[cname or DetailsUser][1]][uArr[dSel]]) do
 			if val["i"] then
-				for c, v in val["i"] do
+				for c, v in pairs(val["i"]) do
 					local key = tonumber(strformat("%.1f", c))
 					if not temp[cat] then
 						temp[cat] = {}
@@ -412,11 +412,11 @@ function DPSMate.Modules.DetailsEHealingTaken:UpdateStackedGraph(gg, comp, cname
 			end
 		end	
 	else
-		for cat, val in db[DPSMateUser[cname or DetailsUser][1]] do
+		for cat, val in pairs(db[DPSMateUser[cname or DetailsUser][1]]) do
 			if cat~="i" then
-				for ca, va in val do
+				for ca, va in pairs(val) do
 					if va["i"] then
-						for c, v in va["i"] do
+						for c, v in pairs(va["i"]) do
 							local key = tonumber(strformat("%.1f", c))
 							if not temp[ca] then
 								temp[ca] = {}
@@ -448,13 +448,13 @@ function DPSMate.Modules.DetailsEHealingTaken:UpdateStackedGraph(gg, comp, cname
 		end
 	end
 	local min
-	for cat, val in temp do
+	for cat, val in pairs(temp) do
 		local pmin = DPSMate:GetMinValue(val, 1)
 		if not min or pmin<min then
 			min = pmin
 		end
 	end
-	for cat, val in temp do
+	for cat, val in pairs(temp) do
 		local i = 1
 		while true do
 			if not b[i] then
@@ -472,7 +472,7 @@ function DPSMate.Modules.DetailsEHealingTaken:UpdateStackedGraph(gg, comp, cname
 		end
 	end
 	
-	for cat, val in Data1 do
+	for cat, val in pairs(Data1) do
 		Data1[cat] = DPSMate:ScaleDown(val, min)
 	end
 	
@@ -508,9 +508,9 @@ end
 function DPSMate.Modules.DetailsEHealingTaken:SortLineTable(t,b, cname)
 	local newArr = {}
 	if b then
-		for cat, val in t[DPSMateUser[cname or DetailsUser][1]][b] do
+		for cat, val in pairs(t[DPSMateUser[cname or DetailsUser][1]][b]) do
 			if val["i"] then
-				for ca, va in val["i"] do
+				for ca, va in pairs(val["i"]) do
 					local i=1
 					while true do
 						if (not newArr[i]) then 
@@ -527,11 +527,11 @@ function DPSMate.Modules.DetailsEHealingTaken:SortLineTable(t,b, cname)
 			end
 		end
 	else
-		for cat, val in t[DPSMateUser[cname or DetailsUser][1]] do
+		for cat, val in pairs(t[DPSMateUser[cname or DetailsUser][1]]) do
 			if cat~="i" then
-				for c,v in val do
+				for c,v in pairs(val) do
 					if v["i"] then
-						for ca, va in v["i"] do
+						for ca, va in pairs(v["i"]) do
 							local i=1
 							while true do
 								if (not newArr[i]) then 

@@ -170,14 +170,14 @@ DPSMate.Options.Options = {
 				type = 'execute',
 				name = DPSMate.L["showAll"],
 				desc = DPSMate.L["showAllDesc"],
-				func = function() for _, val in DPSMateSettings["windows"] do DPSMate.Options:Show(getglobal("DPSMate_"..val["name"])) end; DPSMate.Options.Dewdrop:Close() end,
+				func = function() for _, val in pairs(DPSMateSettings["windows"]) do DPSMate.Options:Show(getglobal("DPSMate_"..val["name"])) end; DPSMate.Options.Dewdrop:Close() end,
 			},
 			hideAll  = {
 				order = 33,
 				type = 'execute',
 				name = DPSMate.L["hideAll"],
 				desc = DPSMate.L["hideAllDesc"],
-				func = function() for _, val in DPSMateSettings["windows"] do DPSMate.Options:Hide(getglobal("DPSMate_"..val["name"])) end; DPSMate.Options.Dewdrop:Close() end,
+				func = function() for _, val in pairs(DPSMateSettings["windows"]) do DPSMate.Options:Hide(getglobal("DPSMate_"..val["name"])) end; DPSMate.Options.Dewdrop:Close() end,
 			},
 			showwindow = {
 				order = 36,
@@ -560,62 +560,8 @@ Logout = function()
 	end
 end
 
--- Deprecated
-function DPSMate.Options:SumGraphData()
-	for i=1,2 do
-		-- Damage done
-		for k,v in DPSMateDamageDone[i] do
-			DPSMateDamageDone[i][k]["i"][1] = DPSMate.Sync:GetSummarizedTable(v["i"][1])
-		end
-		
-		-- EDT
-		for k,v in DPSMateEDT[i] do
-			for key, var in v do 
-				DPSMateEDT[i][k][key]["i"][1] = DPSMate.Sync:GetSummarizedTable(var["i"][1])
-			end
-		end
-		
-		-- EDD
-		for k,v in DPSMateEDD[i] do
-			for key, var in v do 
-				DPSMateEDD[i][k][key]["i"][1] = DPSMate.Sync:GetSummarizedTable(var["i"][1])
-			end
-		end
-		
-		-- Damage taken
-		for k,v in DPSMateDamageTaken[i] do
-			DPSMateDamageTaken[i][k]["i"][1] = DPSMate.Sync:GetSummarizedTable(v["i"][1])
-		end
-		
-		-- Ehealing
-		for k,v in DPSMateEHealing[i] do
-			DPSMateEHealing[i][k]["i"][2] = DPSMate.Sync:GetSummarizedTable(v["i"][2])
-		end
-		
-		-- Thealing
-		for k,v in DPSMateTHealing[i] do
-			DPSMateTHealing[i][k]["i"][2] = DPSMate.Sync:GetSummarizedTable(v["i"][2])
-		end
-		
-		-- Overhealing
-		for k,v in DPSMateOverhealing[i] do
-			DPSMateOverhealing[i][k]["i"][2] = DPSMate.Sync:GetSummarizedTable(v["i"][2])
-		end
-		
-		-- Ehealing taken
-		for k,v in DPSMateEHealingTaken[i] do
-			DPSMateEHealingTaken[i][k]["i"][2] = DPSMate.Sync:GetSummarizedTable(v["i"][2])
-		end
-		
-		-- Thealing taken
-		for k,v in DPSMateHealingTaken[i] do
-			DPSMateHealingTaken[i][k]["i"][2] = DPSMate.Sync:GetSummarizedTable(v["i"][2])
-		end
-	end
-end
-
 function DPSMate.Options:ToggleVisibility()
-	for _, val in DPSMateSettings["windows"] do
+	for _, val in pairs(DPSMateSettings["windows"]) do
 		if val["hidden"] then
 			getglobal("DPSMate_"..val["name"]):Show()
 			val["hidden"] = false
@@ -632,7 +578,7 @@ function DPSMate.Options:ActivateTestMode()
 		DPSMate:SetStatusBarValue()
 	else
 		self.TestMode = true
-		for k,c in DPSMateSettings.windows do
+		for k,c in pairs(DPSMateSettings["windows"]) do
 			if DPSMateSettings["showtotals"] then
 				_G("DPSMate_"..c["name"].."_ScrollFrame_Child_Total_Name"):SetText("Total")
 				_G("DPSMate_"..c["name"].."_ScrollFrame_Child_Total_Value"):SetText("3000000")
@@ -957,7 +903,7 @@ function DPSMate.Options:PopUpAccept(bool, bypass)
 end
 
 function DPSMate.Options:OpenMenu(b, obj)
-	for _, val in pairs(DPSMateSettings.windows) do
+	for _, val in pairs(DPSMateSettings["windows"]) do
 		if DPSMate.Options.Dewdrop:IsOpen(_G("DPSMate_"..val["name"])) then
 			DPSMate.Options.Dewdrop:Close()
 			return
@@ -1523,7 +1469,7 @@ function DPSMate.Options:InializePlayerDewDrop(obj)
 		end
 	end
 	
-	for cat, val in channel do
+	for cat, val in pairs(channel) do
 		path["a"..cat] = {
 			order = 10*cat+10,
 			type = "execute",
@@ -1540,7 +1486,7 @@ function DPSMate.Options:InializePlayerDewDrop(obj)
 	local db,cbt = DPSMate:GetMode(Key)
 	local temp = ''
 	local a = DPSMate:GetSettingValues(db, cbt, Key, 0)
-	for cat, name in a do
+	for cat, name in pairs(a) do
 		if name and name ~= obj.user then
 			if DPSMateSettings["windows"][Key]["grouponly"] then
 				if DPSMate.Parser.TargetParty[name] then
@@ -1565,7 +1511,7 @@ function DPSMate.Options:InializePlayerDewDrop(obj)
 	
 	local mode = _G(obj:GetParent():GetParent():GetParent():GetName().."_Head_Font"):GetText()
 	
-	for cat, val in temp do
+	for cat, val in pairs(temp) do
 		if cat>100 then break end
 		if not strfind(val, "%s") or CompareExcept[mode] then
 			path["Arg"..cat] = {
@@ -1862,7 +1808,7 @@ function DPSMate.Options:Show(frame)
 end
 
 function DPSMate.Options:RemoveSegment(i)
-	for cat, val in DPSMateHistory do
+	for cat, val in pairs(DPSMateHistory) do
 		tremove(DPSMateHistory[cat], i)
 	end
 	DPSMate.Options:InitializeSegments()
@@ -1892,14 +1838,14 @@ function DPSMate.Options:ToggleState()
 		DPSMateSettings["sync"] = false
 		DPSMateSettings["enable"] = false
 		DPSMate:Disable()
-		for cat, val in DPSMateSettings["windows"] do
+		for cat, val in pairs(DPSMateSettings["windows"]) do
 			_G("DPSMate_"..val["name"].."_Head_Sync"):GetNormalTexture():SetVertexColor(1,0,0,1)
 			_G("DPSMate_"..val["name"].."_Head_Enable"):SetChecked(false)
 		end
 	else
 		DPSMateSettings["enable"] = true
 		DPSMate:Enable()
-		for cat, val in DPSMateSettings["windows"] do
+		for cat, val in pairs(DPSMateSettings["windows"]) do
 			_G("DPSMate_"..val["name"].."_Head_Enable"):SetChecked(true)
 		end
 	end

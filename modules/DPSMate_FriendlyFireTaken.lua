@@ -55,12 +55,12 @@ function DPSMate.Modules.FriendlyFireTaken:EvalTable(user, k)
 	local a, d, total, temp = {}, {}, 0, {}
 	local arr = DPSMate:GetMode(k)
 	if not arr[user[1]] then return end
-	for c, v in arr[user[1]] do
+	for c, v in pairs(arr[user[1]]) do
 		local cName = DPSMate:GetUserById(c)
 		local CV = 0
 		local aa,bb = {}, {}
 		if DPSMateUser[cName][3] == user[3] and DPSMateUser[cName][3] then
-			for cat, val in v do
+			for cat, val in pairs(v) do
 				if cat~="i" then 
 					local i = 1
 					while true do

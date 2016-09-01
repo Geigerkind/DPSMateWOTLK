@@ -114,13 +114,13 @@ function DPSMate.Modules.DetailsHABTotal:UpdateStackedGraph()
 	local label = {}
 	local maxX, maxY = 0,0
 	local p = {}
-	for cat, val in DPSMateEHealing[curKey] do
+	for cat, val in pairs(DPSMateEHealing[curKey]) do
 		local temp = {}
 		local user = DPSMate:GetUserById(cat)
 		if DPSMate:ApplyFilter(curKey, user) then
-			for ca, va in val do
+			for ca, va in pairs(val) do
 				if ca~="i" then
-					for c,v in va["i"] do
+					for c,v in pairs(va["i"]) do
 						local i = 1
 						while true do
 							if not temp[i] then
@@ -148,12 +148,12 @@ function DPSMate.Modules.DetailsHABTotal:UpdateStackedGraph()
 		end
 	end
 	
-	for cat, val in db do
-		for qq, uu in val do
+	for cat, val in pairs(db) do
+		for qq, uu in pairs(val) do
 			local temp = {}
 			local ownername = DPSMate:GetUserById(qq)
 			if DPSMate:ApplyFilter(curKey, ownername) then
-				for ca, va in uu["i"] do
+				for ca, va in pairs(uu["i"]) do
 					local i, dmg = 1, 5
 					if DPSMateDamageTaken[1][cat] then
 						if DPSMateDamageTaken[1][cat][va[2]] then
@@ -190,7 +190,7 @@ function DPSMate.Modules.DetailsHABTotal:UpdateStackedGraph()
 	
 	
 	
-	for cat, val in p do
+	for cat, val in pairs(p) do
 		if maxY<val then
 			maxY = val
 		end
@@ -248,11 +248,11 @@ end
 function DPSMate.Modules.DetailsHABTotal:AddTotalDataSeries()
 	local sumTable, newArr = {[0]=0}, {}
 	
-	for cat, val in DPSMateEHealing[curKey] do
+	for cat, val in pairs(DPSMateEHealing[curKey]) do
 		if DPSMate:ApplyFilter(curKey, DPSMate:GetUserById(cat)) then
-			for ca, va in val do
+			for ca, va in pairs(val) do
 				if ca~="i" and va["i"] then
-					for c,v in va["i"] do
+					for c,v in pairs(va["i"]) do
 						if sumTable[c] then
 							sumTable[c] = sumTable[c] + v
 						else
@@ -263,11 +263,11 @@ function DPSMate.Modules.DetailsHABTotal:AddTotalDataSeries()
 			end
 		end
 	end
-	for cat, val in db do
-		for qq, uu in val do
+	for cat, val in pairs(db) do
+		for qq, uu in pairs(val) do
 			local ownername = DPSMate:GetUserById(qq)
 			if DPSMate:ApplyFilter(curKey, ownername) then
-				for ca, va in uu["i"] do
+				for ca, va in pairs(uu["i"]) do
 					local i, dmg = 1, 5
 					if DPSMateDamageTaken[1][cat] then
 						if DPSMateDamageTaken[1][cat][va[2]] then
@@ -297,7 +297,7 @@ function DPSMate.Modules.DetailsHABTotal:AddTotalDataSeries()
 	local tl = DPSMate:TableLength(sumTable)
 	tl = ceil(tl-0.3*tl)
 	
-	for cat, val in sumTable do
+	for cat, val in pairs(sumTable) do
 		local i=1
 		while true do
 			if (not newArr[i]) then 
@@ -325,11 +325,11 @@ end
 
 function DPSMate.Modules.DetailsHABTotal:GetTableValues()
 	local arr, total = {}, 0
-	for cat, val in DPSMateEHealing[curKey] do
+	for cat, val in pairs(DPSMateEHealing[curKey]) do
 		local name = DPSMate:GetUserById(cat)
 		if DPSMate:ApplyFilter(curKey, name) then
 			local crit, totCrit, miss, totMiss, time, last = 0, 0.000001, 0, 0.000001, 0, 0
-			for ca, va in val do
+			for ca, va in pairs(val) do
 				if ca~="i" then
 					totCrit=totCrit+va[3]+va[2]
 					totMiss=totMiss+va[2]+va[3]
@@ -345,7 +345,7 @@ function DPSMate.Modules.DetailsHABTotal:GetTableValues()
 	end
 	
 	local temp = {}
-	for cat, val in db do -- 28 Target
+	for cat, val in pairs(db) do -- 28 Target
 		local PerPlayerAbsorb = 0
 		local totHits = 0
 		for ca, va in pairs(val) do -- 28 Owner
@@ -361,10 +361,10 @@ function DPSMate.Modules.DetailsHABTotal:GetTableValues()
 							for cet, vel in pairs(ve) do
 								if cet~="i" then
 									local totalHits = 0
-									for qq,ss in vel do
+									for qq,ss in pairs(vel) do
 										totalHits = totalHits + ss
 									end
-									for qq,ss in vel do
+									for qq,ss in pairs(vel) do
 										local p = 5
 										if DPSMateDamageTaken[1][cat] then
 											if DPSMateDamageTaken[1][cat][cet] then
@@ -413,8 +413,8 @@ function DPSMate.Modules.DetailsHABTotal:GetTableValues()
 	end
 	
 	-- Merging!
-	for ca, va in temp do
-		for c, v in arr do
+	for ca, va in pairs(temp) do
+		for c, v in pairs(arr) do
 			if v[1]==ca and temp[ca] then
 				arr[c][2] = arr[c][2] + va[2]
 				arr[c][4] = arr[c][4] + va[4]
@@ -426,7 +426,7 @@ function DPSMate.Modules.DetailsHABTotal:GetTableValues()
 		end
 	end
 	
-	for ca, va in temp do
+	for ca, va in pairs(temp) do
 		if va then
 			tinsert(arr, va)
 			total = total + va[2]
@@ -435,7 +435,7 @@ function DPSMate.Modules.DetailsHABTotal:GetTableValues()
 	temp = nil
 	
 	local newArr = {}
-	for cat, val in arr do
+	for cat, val in pairs(arr) do
 		if val[2]>0 then
 			local i = 1
 			while true do
@@ -480,9 +480,9 @@ end
 function DPSMate.Modules.DetailsHABTotal:SortLineTable(uid)
 	local newArr = {}
 	-- user
-	for cat, val in DPSMateEHealing[curKey][uid] do
+	for cat, val in pairs(DPSMateEHealing[curKey][uid]) do
 		if cat~="i" and val["i"] then
-			for c,v in val["i"] do
+			for c,v in pairs(val["i"]) do
 				local i = 1
 				while true do
 					if not newArr[i] then
@@ -499,9 +499,9 @@ function DPSMate.Modules.DetailsHABTotal:SortLineTable(uid)
 	end
 	
 	local ownername = DPSMate:GetUserById(uid)
-	for cat, val in db do
+	for cat, val in pairs(db) do
 		if val[uid] then
-			for ca, va in val[uid]["i"] do
+			for ca, va in pairs(val[uid]["i"]) do
 				local i, dmg = 1, 5
 				if DPSMateDamageTaken[1][cat] then
 					if DPSMateDamageTaken[1][cat][va[2]] then
@@ -591,7 +591,7 @@ function DPSMate.Modules.DetailsHABTotal:LoadLegendButtons()
 	for i=1, 30 do
 		_G("DPSMate_Details_HABTotal_DiagramLegend_Child_C"..i):Hide()
 	end
-	for cat, val in buttons do
+	for cat, val in pairs(buttons) do
 		local name = DPSMate:GetUserById(val[2])
 		local font = _G("DPSMate_Details_HABTotal_DiagramLegend_Child_C"..cat.."_Font")
 		font:SetText(name)
@@ -623,7 +623,7 @@ function DPSMate.Modules.DetailsHABTotal:LoadTable()
 		_G("DPSMate_Details_HABTotal_PlayerList_Child_R"..i.."_CB"):SetChecked(false)
 		_G("DPSMate_Details_HABTotal_PlayerList_Child_R"..i.."_CB").act = false
 	end
-	for cat, val in arr do
+	for cat, val in pairs(arr) do
 		if DPSMateUser[val[1]][4] then
 			i=i+1
 		else

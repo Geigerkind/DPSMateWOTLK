@@ -157,12 +157,12 @@ function DPSMate.Modules.DetailsHealingAndAbsorbs:UpdateSumGraph()
 	g7:SetXLabels(true)
 	
 	local ata={{0,0}}
-	for cat, val in DPSMate:ScaleDown(sumTable, min) do
+	for cat, val in pairs(DPSMate:ScaleDown(sumTable, min)) do
 		tinsert(ata, {val[1],val[2], self:CheckProcs(DPSMate_Details_CompareHealingAndAbsorbs.proc, val[1]+min+1, DetailsUserComp)})
 	end
 	
 	local Data2={{0,0}}
-	for cat, val in DPSMate:ScaleDown(sumTableTwo, minT) do
+	for cat, val in pairs(DPSMate:ScaleDown(sumTableTwo, minT)) do
 		tinsert(Data2, {val[1],val[2], self:CheckProcs(DPSMate_Details_HealingAndAbsorbs.proc, val[1]+minT+1)})
 	end
 
@@ -174,11 +174,11 @@ end
 function DPSMate.Modules.DetailsHealingAndAbsorbs:EvalToggleTable(cname)
 	local a,b = {},{}
 	local d = 0
-	for cat, val in db2 do
+	for cat, val in pairs(db2) do
 		if val[DPSMateUser[cname or DetailsUser][1]] then
 			local CV = 0
 			local c = {[1] = 0,[2] = {},[3] = {}}
-			for p, v in val[DPSMateUser[cname or DetailsUser][1]] do
+			for p, v in pairs(val[DPSMateUser[cname or DetailsUser][1]]) do
 				CV = CV + v[1]
 				local i = 1
 				while true do
@@ -217,11 +217,11 @@ function DPSMate.Modules.DetailsHealingAndAbsorbs:EvalToggleTable(cname)
 	end
 	
 	-- Absorbs
-	for cat, val in DPSMateAbsorbs[curKey] do
+	for cat, val in pairs(DPSMateAbsorbs[curKey]) do
 		if val[DPSMateUser[cname or DetailsUser][1]] then
 			local CV = 0
 			local c = {[1] = 0,[2] = {},[3] = {}}
-			for ca, va in val[DPSMateUser[cname or DetailsUser][1]] do
+			for ca, va in pairs(val[DPSMateUser[cname or DetailsUser][1]]) do
 				local dmg = 5
 				local hit, hitav, hitmin, hitmax = 0, 0, 0, 0
 				local shieldname = DPSMate:GetAbilityById(ca)
@@ -231,10 +231,10 @@ function DPSMate.Modules.DetailsHealingAndAbsorbs:EvalToggleTable(cname)
 						for cet, vel in pairs(ve) do
 							if cet~="i" then
 								local totalHits = 0
-								for qq,ss in vel do
+								for qq,ss in pairs(vel) do
 									totalHits = totalHits + ss
 								end
-								for qq,ss in vel do
+								for qq,ss in pairs(vel) do
 									local p = 5
 									if DPSMateDamageTaken[1][cat] then
 										if DPSMateDamageTaken[1][cat][cet] then
@@ -417,20 +417,20 @@ function DPSMate.Modules.DetailsHealingAndAbsorbs:SelectDetails_HealingAndAbsorb
 	local hit, crit, hitav, critav, hitMin, hitMax, critMin, critMax, total, max = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	if dArr[lineplusoffset][2] and not toggle then -- IsAbsorb
 		local abString = DPSMate:GetAbilityById(tonumber(uArr[lineplusoffset]))
-		for cat, val in DPSMateAbsorbs[curKey] do 
-			for ca, va in val do
+		for cat, val in pairs(DPSMateAbsorbs[curKey]) do 
+			for ca, va in pairs(val) do
 				if ca == DPSMateUser[cname or DetailsUser][1] then -- Owner
-					for c, v in va do -- Every Ability
+					for c, v in pairs(va) do -- Every Ability
 						if c==tonumber(uArr[lineplusoffset]) then
-							for ce, ve in v do -- Every individual shield
+							for ce, ve in pairs(v) do -- Every individual shield
 								local PerShieldAbsorb = 0
-								for cet, vel in ve do
+								for cet, vel in pairs(ve) do
 									if cet~="i" then
 										local totalHits = 0
-										for qq,ss in vel do
+										for qq,ss in pairs(vel) do
 											totalHits = totalHits + ss
 										end
-										for qq,ss in vel do
+										for qq,ss in pairs(vel) do
 											local p = 5
 											if DPSMateDamageTaken[1][cat] then
 												if DPSMateDamageTaken[1][cat][cet] then
@@ -630,7 +630,7 @@ function DPSMate.Modules.DetailsHealingAndAbsorbs:UpdatePie(gg, cname)
 		dTot = DetailsTotalComp
 	end
 	gg:ResetPie()
-	for cat, val in dArr do
+	for cat, val in pairs(dArr) do
 		gg:AddPie(val[1]*100/dTot, 0, DPSMate:GetAbilityById(uArr[cat]))
 	end
 end
@@ -669,7 +669,7 @@ function DPSMate.Modules.DetailsHealingAndAbsorbs:UpdateLineGraph(gg, comp, cnam
 	gg:SetXLabels(true)
 
 	local Data1={{0,0}}
-	for cat, val in DPSMate:ScaleDown(sumTable, min) do
+	for cat, val in pairs(DPSMate:ScaleDown(sumTable, min)) do
 		tinsert(Data1, {val[1],val[2], self:CheckProcs(_G("DPSMate_Details_"..comp.."HealingAndAbsorbs").proc, val[1]+min+1, cname)})
 	end
 	local colorT = {{1.0,0.0,0.0,0.8}, {1.0,1.0,0.0,0.8}}
@@ -706,10 +706,10 @@ function DPSMate.Modules.DetailsHealingAndAbsorbs:UpdateStackedGraph(gg, comp, c
 	if toggle3 then
 		if db2[d1[d4]] then
 			if db2[d1[d4]][DPSMateUser[cname or DetailsUser][1]] then
-				for cat, val in db2[d1[d4]][DPSMateUser[cname or DetailsUser][1]] do
+				for cat, val in pairs(db2[d1[d4]][DPSMateUser[cname or DetailsUser][1]]) do
 					if cat~="i" and val["i"] then
 						local temp = {}
-						for c, v in val["i"] do
+						for c, v in pairs(val["i"]) do
 							local key = tonumber(strformat("%.1f", c))
 							if p[key] then
 								p[key] = p[key] + v
@@ -753,7 +753,7 @@ function DPSMate.Modules.DetailsHealingAndAbsorbs:UpdateStackedGraph(gg, comp, c
 		local temp = {}
 		if DPSMateAbsorbs[curKey][d1[d4]] then
 			if DPSMateAbsorbs[curKey][d1[d4]][DPSMateUser[cname or DetailsUser][1]] then
-				for ca, va in DPSMateAbsorbs[curKey][d1[d4]][DPSMateUser[cname or DetailsUser][1]]["i"] do
+				for ca, va in pairs(DPSMateAbsorbs[curKey][d1[d4]][DPSMateUser[cname or DetailsUser][1]]["i"]) do
 					local i, dmg = 1, 5
 					if DPSMateDamageTaken[1][d1[d4]] then
 						if DPSMateDamageTaken[1][d1[d4]][va[2]] then
@@ -786,19 +786,19 @@ function DPSMate.Modules.DetailsHealingAndAbsorbs:UpdateStackedGraph(gg, comp, c
 				end
 			end
 		end
-		for cat, val in temp do
+		for cat, val in pairs(temp) do
 			tinsert(label, 1, DPSMate:GetAbilityById(cat))
 			tinsert(Data1, 1, val)
 		end
 		
 		local min
-		for cat, val in Data1 do
+		for cat, val in pairs(Data1) do
 			local pmin = DPSMate:GetMinValue(val, 1)
 			if not min or pmin<min then
 				min = pmin
 			end
 		end
-		for cat, val in Data1 do
+		for cat, val in pairs(Data1) do
 			Data1[cat] = DPSMate:ScaleDown(val, min)
 		end
 		
@@ -806,10 +806,10 @@ function DPSMate.Modules.DetailsHealingAndAbsorbs:UpdateStackedGraph(gg, comp, c
 		gg:SetGridSpacing((maxX-(min or 0))/7,maxY/7)	
 	else
 		if DPSMateEHealing[curKey][DPSMateUser[cname or DetailsUser][1]] then
-			for cat, val in DPSMateEHealing[curKey][DPSMateUser[cname or DetailsUser][1]] do
+			for cat, val in pairs(DPSMateEHealing[curKey][DPSMateUser[cname or DetailsUser][1]]) do
 				if cat~="i" and val["i"] then
 					local temp = {}
-					for c, v in val["i"] do
+					for c, v in pairs(val["i"]) do
 						local key = tonumber(strformat("%.1f", c))
 						if p[key] then
 							p[key] = p[key] + v
@@ -850,9 +850,9 @@ function DPSMate.Modules.DetailsHealingAndAbsorbs:UpdateStackedGraph(gg, comp, c
 		end
 		-- Add absorbs points
 		local temp = {}
-		for cat, val in DPSMateAbsorbs[curKey] do
+		for cat, val in pairs(DPSMateAbsorbs[curKey]) do
 			if val[DPSMateUser[cname or DetailsUser][1]] then
-				for ca, va in val[DPSMateUser[cname or DetailsUser][1]]["i"] do
+				for ca, va in pairs(val[DPSMateUser[cname or DetailsUser][1]]["i"]) do
 					local i, dmg = 1, 5
 					if DPSMateDamageTaken[1][cat] then
 						if DPSMateDamageTaken[1][cat][va[2]] then
@@ -885,7 +885,7 @@ function DPSMate.Modules.DetailsHealingAndAbsorbs:UpdateStackedGraph(gg, comp, c
 				end
 			end
 		end
-		for cat, val in temp do
+		for cat, val in pairs(temp) do
 			tinsert(label, 1, DPSMate:GetAbilityById(cat))
 			tinsert(Data1, 1, val)
 		end
@@ -1008,7 +1008,7 @@ function DPSMate.Modules.DetailsHealingAndAbsorbs:SortLineTable(arr, b, cname)
 	if b then
 		if DPSMateAbsorbs[curKey][b] then
 			if DPSMateAbsorbs[curKey][b][DPSMateUser[cname or DetailsUser][1]] then
-				for ca, va in DPSMateAbsorbs[curKey][b][DPSMateUser[cname or DetailsUser][1]]["i"] do
+				for ca, va in pairs(DPSMateAbsorbs[curKey][b][DPSMateUser[cname or DetailsUser][1]]["i"]) do
 					local i, dmg = 1, 5
 					if DPSMateDamageTaken[1][b] then
 						if DPSMateDamageTaken[1][b][va[2]] then
@@ -1042,9 +1042,9 @@ function DPSMate.Modules.DetailsHealingAndAbsorbs:SortLineTable(arr, b, cname)
 		end
 		if arr[b] then
 			if arr[b][DPSMateUser[cname or DetailsUser][1]] then
-				for cat, val in arr[b][DPSMateUser[cname or DetailsUser][1]] do
+				for cat, val in pairs(arr[b][DPSMateUser[cname or DetailsUser][1]]) do
 					if cat~="i" and val["i"] then
-						for ca, va in val["i"] do
+						for ca, va in pairs(val["i"]) do
 							local i=1
 							while true do
 								if (not newArr[i]) then 
@@ -1063,9 +1063,9 @@ function DPSMate.Modules.DetailsHealingAndAbsorbs:SortLineTable(arr, b, cname)
 			end
 		end
 	else
-		for cat, val in DPSMateAbsorbs[curKey] do
+		for cat, val in pairs(DPSMateAbsorbs[curKey]) do
 			if val[DPSMateUser[cname or DetailsUser][1]] then
-				for ca, va in val[DPSMateUser[cname or DetailsUser][1]]["i"] do
+				for ca, va in pairs(val[DPSMateUser[cname or DetailsUser][1]]["i"]) do
 					local i, dmg = 1, 5
 					if DPSMateDamageTaken[1][cat] then
 						if DPSMateDamageTaken[1][cat][va[2]] then
@@ -1098,9 +1098,9 @@ function DPSMate.Modules.DetailsHealingAndAbsorbs:SortLineTable(arr, b, cname)
 			end
 		end
 		if DPSMateEHealing[curKey][DPSMateUser[cname or DetailsUser][1]] then
-			for cat, val in DPSMateEHealing[curKey][DPSMateUser[cname or DetailsUser][1]] do
+			for cat, val in pairs(DPSMateEHealing[curKey][DPSMateUser[cname or DetailsUser][1]]) do
 				if cat~="i" and val["i"] then
-					for ca, va in val["i"] do
+					for ca, va in pairs(val["i"]) do
 						local i=1
 						while true do
 							if (not newArr[i]) then 

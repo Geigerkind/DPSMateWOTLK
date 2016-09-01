@@ -34,10 +34,10 @@ function DPSMate.Modules.Absorbs:GetSortedTable(arr,k)
 							for cet, vel in pairs(ve) do
 								if cet~="i" then
 									local totalHits = 0
-									for qq,ss in vel do
+									for qq,ss in pairs(vel) do
 										totalHits = totalHits + ss
 									end
-									for qq,ss in vel do
+									for qq,ss in pairs(vel) do
 										local p = 5
 										if DPSMateDamageTaken[1][cat] then
 											if DPSMateDamageTaken[1][cat][cet] then
@@ -114,10 +114,10 @@ function DPSMate.Modules.Absorbs:EvalTable(user, k)
 							for cet, vel in pairs(ve) do
 								if cet~="i" then
 									local totalHits = 0
-									for qq,ss in vel do
+									for qq,ss in pairs(vel) do
 										totalHits = totalHits + ss
 									end
-									for qq,ss in vel do
+									for qq,ss in pairs(vel) do
 										local p = 5
 										if DPSMateDamageTaken[1][cat] then
 											if DPSMateDamageTaken[1][cat][cet] then
@@ -152,9 +152,9 @@ function DPSMate.Modules.Absorbs:EvalTable(user, k)
 							end
 							PerAbilityAbsorb = PerAbilityAbsorb+PerShieldAbsorb
 						end
-						for ut, utt in temp do
+						for ut, utt in pairs(temp) do
 							local CVV, qa, qd = 0, {}, {}
-							for qt, qtt in utt do
+							for qt, qtt in pairs(utt) do
 								CVV = CVV + qtt
 								if qtt>0 then
 									local i = 1

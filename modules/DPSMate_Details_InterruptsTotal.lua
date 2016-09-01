@@ -50,10 +50,10 @@ end
 
 function DPSMate.Modules.DetailsInterruptsTotal:EvalTable()
 	local a = {}
-	for cat, val in db do -- user
+	for cat, val in pairs(db) do -- user
 		local name = DPSMate:GetUserById(cat)
 		if DPSMate:ApplyFilter(curKey, name) then
-			for ca, va in val["i"][2] do
+			for ca, va in pairs(val["i"][2]) do
 				local i=1
 				while true do
 					if not a[i] then

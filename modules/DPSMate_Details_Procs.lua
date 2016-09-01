@@ -173,7 +173,7 @@ end
 
 function DPSMate.Modules.DetailsProcs:GetTotalHits(cname)
 	if hits == 1 or (cname and hitsComp == 1) then
-		for cat, val in DPSMateDamageDone[1][DPSMateUser[cname or DetailsUser][1]] do
+		for cat, val in pairs(DPSMateDamageDone[1][DPSMateUser[cname or DetailsUser][1]]) do
 			if cat~="i" then
 				if mab[DPSMate:GetAbilityById(cat)] then
 					if cname then
@@ -194,7 +194,7 @@ end
 function DPSMate.Modules.DetailsProcs:GetSpecialSnowFlakeHits(ability, cname)
 	local num = 0;
 	if specialSnowflakes[ability] then
-		for cat, val in DPSMateDamageDone[1][DPSMateUser[cname or DetailsUser][1]] do
+		for cat, val in pairs(DPSMateDamageDone[1][DPSMateUser[cname or DetailsUser][1]]) do
 			if cat~="i" then
 				if specialSnowflakes[ability][DPSMate:GetAbilityById(cat)] then
 					num = num + val[1] + val[5]
@@ -202,9 +202,9 @@ function DPSMate.Modules.DetailsProcs:GetSpecialSnowFlakeHits(ability, cname)
 			end
 		end
 	elseif specialSnowflakesDmgTaken[1][ability] then
-		for cat, val in DPSMateDamageTaken[1][DPSMateUser[cname or DetailsUser][1]] do
+		for cat, val in pairs(DPSMateDamageTaken[1][DPSMateUser[cname or DetailsUser][1]]) do
 			if cat~="i" then
-				for ca, va in val do
+				for ca, va in pairs(val) do
 					if ca~="i" then
 						if DPSMate:GetAbilityById(ca) == DPSMate.BabbleSpell:GetTranslation("AutoAttack") then
 							num = num + va[1] + va[5] + va[15]
@@ -214,9 +214,9 @@ function DPSMate.Modules.DetailsProcs:GetSpecialSnowFlakeHits(ability, cname)
 			end
 		end
 	elseif specialSnowflakesDmgTaken[2][ability] then
-		for cat, val in DPSMateDamageTaken[1][DPSMateUser[cname or DetailsUser][1]] do
+		for cat, val in pairs(DPSMateDamageTaken[1][DPSMateUser[cname or DetailsUser][1]]) do
 			if cat~="i" then
-				for ca, va in val do
+				for ca, va in pairs(val) do
 					if ca~="i" then
 						if DPSMate:GetAbilityById(ca) == DPSMate.BabbleSpell:GetTranslation("AutoAttack") then
 							num = num + va[5]
@@ -226,9 +226,9 @@ function DPSMate.Modules.DetailsProcs:GetSpecialSnowFlakeHits(ability, cname)
 			end
 		end
 	elseif specialSnowflakesHealTaken[ability] then
-		for cat, val in DPSMateHealingTaken[1][DPSMateUser[cname or DetailsUser][1]] do
+		for cat, val in pairs(DPSMateHealingTaken[1][DPSMateUser[cname or DetailsUser][1]]) do
 			if cat~="i" then
-				for ca, va in val do
+				for ca, va in pairs(val) do
 					if specialSnowflakesHealTaken[ability][DPSMate:GetAbilityById(ca)] then
 						num = num + va[2] + va[3]
 					end
@@ -236,7 +236,7 @@ function DPSMate.Modules.DetailsProcs:GetSpecialSnowFlakeHits(ability, cname)
 			end
 		end
 	elseif specialSnowflakesHealDone[ability] then
-		for cat, val in DPSMateTHealing[1][DPSMateUser[cname or DetailsUser][1]] do
+		for cat, val in pairs(DPSMateTHealing[1][DPSMateUser[cname or DetailsUser][1]]) do
 			if cat~="i" then
 				if specialSnowflakesHealDone[ability][DPSMate:GetAbilityById(cat)] then
 					num = num + val[2] + val[3]
@@ -244,7 +244,7 @@ function DPSMate.Modules.DetailsProcs:GetSpecialSnowFlakeHits(ability, cname)
 			end
 		end
 	elseif ability == DPSMate.BabbleSpell:GetTranslation("Vengeance") or ability == DPSMate.BabbleSpell:GetTranslation("Flurry") then
-		for cat, val in DPSMateDamageDone[1][DPSMateUser[cname or DetailsUser][1]] do
+		for cat, val in pairs(DPSMateDamageDone[1][DPSMateUser[cname or DetailsUser][1]]) do
 			if cat~="i" then
 				num = num + val[5]
 			end
@@ -256,7 +256,7 @@ function DPSMate.Modules.DetailsProcs:GetSpecialSnowFlakeHits(ability, cname)
 		return hits;
 	end
 	if ability == DPSMate.BabbleSpell:GetTranslation("Relentless Strikes Effect") then
-		for cat, val in DPSMateAurasGained[1][DPSMateUser[cname or DetailsUser][1]] do
+		for cat, val in pairs(DPSMateAurasGained[1][DPSMateUser[cname or DetailsUser][1]]) do
 			if specialSnowflakes[ability][DPSMate:GetAbilityById(cat)] then
 				num = num + DPSMate:TableLength(val[2])
 			end
@@ -342,7 +342,7 @@ function DPSMate.Modules.DetailsProcs:ShowTooltip(obj)
 		if db[DPSMateUser[user][1]][obj.id] then
 			GameTooltip:SetOwner(obj)
 			GameTooltip:AddLine(DPSMate:GetAbilityById(obj.id))
-			for cat, val in db[DPSMateUser[user][1]][obj.id][3] do
+			for cat, val in pairs(db[DPSMateUser[user][1]][obj.id][3]) do
 				GameTooltip:AddDoubleLine(DPSMate:GetUserById(cat),val,1,1,1,1,1,1)
 			end
 			GameTooltip:Show()

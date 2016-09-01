@@ -50,10 +50,10 @@ end
 
 function DPSMate.Modules.DetailsLiftMagicTotal:EvalTable()
 	local a = {}
-	for cat, val in db do -- user
+	for cat, val in pairs(db) do -- user
 		local name = DPSMate:GetUserById(cat)
 		if DPSMate:ApplyFilter(curKey, name) then
-			for ca, va in val["i"][2] do
+			for ca, va in pairs(val["i"][2]) do
 				local ab = DPSMate:GetAbilityById(va[2])
 				local abtwo = DPSMate:GetUserById(va[3])
 				if DPSMate.Modules.LiftMagic:IsValid(ab, abtwo) then

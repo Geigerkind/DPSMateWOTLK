@@ -375,9 +375,9 @@ function DPSMate.Modules.Auras:UpdateStackedGraph(gg, cname)
 	local maxX, maxY = 0, 0
 	local label = {}
 	
-	for cat, val in db[DPSMateUser[cname or DetailsUser][1]] do -- ability
+	for cat, val in pairs(db[DPSMateUser[cname or DetailsUser][1]]) do -- ability
 		local temp = {}
-		for ca, va in val[1] do
+		for ca, va in pairs(val[1]) do
 			tinsert(temp, {va, 1})
 		end
 		tinsert(Data1, temp)
@@ -394,7 +394,7 @@ function DPSMate.Modules.Auras:SortTable(cname)
 	local t, u = {}, {}
 	local a,_,b,c = DPSMate.Modules.AurasUptimers:EvalTable(DPSMateUser[cname or DetailsUser], curKey)
 	local p1,p2 = 1, 1
-	for cat, val in a do
+	for cat, val in pairs(a) do
 		local name = DPSMate:GetAbilityById(val)
 		local obj = {name, b[cat], c[cat]}
 		if Debuffs[name] then
@@ -409,7 +409,7 @@ function DPSMate.Modules.Auras:SortTable(cname)
 end
 
 function DPSMate.Modules.Auras:CleanTables(comp)
-	for _, val in {"Buffs", "Debuffs"} do
+	for _, val in pairs({"Buffs", "Debuffs"}) do
 		local path = "DPSMate_Details_"..comp.."Auras_"..val.."_Row"
 		for i=1, 6 do
 			_G(path..i.."_Icon"):SetTexture()
@@ -508,7 +508,7 @@ function DPSMate.Modules.Auras:ShowTooltip(obj)
 	if obj.id and db[DPSMateUser[user][1]][DPSMateAbility[obj.id][1]] then
 		GameTooltip:SetOwner(obj)
 		GameTooltip:AddLine(obj.id)
-		for cat, val in db[DPSMateUser[user][1]][DPSMateAbility[obj.id][1]][3] do
+		for cat, val in pairs(db[DPSMateUser[user][1]][DPSMateAbility[obj.id][1]][3]) do
 			GameTooltip:AddDoubleLine(DPSMate:GetUserById(cat),val,1,1,1,1,1,1)
 		end
 		GameTooltip:Show()

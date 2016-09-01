@@ -42,12 +42,12 @@ end
 
 function DPSMate.Modules.DetailsCureDisease:EvalTable(cname)
 	local a, b, total = {}, {}, 0
-	for cat, val in db[DPSMateUser[cname or DetailsUser][1]] do -- 41 Ability
+	for cat, val in pairs(db[DPSMateUser[cname or DetailsUser][1]]) do -- 41 Ability
 		if cat~="i" then
 			local CV, ta, tb = 0, {}, {}
-			for ca, va in val do
+			for ca, va in pairs(val) do
 				local taa, tbb, CVV = {}, {}, 0
-				for c, v in va do
+				for c, v in pairs(va) do
 					if DPSMate.Modules.CureDisease:IsValid(DPSMate:GetAbilityById(c), DPSMate:GetAbilityById(cat)) then
 						CVV = CVV + v
 						local i = 1

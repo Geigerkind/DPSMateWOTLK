@@ -114,15 +114,15 @@ function DPSMate.Modules.DetailsEHealingTakenTotal:UpdateStackedGraph()
 	local label = {}
 	local maxX, maxY = 0,0
 	local p = {}
-	for cat, val in db do
+	for cat, val in pairs(db) do
 		local temp = {}
 		local user = DPSMate:GetUserById(cat)
 		if DPSMate:ApplyFilter(curKey, user) then
-			for ca, va in val do
+			for ca, va in pairs(val) do
 				if ca~="i" then
-					for q,s in va do
+					for q,s in pairs(va) do
 						if q~="i" and s["i"] then
-							for c,v in s["i"] do
+							for c,v in pairs(s["i"]) do
 								local i = 1
 								while true do
 									if not temp[i] then
@@ -151,7 +151,7 @@ function DPSMate.Modules.DetailsEHealingTakenTotal:UpdateStackedGraph()
 			tinsert(Data1, 1, temp)
 		end
 	end
-	for cat, val in p do
+	for cat, val in pairs(p) do
 		if maxY<val then
 			maxY = val
 		end
@@ -210,15 +210,15 @@ function DPSMate.Modules.DetailsEHealingTakenTotal:AddTotalDataSeries()
 	local sumTable, newArr = {[0]=0}, {}
 	
 	local temp = {}
-	for cat, val in db do -- each user
+	for cat, val in pairs(db) do -- each user
 		local user = DPSMate:GetUserById(cat)
 		if DPSMate:ApplyFilter(curKey, user) then
 			temp[user] = true
-			for ca, va in val do -- each healer
+			for ca, va in pairs(val) do -- each healer
 				if ca~="i" then 
-					for q,s in va do
+					for q,s in pairs(va) do
 						if q~="i" and s["i"] then
-							for c,v in s["i"] do -- each ability
+							for c,v in pairs(s["i"]) do -- each ability
 								if sumTable[c] then
 									sumTable[c] = sumTable[c] + v
 								else
@@ -235,7 +235,7 @@ function DPSMate.Modules.DetailsEHealingTakenTotal:AddTotalDataSeries()
 	local tl = DPSMate:TableLength(temp)
 	tl = ceil(tl-0.3*tl)
 	
-	for cat, val in sumTable do
+	for cat, val in pairs(sumTable) do
 		local i=1
 		while true do
 			if (not newArr[i]) then 
@@ -263,14 +263,14 @@ end
 
 function DPSMate.Modules.DetailsEHealingTakenTotal:GetTableValues()
 	local arr, total = {}, 0
-	for cat, val in db do
+	for cat, val in pairs(db) do
 		if cat~="i" then
 			local name = DPSMate:GetUserById(cat)
 			if DPSMate:ApplyFilter(curKey, name) then
 				local crit, totCrit, miss, totMiss, time, last = 0, 0.000001, 0, 0.000001, 0, 0
-				for q,s in val do
+				for q,s in pairs(val) do
 					if q~="i" then
-						for ca, va in s do
+						for ca, va in pairs(s) do
 							if ca~="i" then
 								totCrit=totCrit+va[3]+va[2]
 								totMiss=totMiss+va[2]+va[3]
@@ -288,7 +288,7 @@ function DPSMate.Modules.DetailsEHealingTakenTotal:GetTableValues()
 		end
 	end
 	local newArr = {}
-	for cat, val in arr do
+	for cat, val in pairs(arr) do
 		if val[2]>0 then
 			local i = 1
 			while true do
@@ -333,11 +333,11 @@ end
 function DPSMate.Modules.DetailsEHealingTakenTotal:SortLineTable(uid)
 	local newArr = {}
 	-- user
-	for cat, val in db[uid] do
+	for cat, val in pairs(db[uid]) do
 		if cat~="i" then
-			for q,s in val do
+			for q,s in pairs(val) do
 				if q~="i" and s["i"] then
-					for c,v in s["i"] do
+					for c,v in pairs(s["i"]) do
 						local i = 1
 						while true do
 							if not newArr[i] then
@@ -412,7 +412,7 @@ function DPSMate.Modules.DetailsEHealingTakenTotal:LoadLegendButtons()
 	for i=1, 30 do
 		_G("DPSMate_Details_EHealingTakenTotal_DiagramLegend_Child_C"..i):Hide()
 	end
-	for cat, val in buttons do
+	for cat, val in pairs(buttons) do
 		local name = DPSMate:GetUserById(val[2])
 		local font = _G("DPSMate_Details_EHealingTakenTotal_DiagramLegend_Child_C"..cat.."_Font")
 		font:SetText(name)
@@ -444,7 +444,7 @@ function DPSMate.Modules.DetailsEHealingTakenTotal:LoadTable()
 		_G("DPSMate_Details_EHealingTakenTotal_PlayerList_Child_R"..i.."_CB"):SetChecked(false)
 		_G("DPSMate_Details_EHealingTakenTotal_PlayerList_Child_R"..i.."_CB").act = false
 	end
-	for cat, val in arr do
+	for cat, val in pairs(arr) do
 		if DPSMateUser[val[1]][4] then
 			i=i+1
 		else

@@ -155,11 +155,11 @@ end
 
 function DPSMate.Modules.DetailsProcsTotal:EvalTable()
 	local a = {}
-	for cat, val in db do -- each user
+	for cat, val in pairs(db) do -- each user
 		local user = DPSMate:GetUserById(cat)
 		if DPSMate:ApplyFilter(curKey, user) then
 			local z,x,y = DPSMate.Modules.Procs:EvalTable(DPSMateUser[user], curKey)
-			for ca, va in z do
+			for ca, va in pairs(z) do
 				if a[va] then
 					a[va] = a[va] + y[ca]
 				else
@@ -169,7 +169,7 @@ function DPSMate.Modules.DetailsProcsTotal:EvalTable()
 		end
 	end
 	local b = {}
-	for cat, val in a do
+	for cat, val in pairs(a) do
 		local i=1
 		local chance = self:GetChance(cat, val)
 		while true do
@@ -189,7 +189,7 @@ end
 function DPSMate.Modules.DetailsProcsTotal:GetTotalHits(user)
 	local hits = 0
 	if DPSMateDamageDone[1][user] then
-		for cat, val in DPSMateDamageDone[1][user] do
+		for cat, val in pairs(DPSMateDamageDone[1][user]) do
 			if cat~="i" then
 				if mab[DPSMate:GetAbilityById(cat)] then
 					hits = hits + val[1] + val[5]
@@ -203,7 +203,7 @@ end
 function DPSMate.Modules.DetailsProcsTotal:GetChance(ab, amount)
 	local hits = 0.0000001
 	local abname = DPSMate:GetAbilityById(ab)
-	for cat, val in db do
+	for cat, val in pairs(db) do
 		if val[ab] then
 			hits = hits + self:GetSpecialSnowFlakeHits(abname, cat)
 		end
@@ -214,7 +214,7 @@ end
 function DPSMate.Modules.DetailsProcsTotal:GetSpecialSnowFlakeHits(ability, user)
 	local num = 0;
 	if specialSnowflakes[ability] then
-		for cat, val in DPSMateDamageDone[1][user] do
+		for cat, val in pairs(DPSMateDamageDone[1][user]) do
 			if cat~="i" then
 				if specialSnowflakes[ability][DPSMate:GetAbilityById(cat)] then
 					num = num + val[1] + val[5]
@@ -222,9 +222,9 @@ function DPSMate.Modules.DetailsProcsTotal:GetSpecialSnowFlakeHits(ability, user
 			end
 		end
 	elseif specialSnowflakesDmgTaken[1][ability] then
-		for cat, val in DPSMateDamageTaken[1][user] do
+		for cat, val in pairs(DPSMateDamageTaken[1][user]) do
 			if cat~="i" then
-				for ca, va in val do
+				for ca, va in pairs(val) do
 					if ca~="i" then
 						if DPSMate:GetAbilityById(ca) == DPSMate.BabbleSpell:GetTranslation("AutoAttack") then
 							num = num + va[1] + va[5] + va[15]
@@ -234,9 +234,9 @@ function DPSMate.Modules.DetailsProcsTotal:GetSpecialSnowFlakeHits(ability, user
 			end
 		end
 	elseif specialSnowflakesDmgTaken[2][ability] then
-		for cat, val in DPSMateDamageTaken[1][user] do
+		for cat, val in pairs(DPSMateDamageTaken[1][user]) do
 			if cat~="i" then
-				for ca, va in val do
+				for ca, va in pairs(val) do
 					if ca~="i" then
 						if DPSMate:GetAbilityById(ca) == DPSMate.BabbleSpell:GetTranslation("AutoAttack") then
 							num = num + va[5]
@@ -246,9 +246,9 @@ function DPSMate.Modules.DetailsProcsTotal:GetSpecialSnowFlakeHits(ability, user
 			end
 		end
 	elseif specialSnowflakesHealTaken[ability] then
-		for cat, val in DPSMateHealingTaken[1][user] do
+		for cat, val in pairs(DPSMateHealingTaken[1][user]) do
 			if cat~="i" then
-				for ca, va in val do
+				for ca, va in pairs(val) do
 					if specialSnowflakesHealTaken[ability][DPSMate:GetAbilityById(ca)] then
 						num = num + va[2] + va[3]
 					end
@@ -256,7 +256,7 @@ function DPSMate.Modules.DetailsProcsTotal:GetSpecialSnowFlakeHits(ability, user
 			end
 		end
 	elseif specialSnowflakesHealDone[ability] then
-		for cat, val in DPSMateTHealing[1][user] do
+		for cat, val in pairs(DPSMateTHealing[1][user]) do
 			if cat~="i" then
 				if specialSnowflakesHealDone[ability][DPSMate:GetAbilityById(cat)] then
 					num = num + val[2] + val[3]
@@ -265,7 +265,7 @@ function DPSMate.Modules.DetailsProcsTotal:GetSpecialSnowFlakeHits(ability, user
 		end
 	elseif ability == DPSMate.BabbleSpell:GetTranslation("Vengeance") or ability == DPSMate.BabbleSpell:GetTranslation("Flurry") then
 		if DPSMateDamageDone[1][user] then
-			for cat, val in DPSMateDamageDone[1][user] do
+			for cat, val in pairs(DPSMateDamageDone[1][user]) do
 				if cat~="i" then
 					num = num + val[5]
 				end
@@ -275,7 +275,7 @@ function DPSMate.Modules.DetailsProcsTotal:GetSpecialSnowFlakeHits(ability, user
 		return self:GetTotalHits(user);
 	end
 	if ability == DPSMate.BabbleSpell:GetTranslation("Relentless Strikes Effect") then
-		for cat, val in DPSMateAurasGained[1][user] do
+		for cat, val in pairs(DPSMateAurasGained[1][user]) do
 			if specialSnowflakes[ability][DPSMate:GetAbilityById(cat)] then
 				num = num + DPSMate:TableLength(val[2])
 			end
