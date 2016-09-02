@@ -430,6 +430,7 @@ local _,playerclass = UnitClass("player")
 local DB = DPSMate.DB
 local _G = getfenv(0)
 local string_find = string.find
+local strgfind = string.gmatch
 local UL = UnitLevel
 local t = {}
 local UnitName = UnitName
@@ -738,7 +739,17 @@ function DPSMate.Parser:UnitDied(timestamp, eventtype, srcGUID, srcName, srcFlag
 end
 
 function DPSMate.Parser:Test(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, amount)
-	DPSMate:SendMessage("EXTRA ATTACKS: "..srcName.."/"..dstName.."/"..spellName.."/"..amount)
+	DB.NextSwing[srcName] = {
+		[1] = amount,
+		[2] = spellName
+	}
+	DB.NextSwingEDD[srcName] = {
+		[1] = amount,
+		[2] = spellName
+	}
+	DB:BuildBuffs(srcName, srcName, spellName, true)
+	DB:DestroyBuffs(srcName, spellName)
+	DPSMate:SendMessage(srcName.."/"..dstName.."/"..spellName.."/"..amount)
 end
 
 function DPSMate.Parser:SpellCastStart(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool)
@@ -766,7 +777,7 @@ function DPSMate.Parser:Loot(msg)
 		return
 	end
 	for a,b,c,d in strgfind(msg, DPSMate.L["loot2"]) do
-		DB:Loot(self.player, linkQuality[a], tnbr(b), d)
+		DB:Loot(DPSMate.Parser.player, linkQuality[a], tnbr(b), d)
 		return
 	end
 end
