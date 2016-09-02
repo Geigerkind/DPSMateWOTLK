@@ -5,7 +5,7 @@
 ## Notes-deDE: [TO BE EDITED]
 ## Author: Shino <Synced> - Kronos
 ## SavedVariables: DPSMateSettings
-## SavedVariablesPerCharacter: DPSMateUser, DPSMateAbility, DPSMateDamageDone, DPSMateEDT, DPSMateEDD, DPSMateDamageTaken, DPSMateDispels, DPSMateInterrupts, DPSMateDeaths, DPSMateEHealing, DPSMateTHealing, DPSMateHealingTaken, DPSMateEHealingTaken, DPSMateOverhealing, DPSMateOverhealingTaken, DPSMateAbsorbs, DPSMateThreat, DPSMateAurasGained, DPSMateCombatTime, DPSMateHistory, DPSMateAttempts, DPSMatePlayer, DPSMateLoot, DPSMateFails, DPSMateCCBreaker
+## SavedVariablesPerCharacter: DPSMateUser, DPSMateAbility, DPSMateAbilityByName, DPSMateDamageDone, DPSMateEDT, DPSMateEDD, DPSMateDamageTaken, DPSMateDispels, DPSMateInterrupts, DPSMateDeaths, DPSMateEHealing, DPSMateTHealing, DPSMateHealingTaken, DPSMateEHealingTaken, DPSMateOverhealing, DPSMateOverhealingTaken, DPSMateAbsorbs, DPSMateThreat, DPSMateAurasGained, DPSMateCombatTime, DPSMateHistory, DPSMateAttempts, DPSMatePlayer, DPSMateLoot, DPSMateFails, DPSMateCCBreaker
 ## OptionalDeps: KLHThreatMeter
 ## Version: 1
 

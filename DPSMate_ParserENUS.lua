@@ -197,7 +197,7 @@ end
 function DPSMate.Parser:FriendlyPlayerHits(msg)
 	t = {}
 	for a,b,c,d,e in strgfind(msg, "(.-) (%a%a?)\its (.+) for (%d+)%. %((%d+) absorbed%)") do
-		DB:SetUnregisterVariables(tnbr(e), c, a)
+		DB:SetUnregisterVariables(tnbr(e), "AutoAttack", a)
 	end
 	for a,b,c,d,e in strgfind(msg, "(.-) (%a%a?)\its (.+) for (%d+)\.%s?(.*)") do
 		if b=="h" then t[3]=1;t[4]=0 end

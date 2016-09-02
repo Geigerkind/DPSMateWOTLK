@@ -445,11 +445,32 @@ local spellSchoolToString = {
 local strupper = string.upper
 local strsub = string.sub
 local strlower = string.lower
+local tinsert = table.insert
 local FixCaps = function(capsstr)
 	return strupper(strsub(capsstr,1,1))..strlower(strsub(capsstr,2))
 end
 local overheal = 0
 local GetTime = GetTime
+local SuccessfulCasts = {}
+local GetSpellSource = function(spellName, dstName)
+	local owner, secPrio = DPSMate.L["unknown"]
+	for c, v in pairs(SuccessfulCasts) do
+		if v then
+			if (GetTime()-v[1])>2 then
+				SuccessfulCasts[c]=nil
+			else
+				if v[2]==spellName then
+					if v[4]==dstName then
+						owner = v[3]
+					else
+						secPrio = v[3]
+					end
+				end
+			end
+		end
+	end
+	return secPrio or owner
+end
 
 -- Begin Functions
 
@@ -517,13 +538,14 @@ end
 
 function DPSMate.Parser:OnEvent(event)
 	if arg2 and Execute[arg2] then
-		--DPSMate:SendMessage(event..": "..(arg1 or "NONE").."/"..(arg2 or "NONE").."/"..(arg3 or "NONE").."/"..(arg4 or "NONE").."/"..(arg5 or "NONE").."/"..(arg6 or "NONE").."/")
-		--DPSMate:SendMessage(arg1)
 		Execute[arg2](nil,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,arg10,arg11,arg12,arg13,arg14,arg15,arg16,arg17,arg18,arg19,arg20,arg21,arg22)
+		return
+	end
+	if Execute[event] then
+		Execute[event](nil,arg1,arg2,arg3,arg4,arg5)
 	end
 end
 
--- Deprecated
 function DPSMate.Parser:GetUnitByName(target)
 	local unit = self.TargetParty[target]
 	if not unit then
@@ -535,27 +557,17 @@ function DPSMate.Parser:GetUnitByName(target)
 	end
 	return unit
 end
--- Deprecated
 function DPSMate.Parser:GetOverhealByName(amount, target)
 	local result, unit = 0, self:GetUnitByName(target)
 	if unit then result = amount-(UnitHealthMax(unit)-UnitHealth(unit)) end
 	if result<0 then return 0 else return result end 
 end
--- Deprecated
--- The totem aura just reports a removed event in the chat.
--- Maybe we can guess here?
 function DPSMate.Parser:UnitAuraDispels(unit)
-	for i=0, 3 do
-		DPSMate_Tooltip:SetOwner(UIParent, "ANCHOR_NONE")
-		DPSMate_Tooltip:ClearLines()
-		--DPSMate_Tooltip:SetUnitDebuff(unit, i, "HARMFUL")
-		DPSMate_Tooltip:SetPlayerBuff(GetPlayerBuff(i, "HARMFUL"))
-		local aura = DPSMate_TooltipTextLeft1:GetText()
-		local type = DPSMate_TooltipTextRight1:GetText()
-		DPSMate_Tooltip:Hide()
-		if not aura then break end
-		DB:BuildAbility(aura, type)
-		DPSMateAbility[aura][2] = type
+	for i=1, 4 do
+		local name, _, _, _, dispelType = UnitDebuff(unit, i)
+		if not name then break end
+		DB:BuildAbility(name, dispelType)
+		DPSMateAbility[name][2] = dispelType
 	end
 end
 
@@ -575,10 +587,17 @@ function DPSMate.Parser:SwingDamage(timestamp, eventtype, srcGUID, srcName, srcF
 		if DPSMate.Parser.TargetParty[dstName] and DPSMate.Parser.TargetParty[srcName] then DB:BuildFail(1, dstName, srcName, DPSMate.L["AutoAttack"], amount) end
 	end
 	DB:DeathHistory(dstName, srcName, DPSMate.L["AutoAttack"], amount, t[1] or 1, t[2] or 0, 0, t[6] or 0)
+	if absorbed then
+		DB:SetUnregisterVariables(absorbed, DPSMate.L["AutoAttack"], srcName)
+	end
 end
 
 function DPSMate.Parser:SwingMissed(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, missType)
 	t = {}
+	if missType == DPSMate.L["pabsorb"] then
+		DB:Absorb(DPSMate.L["AutoAttack"], dstName, srcName)
+		return -- Cant rly return here, can I?
+	end
 	if missType == DPSMate.L["pmiss"] then t[2]=1 end
 	if missType == DPSMate.L["pdodge"] then t[3]=1 end
 	if missType == DPSMate.L["pparry"] then t[4]=1 end
@@ -604,8 +623,7 @@ function DPSMate.Parser:SpellDamage(timestamp, eventtype, srcGUID, srcName, srcF
 		spellName = spellName..DPSMate.L["periodic"]
 	end
 	if DPSMate:IsNPC(srcGUID) then
-		DB:UnregisterPotentialKick(srcName, spellName, GetTime())
-		if DPSMate.Parser.FailDT[spellName] then DB:BuildFail(2, spellName, dstName, srcName, amount) end
+		if DPSMate.Parser.FailDT[spellName] then DB:BuildFail(2, spellName, dstName, srcName, amount) end -- TO TEST
 		DB:EnemyDamage(false, DPSMateEDD, dstName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, 0, amount, srcName, t[4] or 0, t[6] or 0)
 		DB:DamageTaken(dstName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, 0, amount, srcName, t[6] or 0)
 	else
@@ -615,12 +633,20 @@ function DPSMate.Parser:SpellDamage(timestamp, eventtype, srcGUID, srcName, srcF
 		DB:DamageDone(srcName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, t[3] or 0, amount, t[4] or 0, t[5] or 0)
 		if DPSMate.Parser.TargetParty[dstName] and DPSMate.Parser.TargetParty[srcName] then DB:BuildFail(1, dstName, srcName, spellName, amount) end
 	end
+	DB:UnregisterPotentialKick(srcName, spellName, GetTime())
 	DB:AddSpellSchool(spellName,spellSchoolToString[spellSchool])
 	DB:DeathHistory(dstName, srcName, spellName, amount, t[1] or 1, t[2] or 0, 0, t[6] or 0)
+	if absorbed then
+		DB:SetUnregisterVariables(absorbed, spellName, srcName)
+	end
 end
 
 function DPSMate.Parser:SpellMissed(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, missType)
 	t = {}
+	if missType == DPSMate.L["pabsorb"] then
+		DB:Absorb(spellName, dstName, srcName)
+		return -- Cant rly return here, can I?
+	end
 	if missType == DPSMate.L["pmiss"] then t[2]=1 end
 	if missType == DPSMate.L["pdodge"] then t[3]=1 end
 	if missType == DPSMate.L["pparry"] then t[4]=1 end
@@ -653,6 +679,7 @@ function DPSMate.Parser:SpellHeal(timestamp, eventtype, srcGUID, srcName, srcFla
 	if eventtype == "SPELL_PERIODIC_HEAL" then
 		spellName = spellName..DPSMate.L["periodic"]
 	end
+	DB:UnregisterPotentialKick(srcName, spellName, GetTime())
 	overheal = DPSMate.Parser:GetOverhealByName(amount, dstName) -- Gotta localize those functions
 	DB:HealingTaken(DPSMateHealingTaken, dstName, spellName, t[1] or 1, t[2] or 0, amount, srcName)
 	DB:HealingTaken(DPSMateEHealingTaken, dstName, spellName, t[1] or 1, t[2] or 0, amount-overheal, srcName)
@@ -669,21 +696,32 @@ function DPSMate.Parser:SpellAuraDispelled(timestamp, eventtype, srcGUID, srcNam
 	DPSMate.DB:Dispels(srcName, spellName, dstName, extraSpellName)
 end
 
+-- auraType: BUFF/DEBUFF => Replace DB in auras evaluation
 function DPSMate.Parser:SpellAuraApplied(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, auraType)
-	if not srcName then srcName = DPSMate.Parser.player end
+	srcName = srcName or GetSpellSource(spellName, dstName)
 	if DPSMate:IsNPC(dstGUID) then
-		if DPSMate.Parser.CC[spellName] then DB:BuildActiveCC(dstName, spellName) end
-		if DPSMate.Parser.Kicks[spellName] then DB:AssignPotentialKick(srcName, spellName, dstName, GetTime()) end
+		if DPSMate.Parser.CC[spellName] then DB:BuildActiveCC(dstName, spellName) end -- TO TEST
 	else
-		DPSMate.DB:BuildBuffs(srcName, dstName, spellName, false)
+		if DPSMate.Parser.RCD[spellName] then DPSMate:Broadcast(1, dstName, spellName) end -- TO TEST
+		if DPSMate.Parser.FailDB[spellName] then DB:BuildFail(3, srcName, dstName, spellName, 0) end -- TO TEST
+		if DPSMate.Parser.procs[spellName] and not DPSMate.Parser.OtherExceptions[spellName] then -- TO TEST
+			DPSMate.DB:BuildBuffs(srcName, dstName, spellName, true)
+		else
+			DPSMate.DB:BuildBuffs(srcName, dstName, spellName, false)
+		end
 	end
+	if DPSMate.Parser.Kicks[spellName] then DB:AssignPotentialKick(srcName, spellName, dstName, GetTime()); end
+	if DB.ShieldFlags[spellName] then DB:RegisterAbsorb(srcName, spellName, dstName) end
 end
 
 function DPSMate.Parser:SpellAuraRemoved(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, auraType)
 	if not DPSMate:IsNPC(dstGUID) then
 		DB:UnregisterPotentialKick(dstName, spellName, GetTime())
 		DPSMate.DB:DestroyBuffs(dstName, spellName)
+		if DPSMate.Parser.RCD[spellName] then DPSMate:Broadcast(6, dstName, spellName) end -- TO TEST
+		DB:RemoveActiveCC(dstName, spellName) -- TO TEST
 	end
+	if DB.ShieldFlags[spellName] then DB:UnregisterAbsorb(spellName, dstName) end
 end
 
 function DPSMate.Parser:Interrupt(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, extraSpellId, extraSpellName, extraSpellSchool)
@@ -703,9 +741,14 @@ function DPSMate.Parser:Test(timestamp, eventtype, srcGUID, srcName, srcFlags, d
 end
 
 function DPSMate.Parser:SpellCastStart(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool)
-	if DPSMate:IsNPC(srcGUID) then
-		DB:RegisterPotentialKick(srcName, spellName, GetTime())
+	if not DPSMate:IsNPC(srcGUID) then
+		if DPSMate.Parser.RCD[spellName] then DPSMate:Broadcast(2, srcName, dstName or DPSMate.L["unknown"], spellName) end -- TO TEST MAYBE: SPELL_RESURRECT 
 	end
+	DB:RegisterPotentialKick(srcName, spellName, GetTime())
+end
+
+function DPSMate.Parser:SpellCastSuccess(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool)
+	tinsert(SuccessfulCasts, {GetTime(), spellName, srcName, dstName})
 end
 
 Execute = {
@@ -731,6 +774,8 @@ Execute = {
 	["UNIT_DIED"] = DPSMate.Parser.UnitDied,
 	["UNIT_DESTROYED"] = DPSMate.Parser.UnitDied,
 	["SPELL_CAST_START"] = DPSMate.Parser.SpellCastStart,
+	["SPELL_CAST_SUCCESS"] = DPSMate.Parser.SpellCastSuccess,
+	["UNIT_AURA"] = DPSMate.Parser.UnitAuraDispels,
 	
 	--["SPELL_CAST_FAILED"] = DPSMate.Parser.Test2,
 	

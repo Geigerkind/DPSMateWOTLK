@@ -888,7 +888,7 @@ local spellSchoolNames = {
 	["frost"] = true,
 	["heilig"] = true
 }
-function DPSMate.DB:AddSpellSchool(ab, school)
+function DPSMate.DB:AddSpellSchool(ab, sc)
 	if DPSMateAbility[ab] then
 		DPSMateAbility[ab][3] = sc
 	else
@@ -1341,47 +1341,6 @@ end
 -- Example two: Frost Protection Potion and Power Word Shield
 -- Weasel casts Frostbolt. -> Game: Can FPP absorb the FD? Yes -> Go for it. (The Power Word Shield is ignored until FPP fades)
 -- What if a shield is refreshed
-local Await = {}
-local realAbility = {
-	[DPSMate.BabbleSpell:GetTranslation("Greater Fire Protection Potion")] = DPSMate.BabbleSpell:GetTranslation("Fire Protection"),
-	[DPSMate.BabbleSpell:GetTranslation("Greater Frost Protection Potion")] = DPSMate.BabbleSpell:GetTranslation("Frost Protection"),
-	[DPSMate.BabbleSpell:GetTranslation("Greater Nature Protection Potion")] = DPSMate.BabbleSpell:GetTranslation("Nature Protection"),
-	[DPSMate.BabbleSpell:GetTranslation("Greater Holy Protection Potion")] = DPSMate.BabbleSpell:GetTranslation("Holy Protection"),
-	[DPSMate.BabbleSpell:GetTranslation("Greater Shadow Protection Potion")] = DPSMate.BabbleSpell:GetTranslation("Shadow Protection"),
-	[DPSMate.BabbleSpell:GetTranslation("Greater Arcane Protection Potion")] = DPSMate.BabbleSpell:GetTranslation("Arcane Protection"),
-}
-function DPSMate.DB:AwaitingAbsorbConfirmation(owner, ability, abilityTarget, time)
-	tinsert(Await, {owner, realAbility[ability] or ability, abilityTarget, time})
-	--DPSMate:SendMessage(time)
-	--DPSMate:SendMessage("Awaiting confirmation!")
-end
-
-function DPSMate.DB:ClearAwaitAbsorb()
-	for cat, val in pairs(Await) do
-		if (GetTime()-val[4])>=10 then
-			tremove(Await, cat)
-			break
-		end
-	end
-end
-
--- Gotta improve the function to prevent an overflow.
-function DPSMate.DB:ConfirmAbsorbApplication(ability, abilityTarget, time)
-	--DPSMate:SendMessage(time)
-	for cat, val in pairs(Await) do
-		--DPSMate:SendMessage(ability.."=="..val[2].."////"..val[4].."<="..time.."/////"..val[3].."=="..abilityTarget)
-		if val[4]<=time and val[2]==ability then
-			if val[3]==abilityTarget then
-				self:RegisterAbsorb(val[1], ability, abilityTarget)
-				--DPSMate:SendMessage("Aborb registered!")
-				tremove(Await, cat)
-				return
-			end
-		end
-	end
-	self:RegisterAbsorb(DPSMate.L["unknown"], ability, abilityTarget)
---	DPSMate:SendMessage("Aborb registered! (Unknown) /"..ability.."/"..abilityTarget)
-end
 
 function DPSMate.DB:RegisterAbsorb(owner, ability, abilityTarget)
 	if self:BuildUser(owner, nil) or self:BuildUser(abilityTarget, nil) or self:BuildAbility(ability, nil) then return end
@@ -1924,7 +1883,6 @@ function DPSMate.DB:CombatTime()
 				end
 			end
 			if DPSMate.DB.MainUpdate>=150 then
-				DPSMate.DB:ClearAwaitAbsorb()
 				DPSMate.DB.MainUpdate = 0
 				DPSMate.Sync.Async = true
 			end
