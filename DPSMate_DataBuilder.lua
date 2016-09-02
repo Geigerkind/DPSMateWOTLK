@@ -97,6 +97,7 @@ local tremove = table.remove
 local _G = getglobal
 local player = ""
 local GT = GetTime
+local GetTime = GetTime
 local strfind = string.find
 local UL = UnitLevel
 local slower = strlower
@@ -899,6 +900,27 @@ end
 -- First crit/hit av value will be half if it is not the first hit actually. Didnt want to add an exception for it though. Maybe later :/
 local CastsBuffer = {[1]={[1]={},[2]={}},[2]={[1]={},[2]={}},[3]={[1]={},[2]={}}}
 local AAttack = DPSMate.BabbleSpell:GetTranslation("AutoAttack")
+local WFAttack = DPSMate.L["wfattack"]
+local Windfury = {}
+local WindfuryEDT = {}
+function DPSMate.DB:IsWindFuryAttack(arr, Dname, Duser)
+	if Dname~=AAttack then return Dname end
+	local time = GetTime()
+	for c,v in pairs(arr) do
+		if v then
+			if (time-c)<=0.2 then
+				self:BuildBuffs(Duser, Duser, WFAttack, true)
+				self:DestroyBuffs(Duser, WFAttack)
+				return WFAttack
+			else
+				arr[c] = false
+			end
+		end
+	end
+	arr[time] = true
+	return AAttack
+end
+
 function DPSMate.DB:DamageDone(Duser, Dname, Dhit, Dcrit, Dmiss, Dparry, Ddodge, Dresist, Damount, Dglance, Dblock)
 	if self:BuildUser(Duser, nil) or self:BuildAbility(Dname, nil) then return end -- Attempt to fix this problem?
 	
@@ -913,6 +935,8 @@ function DPSMate.DB:DamageDone(Duser, Dname, Dhit, Dcrit, Dmiss, Dparry, Ddodge,
 			Dname = self.NextSwing[Duser][2]
 			self.NextSwing[Duser][1] = self.NextSwing[Duser][1] - 1
 		end
+	else
+		Dname = self:IsWindFuryAttack(Windfury, Dname, Duser)
 	end
 	
 	for cat, val in pairs({[1]="total", [2]="current"}) do 
@@ -1108,6 +1132,8 @@ function DPSMate.DB:EnemyDamage(mode, arr, Duser, Dname, Dhit, Dcrit, Dmiss, Dpa
 				Dname = self.NextSwingEDD[Duser][2]
 				self.NextSwingEDD[Duser][1] = self.NextSwingEDD[Duser][1] - 1
 			end
+		else
+			Dname = self:IsWindFuryAttack(WindfuryEDT, Dname, Duser)
 		end
 	end
 	
@@ -1694,25 +1720,8 @@ function DPSMate.DB:Kick(cause, target, causeAbility, targetAbility)
 	end
 end
 
--- Sometimes the fade event is not fired.
--- What if the fade event is fired after a gain event for some reason
-local windfuryab = {
-	[DPSMate.BabbleSpell:GetTranslation("Windfury Weapon")] = true,
-	[DPSMate.BabbleSpell:GetTranslation("Windfury Totem")] = true,
-}
-
 function DPSMate.DB:BuildBuffs(cause, target, ability, bool)
 	if self:BuildUser(target, nil) or self:BuildUser(cause, nil) or self:BuildAbility(ability, nil) then return end
-	if windfuryab[ability] then -- DEPRECATED?
-		self.NextSwing[target] = {
-			[1] = 1,
-			[2] = ability
-		}
-		self.NextSwingEDD[target] = {
-			[1] = 1,
-			[2] = ability
-		}
-	end
 	for cat, val in pairs({[1]="total", [2]="current"}) do 
 		if not DPSMateAurasGained[cat][DPSMateUser[target][1]] then
 			DPSMateAurasGained[cat][DPSMateUser[target][1]] = {}

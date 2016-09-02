@@ -120,8 +120,11 @@ DPSMate.Parser.procs = {
 	[DPSMate.BabbleSpell:GetTranslation("Stormcaller's Wrath")] = true,
 	[DPSMate.BabbleSpell:GetTranslation("Nature Aligned")] = true,
 	[DPSMate.BabbleSpell:GetTranslation("Elemental Mastery")] = true,
+	
 	[DPSMate.BabbleSpell:GetTranslation("Windfury Weapon")] = true,
 	[DPSMate.BabbleSpell:GetTranslation("Windfury Totem")] = true,
+	[GetSpellInfo(25504)] = true,
+	
 	[DPSMate.BabbleSpell:GetTranslation("Nature's Swiftness")] = true,
 	[DPSMate.BabbleSpell:GetTranslation("Ancestral Healing")] = true,
 	[DPSMate.BabbleSpell:GetTranslation("Reincarnation")] = true,
@@ -706,11 +709,7 @@ function DPSMate.Parser:SpellAuraApplied(timestamp, eventtype, srcGUID, srcName,
 	else
 		if DPSMate.Parser.RCD[spellName] then DPSMate:Broadcast(1, dstName, spellName) end -- TO TEST
 		if DPSMate.Parser.FailDB[spellName] then DB:BuildFail(3, srcName, dstName, spellName, 0) end -- TO TEST
-		if DPSMate.Parser.procs[spellName] and not DPSMate.Parser.OtherExceptions[spellName] then -- TO TEST
-			DPSMate.DB:BuildBuffs(srcName, dstName, spellName, true)
-		else
-			DPSMate.DB:BuildBuffs(srcName, dstName, spellName, false)
-		end
+		DPSMate.DB:BuildBuffs(srcName, dstName, spellName, false)
 	end
 	if DPSMate.Parser.Kicks[spellName] then DB:AssignPotentialKick(srcName, spellName, dstName, GetTime()); end
 	if DB.ShieldFlags[spellName] then DB:RegisterAbsorb(srcName, spellName, dstName) end
@@ -749,7 +748,6 @@ function DPSMate.Parser:Test(timestamp, eventtype, srcGUID, srcName, srcFlags, d
 	}
 	DB:BuildBuffs(srcName, srcName, spellName, true)
 	DB:DestroyBuffs(srcName, spellName)
-	DPSMate:SendMessage(srcName.."/"..dstName.."/"..spellName.."/"..amount)
 end
 
 function DPSMate.Parser:SpellCastStart(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool)
