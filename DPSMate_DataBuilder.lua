@@ -1,10 +1,7 @@
--- NOtes
--- Dispelling for unknown or if people use macros like castspellbyname support
-
-
 -- Global Variables
 DPSMate.DB.loaded = false
 DPSMate.DB.ShieldFlags = {
+	-- Blade Turning (37515)
 	[DPSMate.BabbleSpell:GetTranslation("Power Word: Shield")] = 0, -- All
 	[DPSMate.BabbleSpell:GetTranslation("Ice Barrier")] = 0, -- All
 	[DPSMate.BabbleSpell:GetTranslation("The Burrower's Shell")] = 0, -- All
@@ -63,20 +60,17 @@ DPSMate.DB.NeedUpdate = false
 DPSMate.DB.UserData = {}
 DPSMate.DB.MainUpdate = 0
 DPSMate.DB.Zones = {
-	[DPSMate.L["mc"]] = true,
-	[DPSMate.L["bwl"]] = true,
-	[DPSMate.L["ony"]] = true,
-	[DPSMate.L["zg"]] = true,
-	[DPSMate.L["aq401"]] = true,
-	[DPSMate.L["aq20"]] = true,
-	[DPSMate.L["aq402"]] = true,
-	[DPSMate.L["naxx"]] = true,
-	[DPSMate.L["azs"]] = true, -- Azuregos
-	[DPSMate.L["bl"]] = true, -- Kazzak
-	[DPSMate.L["dw"]] = true, -- Emerald dragons, not sure if those zone names are correct.
-	[DPSMate.L["hintl"]] = true,
-	[DPSMate.L["ash"]] = true,
-	[DPSMate.L["fe"]] = true
+	[DPSMate.L["kazzak"]] = true,
+	[DPSMate.L["doomw"]] = true,
+	[DPSMate.L["blackt"]] = true,
+	[DPSMate.L["sscdun"]] = true,
+	[DPSMate.L["karadun"]] = true,
+	[DPSMate.L["gruuldun"]] = true,
+	[DPSMate.L["magdun"]] = true,
+	[DPSMate.L["zuldun"]] = true,
+	[DPSMate.L["tempestdun"]] = true,
+	[DPSMate.L["hyjaldun"]] = true,
+	[DPSMate.L["sunwell"]] = true,
 }
 DPSMate.DB.KTMHOOK = {}
 DPSMate.DB.NextSwing = {}
@@ -874,21 +868,6 @@ function DPSMate.DB:WeightedAverage(a, b, c, d)
 	return a*(c/(c+d))+b*(d/(c+d))
 end
 
-local spellSchoolNames = {
-	["fire"] = true,
-	["nature"] = true,
-	["shadow"] = true,
-	["holy"] = true,
-	["frost"] = true,
-	["arcane"] = true,
-	
-	["feuer"] = true,
-	["natur"] = true,
-	["schatten"] = true,
-	["arkan"] = true,
-	["frost"] = true,
-	["heilig"] = true
-}
 function DPSMate.DB:AddSpellSchool(ab, sc)
 	if DPSMateAbility[ab] then
 		DPSMateAbility[ab][3] = sc
@@ -1751,7 +1730,6 @@ function DPSMate.DB:BuildBuffs(cause, target, ability, bool)
 	self.NeedUpdate = true
 end
 
--- Lag machine!
 function DPSMate.DB:DestroyBuffs(target, ability)
 	if self:BuildUser(target, nil) or self:BuildAbility(ability, nil) then return end
 	for cat, val in pairs({[1]="total", [2]="current"}) do 
@@ -1789,10 +1767,8 @@ function DPSMate.DB:GetOptionsTrue(i,k)
 end
 
 function DPSMate.DB:UnitIsSaved(unit)
-	for i=1, 32 do
-		DPSMate_Tooltip:ClearLines()
-		DPSMate_Tooltip:SetUnitBuff(unit, i)
-		local buff = DPSMate_TooltipTextLeft1:GetText()
+	for i=1, 50 do
+		local buff = UnitBuff(unit, i)
 		if (not buff) then break end
 		if (strfind(buff, DPSMate.L["vanish"]) or strfind(buff, DPSMate.L["feigndeath"])) or strfind(buff, DPSMate.L["divineintervention"]) or strfind(buff, DPSMate.L["stealth"]) then
 			return true
@@ -1913,17 +1889,13 @@ function DPSMate.DB:CombatTime()
 end
 
 function DPSMate.DB:hasVanishedFeignDeath()
-	for i=0, 31 do
-		DPSMate_Tooltip:SetOwner(UIParent, "ANCHOR_NONE")
-		DPSMate_Tooltip:ClearLines()
-		DPSMate_Tooltip:SetPlayerBuff(GetPlayerBuff(i, "HELPFUL"))
-		local buff = DPSMate_TooltipTextLeft1:GetText()
+	for i=1, 50 do
+		local buff = UnitBuff("player", i)
 		if (not buff) then break end
 		if (strfind(buff, DPSMate.L["vanish"]) or strfind(buff, DPSMate.L["feigndeath"])) then
 			cheatCombat = GetTime()
 			return true
 		end
-		DPSMate_Tooltip:Hide()
 	end
 end
 

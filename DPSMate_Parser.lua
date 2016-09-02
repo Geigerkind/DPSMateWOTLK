@@ -75,6 +75,8 @@ DPSMate.Parser.procs = {
 	[DPSMate.BabbleSpell:GetTranslation("Evasion")] = true,
 	[DPSMate.BabbleSpell:GetTranslation("Restore Energy")] = true,
 	[DPSMate.BabbleSpell:GetTranslation("Remorseless Attacks")] = true,
+	[GetSpellInfo(35546)] = true, -- Combat Potency
+	[GetSpellInfo(14179)] = true, -- Relentless Strikes
 	
 	-- Mage
 	[DPSMate.BabbleSpell:GetTranslation("Arcane Power")] = true,
@@ -123,7 +125,7 @@ DPSMate.Parser.procs = {
 	
 	[DPSMate.BabbleSpell:GetTranslation("Windfury Weapon")] = true,
 	[DPSMate.BabbleSpell:GetTranslation("Windfury Totem")] = true,
-	[GetSpellInfo(25504)] = true,
+	[GetSpellInfo(25504)] = true, -- WF Attack
 	
 	[DPSMate.BabbleSpell:GetTranslation("Nature's Swiftness")] = true,
 	[DPSMate.BabbleSpell:GetTranslation("Ancestral Healing")] = true,
@@ -780,6 +782,13 @@ function DPSMate.Parser:Loot(msg)
 	end
 end
 
+function DPSMate.Parser:Energize(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, amount, powerType) -- Potential to add here mana etc. gained mode
+	if DPSMate.Parser.procs[spellName] then
+		DB:BuildBuffs(srcName, dstName, spellName, true)
+		DB:DestroyBuffs(dstName, spellName)
+	end
+end
+
 Execute = {
 	["SWING_DAMAGE"] = DPSMate.Parser.SwingDamage, 
 	["SWING_MISSED"] = DPSMate.Parser.SwingMissed,
@@ -805,6 +814,8 @@ Execute = {
 	["SPELL_CAST_START"] = DPSMate.Parser.SpellCastStart,
 	["SPELL_CAST_SUCCESS"] = DPSMate.Parser.SpellCastSuccess,
 	["UNIT_AURA"] = DPSMate.Parser.UnitAuraDispels,
+	["SPELL_ENERGIZE"] = DPSMate.Parser.Energize, -- Potential to add mana gained meter etc.
+	["SPELL_PERIODIC_ENERGIZE"] = DPSMate.Parser.Energize,
 	
 	["CHAT_MSG_LOOT"] = DPSMate.Parser.Loot,
 	
@@ -818,8 +829,6 @@ Execute = {
 	--["SPELL_LEECH"] = Recount.SpellDrainLeech,
 	--["SPELL_PERIODIC_DRAIN"] = Recount.SpellDrainLeech,
 	--["SPELL_PERIODIC_LEECH"] = Recount.SpellDrainLeech,
-	--["SPELL_ENERGIZE"] = Recount.SpellEnergize, -- Elsia: Energize
-	--["SPELL_PERIODIC_ENERGIZE"] = Recount.SpellEnergize,
 	
 	-- TO BE IMPLEMENTED
 	--["SPELL_AURA_APPLIED_DOSE"] = DPSMate.Parser.Test,  -- Getting a stack more of Vengeance for example
