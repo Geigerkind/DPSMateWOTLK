@@ -446,6 +446,7 @@ local strupper = string.upper
 local strsub = string.sub
 local strlower = string.lower
 local tinsert = table.insert
+local tnbr = tonumber
 local FixCaps = function(capsstr)
 	return strupper(strsub(capsstr,1,1))..strlower(strsub(capsstr,2))
 end
@@ -751,6 +752,25 @@ function DPSMate.Parser:SpellCastSuccess(timestamp, eventtype, srcGUID, srcName,
 	tinsert(SuccessfulCasts, {GetTime(), spellName, srcName, dstName})
 end
 
+local linkQuality = {
+	["9d9d9d"] = 0,
+	["ffffff"] = 1,
+	["1eff00"] = 2,
+	["0070dd"] = 3,
+	["a335ee"] = 4,
+	["ff8000"] = 5
+}
+function DPSMate.Parser:Loot(msg)
+	for a,b,c,d,e in strgfind(msg, DPSMate.L["loot1"]) do
+		DB:Loot(a, linkQuality[b], tnbr(c), e)
+		return
+	end
+	for a,b,c,d in strgfind(msg, DPSMate.L["loot2"]) do
+		DB:Loot(self.player, linkQuality[a], tnbr(b), d)
+		return
+	end
+end
+
 Execute = {
 	["SWING_DAMAGE"] = DPSMate.Parser.SwingDamage, 
 	["SWING_MISSED"] = DPSMate.Parser.SwingMissed,
@@ -776,6 +796,8 @@ Execute = {
 	["SPELL_CAST_START"] = DPSMate.Parser.SpellCastStart,
 	["SPELL_CAST_SUCCESS"] = DPSMate.Parser.SpellCastSuccess,
 	["UNIT_AURA"] = DPSMate.Parser.UnitAuraDispels,
+	
+	["CHAT_MSG_LOOT"] = DPSMate.Parser.Loot,
 	
 	--["SPELL_CAST_FAILED"] = DPSMate.Parser.Test2,
 	

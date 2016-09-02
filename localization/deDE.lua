@@ -469,4 +469,16 @@ if (GetLocale() == "deDE") then
 	DPSMate.L["absorbssum"] = "Absorbübersicht"
 	DPSMate.L["absorbeddmg"] = "Absorbierungen"
 	DPSMate.L["absorbstakensum"] = "Absorbierungen bekommen Übersicht"
+	
+	DPSMate.L["pmiss"] = "MISS"
+	DPSMate.L["pparry"] = "PARRY"
+	DPSMate.L["pdodge"] = "DODGE"
+	DPSMate.L["presist"] = "RESIST"
+	DPSMate.L["pblock"] = "BLOCK"
+	DPSMate.L["pabsorb"] = "ABSORB"
+	DPSMate.L["pdeflect"] = "DEFLECT"
+	DPSMate.L["preflect"] = "REFLECT"
+	DPSMate.L["penvironment"] = "Umgebung"
+	DPSMate.L["loot1"] = "(.-) bekommt Beute: |cff(.-)|Hitem:(%d+)(.+)%[(.+)%]|h|r"
+	DPSMate.L["loot2"] = "Ihr erhaltet Beute: |cff(.-)|Hitem:(%d+)(.+)%[(.+)%]|h|r"
 end
