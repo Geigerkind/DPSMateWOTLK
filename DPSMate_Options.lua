@@ -809,22 +809,16 @@ function DPSMate.Options:PopUpAccept(bool, bypass)
 				num = GetNumRaidMembers()
 			end
 			for p=1, num do
-				for i=1, 32 do
-					GameTooltip:SetOwner(UIParent)
-					GameTooltip:SetUnitBuff(type..p, i)
-					local buff = GameTooltipTextLeft1:GetText()
-					GameTooltip:Hide()
+				for i=1, 40 do
+					local buff = UnitBuff(type..p, i)
 					if buff then
 						DPSMate.DB:BuildBuffs(DPSMate.L["unknown"], UnitName(type..p), buff, false)
 					end
 				end
 			end
 			if type == "party" or num <= 0 then
-				for i=0,31 do
-					GameTooltip:SetOwner(UIParent)
-					GameTooltip:SetPlayerBuff(i)
-					local buff = GameTooltipTextLeft1:GetText()
-					GameTooltip:Hide()
+				for i=1,40 do
+					local buff = UnitBuff("party", i)
 					if buff then
 						DPSMate.DB:BuildBuffs(DPSMate.L["unknown"], UnitName("player"), buff, false)
 					end

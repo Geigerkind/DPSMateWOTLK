@@ -1472,11 +1472,7 @@ function DPSMate.DB:GetAbsorbingShield(ability, abilityTarget, cat)
 			local unit = DPSMate.Parser:GetUnitByName(abilityTarget)
 			if unit then
 				for i=1, 32 do
-					DPSMate_Tooltip:SetOwner(UIParent, "ANCHOR_NONE")
-					DPSMate_Tooltip:ClearLines()
-					DPSMate_Tooltip:SetUnitBuff(unit, i, "HELPFUL")
-					local buff = DPSMate_TooltipTextLeft1:GetText()
-					DPSMate_Tooltip:Hide()
+					local buff = UnitBuff(unit, i)
 					if (not buff) then break end
 					self:BuildAbility(buff, nil)
 					buff = DPSMateAbility[buff][1]
