@@ -497,8 +497,8 @@ function DPSMate.Parser:OnEvent(event)
 	end
 end
 
-local GetUnitByName = function(target)
-	local unit = DPSMate.Parser.TargetParty[target]
+function DPSMate.Parser:GetUnitByName(target)
+	local unit = self.TargetParty[target]
 	if not unit then
 		if target==player then
 			unit="player"
@@ -509,7 +509,7 @@ local GetUnitByName = function(target)
 	return unit
 end
 local GetOverhealByName = function(amount, target)
-	local result, unit = 0, GetUnitByName(target)
+	local result, unit = 0, DPSMate.Parser:GetUnitByName(target)
 	if unit then result = amount-(UnitHealthMax(unit)-UnitHealth(unit)) end
 	if result<0 then return 0 else return result end 
 end

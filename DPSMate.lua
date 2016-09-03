@@ -10,7 +10,8 @@ DPSMate.Options = {}
 DPSMate.Sync = {}
 DPSMate.Modules = {}
 DPSMate.Events = {
-	-- Update those once Im done
+	"COMBAT_LOG_EVENT_UNFILTERED",
+	"CHAT_MSG_ADDON",
 }
 DPSMate.Registered = true
 DPSMate.RegistredModules = {}
@@ -448,7 +449,7 @@ end
 
 function DPSMate:GetClassColor(class)
 	if (class) then
-		if DPSMateUser[class] then if not DPSMateUser[class][2] then DPSMateUser[class][2] = strlower(UnitClass(class)) end; class = DPSMateUser[class][2] end
+		if DPSMateUser[class] then if not DPSMateUser[class][2] then if UnitClass(class) then DPSMateUser[class][2] = strlower(UnitClass(class)) end; end; class = DPSMateUser[class][2] end
 		if classcolor[class] then
 			return classcolor[class].r, classcolor[class].g, classcolor[class].b, class
 		else
