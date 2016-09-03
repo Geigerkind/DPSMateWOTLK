@@ -349,7 +349,7 @@ if (GetLocale() == "deDE") then
 	DPSMate.L["slashconfig"] = "|c3ffddd80- config:|r Öffne das Konfigurationsmenu."
 	DPSMate.L["bccdo"] = function(who, what) return who.." bekommt "..what end
 	DPSMate.L["bccdt"] = function(who, what) return who.."s "..what.." schwindet" end
-	DPSMate.L["bcress"] = function(who, what) return what.." wurde wiederbelebt von "..who end
+	DPSMate.L["bcress"] = function(who, what) return who.." wirkt Wiederbelebung" end
 	DPSMate.L["bckb"] = function(who, what, with, value) return who.." wurde getötet von "..what.."s "..with.." ("..value.." Schaden)" end
 	DPSMate.L["bcfailo"] = function(what, who, value, with) return "Fail: "..what.." fügt freundlichem Ziel "..who.." "..value.." Schaden zu mit "..with end
 	DPSMate.L["bcfailt"] = function(who, with) return "Fail: "..who.." ist betroffen von "..with end

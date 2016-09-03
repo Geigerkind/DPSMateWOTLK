@@ -446,6 +446,10 @@ local GetSpellSource = function(spellName, dstName)
 	end
 	return secPrio or owner
 end
+local player = UnitName("player")
+local UnitHealth = UnitHealth
+local UnitHealthMax = UnitHealthMax
+local UnitName = UnitName
 
 -- Begin Functions
 
@@ -465,6 +469,7 @@ end
 
 function DPSMate.Parser:GetPlayerValues()
 	self.player = UnitName("player")
+	player = UnitName("player")
 	_,playerclass = UnitClass("player")
 	self.playerclass = playerclass
 	DPSMatePlayer[1] = self.player
@@ -491,10 +496,10 @@ function DPSMate.Parser:OnEvent(event)
 	end
 end
 
-function DPSMate.Parser:GetUnitByName(target)
-	local unit = self.TargetParty[target]
+local GetUnitByName = function(target)
+	local unit = DPSMate.Parser.TargetParty[target]
 	if not unit then
-		if target==self.player then
+		if target==player then
 			unit="player"
 		elseif target==UnitName("target") then
 			unit="target"
@@ -502,8 +507,8 @@ function DPSMate.Parser:GetUnitByName(target)
 	end
 	return unit
 end
-function DPSMate.Parser:GetOverhealByName(amount, target)
-	local result, unit = 0, self:GetUnitByName(target)
+local GetOverhealByName = function(amount, target)
+	local result, unit = 0, GetUnitByName(target)
 	if unit then result = amount-(UnitHealthMax(unit)-UnitHealth(unit)) end
 	if result<0 then return 0 else return result end 
 end
@@ -628,7 +633,7 @@ function DPSMate.Parser:SpellHeal(timestamp, eventtype, srcGUID, srcName, srcFla
 		spellName = spellName..DPSMate.L["periodic"]
 	end
 	DB:UnregisterPotentialKick(srcName, spellName, GetTime())
-	overheal = DPSMate.Parser:GetOverhealByName(amount, dstName) -- Gotta localize those functions
+	overheal = GetOverhealByName(amount, dstName)
 	DB:HealingTaken(DPSMateHealingTaken, dstName, spellName, t[1] or 1, t[2] or 0, amount, srcName)
 	DB:HealingTaken(DPSMateEHealingTaken, dstName, spellName, t[1] or 1, t[2] or 0, amount-overheal, srcName)
 	DB:Healing(0, DPSMateEHealing, srcName, spellName, t[1] or 1, t[2] or 0, amount-overheal, dstName)
@@ -652,13 +657,12 @@ local BuffTypes = {
 }
 function DPSMate.Parser:SpellAuraApplied(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, auraType)
 	srcName = srcName or GetSpellSource(spellName, dstName)
-	if DPSMate:IsNPC(dstGUID) then
-		if DPSMate.Parser.CC[spellName] then DB:BuildActiveCC(dstName, spellName) end -- TO TEST
-	else
-		if DPSMate.Parser.RCD[spellName] then DPSMate:Broadcast(1, dstName, spellName) end -- TO TEST
-		if DPSMate.Parser.FailDB[spellName] then DB:BuildFail(3, srcName, dstName, spellName, 0) end -- TO TEST
+	if not DPSMate:IsNPC(dstGUID) then
+		if DPSMate.Parser.RCD[spellName] then DPSMate:Broadcast(1, dstName, spellName) end
+		if DPSMate.Parser.FailDB[spellName] then DB:BuildFail(3, srcName, dstName, spellName, 0) end
 		DPSMate.DB:BuildBuffs(srcName, dstName, spellName, false)
 	end
+	if DPSMate.Parser.CC[spellName] then DB:BuildActiveCC(dstName, spellName) end
 	if DPSMate.Parser.Kicks[spellName] then DB:AssignPotentialKick(srcName, spellName, dstName, GetTime()); end
 	if DB.ShieldFlags[spellName] then DB:RegisterAbsorb(srcName, spellName, dstName) end
 	DB:AddSpellSchool(spellName,spellSchoolToString[spellSchool],spellId,BuffTypes[auraType])
@@ -668,9 +672,9 @@ function DPSMate.Parser:SpellAuraRemoved(timestamp, eventtype, srcGUID, srcName,
 	if not DPSMate:IsNPC(dstGUID) then
 		DB:UnregisterPotentialKick(dstName, spellName, GetTime())
 		DPSMate.DB:DestroyBuffs(dstName, spellName)
-		if DPSMate.Parser.RCD[spellName] then DPSMate:Broadcast(6, dstName, spellName) end -- TO TEST
-		DB:RemoveActiveCC(dstName, spellName) -- TO TEST
+		if DPSMate.Parser.RCD[spellName] then DPSMate:Broadcast(6, dstName, spellName) end
 	end
+	DB:RemoveActiveCC(dstName, spellName)
 	if DB.ShieldFlags[spellName] then DB:UnregisterAbsorb(spellName, dstName) end
 	DB:AddSpellSchool(spellName,spellSchoolToString[spellSchool],spellId,BuffTypes[auraType])
 end
@@ -705,7 +709,7 @@ end
 
 function DPSMate.Parser:SpellCastStart(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool)
 	if not DPSMate:IsNPC(srcGUID) then
-		if DPSMate.Parser.RCD[spellName] then DPSMate:Broadcast(2, srcName, dstName or DPSMate.L["unknown"], spellName) end -- TO TEST MAYBE: SPELL_RESURRECT 
+		if DPSMate.Parser.RCD[spellName] then DPSMate:Broadcast(2, srcName, dstName or DPSMate.L["unknown"], spellName) end
 	end
 	DB:RegisterPotentialKick(srcName, spellName, GetTime())
 	DB:AddSpellSchool(spellName,spellSchoolToString[spellSchool],spellId)
@@ -730,7 +734,7 @@ function DPSMate.Parser:Loot(msg)
 		return
 	end
 	for a,b,c,d in strgfind(msg, DPSMate.L["loot2"]) do
-		DB:Loot(DPSMate.Parser.player, linkQuality[a], tnbr(b), d)
+		DB:Loot(player, linkQuality[a], tnbr(b), d)
 		return
 	end
 end
