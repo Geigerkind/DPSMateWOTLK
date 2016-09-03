@@ -227,7 +227,7 @@ function DPSMate.Modules.DetailsFFT:SelectCreatureButton(i, comp)
 			local ability = DPSMate:GetAbilityById(dArr[dSel][2][lineplusOffset])
 			_G(path.."_ScrollButton"..line.."_Name"):SetText(ability)
 			_G(path.."_ScrollButton"..line.."_Value"):SetText(dArr[dSel][3][lineplusOffset].." ("..strformat("%.2f", (dArr[dSel][3][lineplusOffset]*100/dArr[dSel][1])).."%)")
-			_G(path.."_ScrollButton"..line.."_Icon"):SetTexture(DPSMate.BabbleSpell:GetSpellIcon(strsub(ability, 1, (strfind(ability, "%(") or 0)-1) or ability))
+			_G(path.."_ScrollButton"..line.."_Icon"):SetTexture(DPSMate:GetSpellIcon(strsub(ability, 1, (strfind(ability, "%(") or 0)-1) or ability))
 			if len < 10 then
 				_G(path.."_ScrollButton"..line):SetWidth(235)
 				_G(path.."_ScrollButton"..line.."_Name"):SetWidth(125)

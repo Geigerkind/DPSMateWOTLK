@@ -120,7 +120,7 @@ function DPSMate.Modules.DetailsInterrupts:ScrollFrame_Update(comp)
 			local ability = DPSMate:GetAbilityById(uArr[lineplusoffset])
 			_G(path..line.."_Name"):SetText(ability)
 			_G(path..line.."_Value"):SetText(dArr[lineplusoffset][1].." ("..string.format("%.2f", 100*dArr[lineplusoffset][1]/dTot).."%)")
-			_G(path..line.."_Icon"):SetTexture(DPSMate.BabbleSpell:GetSpellIcon(strsub(ability, 1, (strfind(ability, "%(") or 0)-1) or ability))
+			_G(path..line.."_Icon"):SetTexture(DPSMate:GetSpellIcon(strsub(ability, 1, (strfind(ability, "%(") or 0)-1) or ability))
 			if len < 14 then
 				_G(path..line):SetWidth(235)
 				_G(path..line.."_Name"):SetWidth(125)
@@ -202,7 +202,7 @@ function DPSMate.Modules.DetailsInterrupts:SelectCreatureAbilityButton(i, p, com
 			local ability = DPSMate:GetAbilityById(dArr[i][3][p][2][lineplusoffset])
 			_G(path..line.."_Name"):SetText(ability)
 			_G(path..line.."_Value"):SetText(dArr[i][3][p][3][lineplusoffset].." ("..string.format("%.2f", 100*dArr[i][3][p][3][lineplusoffset]/dArr[i][3][p][1]).."%)")
-			_G(path..line.."_Icon"):SetTexture(DPSMate.BabbleSpell:GetSpellIcon(strsub(ability, 1, (strfind(ability, "%(") or 0)-1) or ability))
+			_G(path..line.."_Icon"):SetTexture(DPSMate:GetSpellIcon(strsub(ability, 1, (strfind(ability, "%(") or 0)-1) or ability))
 			if len < 14 then
 				_G(path..line):SetWidth(235)
 				_G(path..line.."_Name"):SetWidth(125)

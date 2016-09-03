@@ -46,10 +46,10 @@ function DPSMate.Modules.DetailsCCBreakerTotal:EvalTable()
 				local i=1
 				while true do
 					if not a[i] then
-						tinsert(a, i, {ab, DPSMate.BabbleSpell:GetSpellIcon(self:Replace(ab)), DPSMate:GetUserById(va[2]), va[4], va[3], user})
+						tinsert(a, i, {ab, DPSMate:GetSpellIcon(self:Replace(ab)), DPSMate:GetUserById(va[2]), va[4], va[3], user})
 						break
 					elseif a[i][5]<va[3] then
-						tinsert(a, i, {ab, DPSMate.BabbleSpell:GetSpellIcon(self:Replace(ab)), DPSMate:GetUserById(va[2]), va[4], va[3], user})
+						tinsert(a, i, {ab, DPSMate:GetSpellIcon(self:Replace(ab)), DPSMate:GetUserById(va[2]), va[4], va[3], user})
 						break
 					end
 					i = i +1

@@ -46,8 +46,6 @@ local Arrays = {
 	[15] = {}, -- O Healing taken
 	[16] = {} -- Threat
 }
-local tra = DPSMate.BabbleSpell
-local npctra = DPSMate.NPCDB
 local UpTime = 0
 
 -- Beginn Functions

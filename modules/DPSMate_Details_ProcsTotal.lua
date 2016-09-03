@@ -10,133 +10,146 @@ local tinsert = table.insert
 local strformat = string.format
 local DetailsArr = {}
 local TL = 0
-local mab = {[DPSMate.BabbleSpell:GetTranslation("AutoAttack")] = true, [DPSMate.BabbleSpell:GetTranslation("Sinister Strike")] = true, [DPSMate.BabbleSpell:GetTranslation("Eviscerate")] = true, [DPSMate.BabbleSpell:GetTranslation("Execute")] = true, [DPSMate.BabbleSpell:GetTranslation("Overpower")] = true, [DPSMate.BabbleSpell:GetTranslation("Bloodthirst")] = true, [DPSMate.BabbleSpell:GetTranslation("Mortal Strike")] = true, [DPSMate.BabbleSpell:GetTranslation("Heroic Strike")] = true, [DPSMate.BabbleSpell:GetTranslation("Cleave")] = true, [DPSMate.BabbleSpell:GetTranslation("Whirlwind")] = true, [DPSMate.BabbleSpell:GetTranslation("Backstab")] = true, [DPSMate.BabbleSpell:GetTranslation("Shield Slam")] = true, [DPSMate.BabbleSpell:GetTranslation("Revenge")] = true, [DPSMate.BabbleSpell:GetTranslation("Sunder Armor")] = true, [DPSMate.BabbleSpell:GetTranslation("Hamstring")] = true}
+local mab = {
+	[GetSpellInfo(6603)] = true, -- AutoAttack
+	[GetSpellInfo(1752)] = true, -- Sinister Strike
+	[GetSpellInfo(2098)] = true, -- Eviscerate
+	[GetSpellInfo(5308)] = true, -- Execute
+	[GetSpellInfo(7384)] = true, -- Overpower
+	[GetSpellInfo(23881)] = true, -- Bloodthirst
+	[GetSpellInfo(12294)] = true, -- Mortal Strike
+	[GetSpellInfo(78)] = true, -- Heroic Strike
+	[GetSpellInfo(11609)] = true, -- Cleave
+	[GetSpellInfo(9633)] = true, -- Whirlwind
+	[GetSpellInfo(53)] = true, -- Backstab
+	[GetSpellInfo(8242)] = true, -- Shield Slam
+	[GetSpellInfo(12170)] = true, -- Revenge
+	[GetSpellInfo(11971)] = true, -- Sunder Armor
+	[GetSpellInfo(9080)] = true, -- Hamstring
+}
 local specialSnowflakes = {
-	[DPSMate.BabbleSpell:GetTranslation("Relentless Strikes Effect")] = {
-		[DPSMate.BabbleSpell:GetTranslation("Eviscerate")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Slice and Dice")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Kidney Shot")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Rupture")] = true,
+	[GetSpellInfo(14181)] = {
+		[GetSpellInfo(2098)] = true, -- Eviscerate
+		[GetSpellInfo(5171)] = true, -- Slice and Dice
+		[GetSpellInfo(408)] = true, -- Kidney Shot
+		[GetSpellInfo(1943)] = true, -- Rupture
 	},
-	[DPSMate.BabbleSpell:GetTranslation("Ruthlessness")] = {
-		[DPSMate.BabbleSpell:GetTranslation("Eviscerate")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Slice and Dice")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Kidney Shot")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Rupture")] = true,
+	[GetSpellInfo(14161)] = {
+		[GetSpellInfo(2098)] = true, -- Eviscerate
+		[GetSpellInfo(5171)] = true, -- Slice and Dice
+		[GetSpellInfo(408)] = true, -- Kidney Shot
+		[GetSpellInfo(1943)] = true, -- Rupture
 	},
-	[DPSMate.BabbleSpell:GetTranslation("Netherwind Focus")] = {
-		[DPSMate.BabbleSpell:GetTranslation("Arcane Missiles")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Fireball")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Frostbolt")] = true,
+	[GetSpellInfo(22008)] = {
+		[GetSpellInfo(10274)] = true, -- Arcane Missiles
+		[GetSpellInfo(12466)] = true, -- Fireball
+		[GetSpellInfo(12737)] = true, -- Frostbolt
 	},
-	[DPSMate.BabbleSpell:GetTranslation("Head Rush")] = {
-		[DPSMate.BabbleSpell:GetTranslation("Sinister Strike")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Backstab")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Hemorrhage")] = true,
+	[GetSpellInfo(28813)] = {
+		[GetSpellInfo(1752)] = true, -- Sinister Strike
+		[GetSpellInfo(53)] = true, -- Backstab
+		[GetSpellInfo(17348)] = true, -- Hemorrhage
 	},
-	[DPSMate.BabbleSpell:GetTranslation("Enigma Resist Bonus")] = {
-		[DPSMate.BabbleSpell:GetTranslation("Arcane Missiles")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Fireball")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Frostbolt")] = true,
+	[GetSpellInfo(26128)] = {
+		[GetSpellInfo(10274)] = true, -- Arcane Missiles
+		[GetSpellInfo(12466)] = true, -- Fireball
+		[GetSpellInfo(12737)] = true, -- Frostbolt
 	},
-	[DPSMate.BabbleSpell:GetTranslation("Enigma Blizzard Bonus")] = {
-		[DPSMate.BabbleSpell:GetTranslation("Blizzard")] = true,
+	[GetSpellInfo(26127)] = {
+		[GetSpellInfo(10)] = true, -- Blizzard
 	},
-	[DPSMate.BabbleSpell:GetTranslation("Not There")] = {
-		[DPSMate.BabbleSpell:GetTranslation("Arcane Missiles")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Fireball")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Frostbolt")] = true,
+	[GetSpellInfo(28762)] = {
+		[GetSpellInfo(10274)] = true, -- Arcane Missiles
+		[GetSpellInfo(12466)] = true, -- Fireball
+		[GetSpellInfo(12737)] = true, -- Frostbolt
 	},
-	[DPSMate.BabbleSpell:GetTranslation("Clearcasting")] = {
-		[DPSMate.BabbleSpell:GetTranslation("Arcane Missiles")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Fireball")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Frostbolt")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Lightning Bolt")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Chain Lightning")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Earth Shock")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Flame Shock")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Frost Shock")] = true,
+	[GetSpellInfo(12536)] = {
+		[GetSpellInfo(10274)] = true, -- Arcane Missiles
+		[GetSpellInfo(12466)] = true, -- Fireball
+		[GetSpellInfo(12737)] = true, -- Frostbolt
+		[GetSpellInfo(12167)] = true, -- Lightning Bolt
+		[GetSpellInfo(12058)] = true, -- Chain Lightning
+		[GetSpellInfo(8042)] = true, -- Earth Shock
+		[GetSpellInfo(8050)] = true, -- Flame Shock
+		[GetSpellInfo(8056)] = true, -- Frost Shock
 	},
-	[DPSMate.BabbleSpell:GetTranslation("Battlegear of Eternal Justice")] = {
-		[DPSMate.BabbleSpell:GetTranslation("Judgement")] = true,
+	[GetSpellInfo(26975)] = {
+		[GetSpellInfo(10321)] = true, -- Judgement
 	},
-	[DPSMate.BabbleSpell:GetTranslation("Stormcaller's Wrath")] = {
-		[DPSMate.BabbleSpell:GetTranslation("Lightning Bolt")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Chain Lightning")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Earth Shock")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Flame Shock")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Frost Shock")] = true,
+	[GetSpellInfo(26121)] = {
+		[GetSpellInfo(12167)] = true, -- Lightning Bolt
+		[GetSpellInfo(12058)] = true, -- Chain Lightning
+		[GetSpellInfo(8042)] = true, -- Earth Shock
+		[GetSpellInfo(8050)] = true, -- Flame Shock
+		[GetSpellInfo(8056)] = true, -- Frost Shock
 	},
-	[DPSMate.BabbleSpell:GetTranslation("Vampirism")] = {
-		[DPSMate.BabbleSpell:GetTranslation("Shadow Bolt")] = true,
+	[GetSpellInfo(28839)] = {
+		[GetSpellInfo(12739)] = true, -- Shadow Bolt
 	},
-	[DPSMate.BabbleSpell:GetTranslation("Nightfall")] = {
-		[DPSMate.BabbleSpell:GetTranslation("Corruption")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Drain Life")] = true,
+	[GetSpellInfo(18095)] = {
+		[GetSpellInfo(172)] = true, -- Corruption
+		[GetSpellInfo(12693)] = true, -- Drain Life
 	},
-	[DPSMate.BabbleSpell:GetTranslation("Quick Shots")] = {
-		[DPSMate.BabbleSpell:GetTranslation("Auto Shot")] = true,
+	[GetSpellInfo(6150)] = {
+		[GetSpellInfo(75)] = true, -- Auto Shot
 	}
 }
 local specialSnowflakesDmgTaken = {
 	[1] = { -- All
-		[DPSMate.BabbleSpell:GetTranslation("Cheat Death")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Redoubt")] = true,
+		[GetSpellInfo(28846)] = true, -- Cheat Death
+		[GetSpellInfo(20137)] = true, -- Redoubt
 	}, -- Just crits
 	[2] = {
-		[DPSMate.BabbleSpell:GetTranslation("Enrage")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Blessed Recovery")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Focused Casting")] = true,
+		[GetSpellInfo(12880)] = true, -- Enrage
+		[GetSpellInfo(27818)] = true, -- Blessed Recovery
+		[GetSpellInfo(14743)] = true, -- Focused Casting
 	}
 }
 local specialSnowflakesHealTaken = {
-	[DPSMate.BabbleSpell:GetTranslation("Inspiration")] = {
-		[DPSMate.BabbleSpell:GetTranslation("Flash Heal")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Greater Heal")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Heal")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Prayer of Healing")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Lesser Heal")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Desperate Prayer")] = true,
+	[GetSpellInfo(15363)] = {
+		[GetSpellInfo(2061)] = true, -- Flash Heal
+		[GetSpellInfo(10965)] = true, -- Greater Heal
+		[GetSpellInfo(12039)] = true, -- Heal
+		[GetSpellInfo(596)] = true, -- Prayer of Healing
+		[GetSpellInfo(2050)] = true, -- Lesser Heal
+		[GetSpellInfo(13908)] = true, -- Desperate Prayer
 	},
-	[DPSMate.BabbleSpell:GetTranslation("Ancestral Spirit")] = {
-		[DPSMate.BabbleSpell:GetTranslation("Chain Heal")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Healing Wave")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Lesser Healing Wave")] = true,
+	[GetSpellInfo(2008)] = {
+		[GetSpellInfo(1064)] = true, -- Chain Heal
+		[GetSpellInfo(331)] = true, -- Healing Wave
+		[GetSpellInfo(8004)] = true, -- Lesser Healing Wave
 	}
 }
 local specialSnowflakesHealDone = {
-	[DPSMate.BabbleSpell:GetTranslation("Nature's Grace")] = {
-		[DPSMate.BabbleSpell:GetTranslation("Regrowth")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Swiftmend")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Healing Touch")] = true,
-		--[DPSMate.BabbleSpell:GetTranslation("Starfire")] = true,
-		--[DPSMate.BabbleSpell:GetTranslation("Wrath")] = true,
-		--[DPSMate.BabbleSpell:GetTranslation("Moonfire")] = true,
+	[GetSpellInfo(16886)] = {
+		[GetSpellInfo(8936)] = true, -- Regrowth
+		[GetSpellInfo(18562)] = true, -- Swiftmend
+		[GetSpellInfo(5185)] = true, -- Healing Touch
 	},
-	[DPSMate.BabbleSpell:GetTranslation("Epiphany")] = {
-		[DPSMate.BabbleSpell:GetTranslation("Flash Heal")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Greater Heal")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Heal")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Prayer of Healing")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Lesser Heal")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Desperate Prayer")] = true,
+	[GetSpellInfo(28804)] = {
+		[GetSpellInfo(2061)] = true, -- Flash Heal
+		[GetSpellInfo(10965)] = true, -- Greater Heal
+		[GetSpellInfo(12039)] = true, -- Heal
+		[GetSpellInfo(596)] = true, -- Prayer of Healing
+		[GetSpellInfo(2050)] = true, -- Lesser Heal
+		[GetSpellInfo(13908)] = true, -- Desperate Prayer
 	},
-	[DPSMate.BabbleSpell:GetTranslation("Aura of the Blue Dragon")] = {
-		[DPSMate.BabbleSpell:GetTranslation("Flash Heal")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Greater Heal")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Heal")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Prayer of Healing")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Lesser Heal")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Desperate Prayer")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Flash of Light")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Holy Light")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Holy Shock")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Regrowth")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Swiftmend")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Healing Touch")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Chain Heal")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Healing Wave")] = true,
-		[DPSMate.BabbleSpell:GetTranslation("Lesser Healing Wave")] = true,
+	[GetSpellInfo(23688)] = {
+		[GetSpellInfo(2061)] = true, -- Flash Heal
+		[GetSpellInfo(10965)] = true, -- Greater Heal
+		[GetSpellInfo(12039)] = true, -- Heal
+		[GetSpellInfo(596)] = true, -- Prayer of Healing
+		[GetSpellInfo(2050)] = true, -- Lesser Heal
+		[GetSpellInfo(13908)] = true, -- Desperate Prayer
+		[GetSpellInfo(19750)] = true, -- Flash of Light
+		[GetSpellInfo(635)] = true, -- Holy Light
+		[GetSpellInfo(20473)] = true, -- Holy Shock
+		[GetSpellInfo(8936)] = true, -- Regrowth
+		[GetSpellInfo(18562)] = true, -- Swiftmend
+		[GetSpellInfo(5185)] = true, -- Healing Touch
+		[GetSpellInfo(1064)] = true, -- Chain Heal
+		[GetSpellInfo(331)] = true, -- Healing Wave
+		[GetSpellInfo(8004)] = true, -- Lesser Healing Wave
 	},
 }
 
@@ -322,7 +335,7 @@ function DPSMate.Modules.DetailsProcsTotal:UpdateBuffs(arg1)
 		local pos = Buffpos + i
 		if not DetailsArr[pos] then break end
 		local ab = DPSMate:GetAbilityById(DetailsArr[pos][2])
-		_G(path..i.."_Icon"):SetTexture(DPSMate.BabbleSpell:GetSpellIcon(ab))
+		_G(path..i.."_Icon"):SetTexture(DPSMate:GetSpellIcon(ab))
 		_G(path..i.."_Name"):SetText(ab)
 		_G(path..i.."_Count"):SetText(DetailsArr[pos][1])
 		_G(path..i.."_Chance"):SetText(strformat("%.2f", self:RoundToH(DetailsArr[pos][3])).."%")

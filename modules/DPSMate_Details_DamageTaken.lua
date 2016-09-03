@@ -225,7 +225,7 @@ function DPSMate.Modules.DetailsDamageTaken:SelectCreatureButton(i, comp, cname)
 			local ability = DPSMate:GetAbilityById(dArr[i][2][lineplusoffset])
 			_G(path.."_ScrollButton"..line.."_Name"):SetText(ability)
 			_G(path.."_ScrollButton"..line.."_Value"):SetText(dArr[i][3][lineplusoffset].." ("..strformat("%.2f", (dArr[i][3][lineplusoffset]*100/dTot)).."%)")
-			_G(path.."_ScrollButton"..line.."_Icon"):SetTexture(DPSMate.BabbleSpell:GetSpellIcon(strsub(ability, 1, (strfind(ability, "%(") or 0)-1) or ability))
+			_G(path.."_ScrollButton"..line.."_Icon"):SetTexture(DPSMate:GetSpellIcon(strsub(ability, 1, (strfind(ability, "%(") or 0)-1) or ability))
 			if len < 10 then
 				_G(path.."_ScrollButton"..line):SetWidth(235)
 				_G(path.."_ScrollButton"..line.."_Name"):SetWidth(125)

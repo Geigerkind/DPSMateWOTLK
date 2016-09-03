@@ -355,7 +355,7 @@ function DPSMate.Modules.DetailsHealingAndAbsorbs:ScrollFrame_Update(comp)
 			local ability = DPSMate:GetAbilityById(uArr[lineplusoffset])
 			_G("DPSMate_Details_"..comp.."HealingAndAbsorbs_Log_ScrollButton"..line.."_Name"):SetText(ability)
 			_G("DPSMate_Details_"..comp.."HealingAndAbsorbs_Log_ScrollButton"..line.."_Value"):SetText(dArr[lineplusoffset][1].." ("..strformat("%.2f", (dArr[lineplusoffset][1]*100/dTot)).."%)")
-			_G("DPSMate_Details_"..comp.."HealingAndAbsorbs_Log_ScrollButton"..line.."_Icon"):SetTexture(DPSMate.BabbleSpell:GetSpellIcon(strsub(ability, 1, (strfind(ability, "%(") or 0)-1) or ability))
+			_G("DPSMate_Details_"..comp.."HealingAndAbsorbs_Log_ScrollButton"..line.."_Icon"):SetTexture(DPSMate:GetSpellIcon(strsub(ability, 1, (strfind(ability, "%(") or 0)-1) or ability))
 			if len < 10 then
 				_G("DPSMate_Details_"..comp.."HealingAndAbsorbs_Log_ScrollButton"..line):SetWidth(235)
 				_G("DPSMate_Details_"..comp.."HealingAndAbsorbs_Log_ScrollButton"..line.."_Name"):SetWidth(125)
@@ -576,7 +576,7 @@ function DPSMate.Modules.DetailsHealingAndAbsorbs:PlayerSpells_Update(i, comp)
 			local ability = DPSMate:GetAbilityById(d2[obj.id][2][lineplusoffset]) or "Sinister Strike"
 			_G(path.."_ScrollButton"..line.."_Name"):SetText(ability)
 			_G(path.."_ScrollButton"..line.."_Value"):SetText(d2[obj.id][3][lineplusoffset][1].." ("..strformat("%.2f", (d2[obj.id][3][lineplusoffset][1]*100/d2[obj.id][1])).."%)")
-			_G(path.."_ScrollButton"..line.."_Icon"):SetTexture(DPSMate.BabbleSpell:GetSpellIcon(strsub(ability, 1, (strfind(ability, "%(") or 0)-1) or ability))
+			_G(path.."_ScrollButton"..line.."_Icon"):SetTexture(DPSMate:GetSpellIcon(strsub(ability, 1, (strfind(ability, "%(") or 0)-1) or ability))
 			if len < 10 then
 				_G(path.."_ScrollButton"..line):SetWidth(235)
 				_G(path.."_ScrollButton"..line.."_Name"):SetWidth(125)

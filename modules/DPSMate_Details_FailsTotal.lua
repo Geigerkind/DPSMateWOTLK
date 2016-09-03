@@ -129,7 +129,7 @@ function DPSMate.Modules.DetailsFailsTotal:UpdateBuffs(arg1)
 		local pos = Buffpos + i
 		if not DetailsArr[pos] then break end
 		local ab = DPSMate:GetAbilityById(DetailsArr[pos][4])
-		_G(path..i.."_Icon"):SetTexture(DPSMate.BabbleSpell:GetSpellIcon(self:Replace(ab)))
+		_G(path..i.."_Icon"):SetTexture(DPSMate:GetSpellIcon(self:Replace(ab)))
 		_G(path..i.."_Ability"):SetText(ab)
 		_G(path..i.."_Victim"):SetText(DPSMate:GetUserById(DetailsArr[pos][3]))
 		_G(path..i.."_Type"):SetText(self:Type(DetailsArr[pos][2]))

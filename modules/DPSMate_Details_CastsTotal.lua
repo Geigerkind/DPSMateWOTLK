@@ -93,7 +93,7 @@ function DPSMate.Modules.DetailsCastsTotal:UpdateBuffs(arg1, comp, cname)
 		local pos = Buffpos + i
 		if not DetailsArr[pos] then break end
 		local ab = DPSMate:GetAbilityById(DetailsArr[pos][2])
-		_G(path..i.."_Icon"):SetTexture(DPSMate.BabbleSpell:GetSpellIcon(self:Replace(ab)))
+		_G(path..i.."_Icon"):SetTexture(DPSMate:GetSpellIcon(self:Replace(ab)))
 		_G(path..i.."_Name"):SetText(ab)
 		_G(path..i.."_Count"):SetText(DetailsArr[pos][1])
 	end

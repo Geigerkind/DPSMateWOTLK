@@ -700,13 +700,15 @@ function DPSMate.DB:BuildUser(Dname, Dclass)
 end
 
 -- Performance
-function DPSMate.DB:BuildAbility(name, kind, school)
+function DPSMate.DB:BuildAbility(name, kind, school, sid, buffOrDebuff)
 	if not name then return true end
 	if not DPSMateAbility[name] then
 		DPSMateAbility[name] = {
 			[1] = DPSMate:TableLength(DPSMateAbility)+1,
 			[2] = kind,
 			[3] = school,
+			[4] = sid,
+			[5] = buffOrDebuff,
 		}
 		DPSMate.AbilityId = nil
 	end
@@ -715,7 +717,7 @@ end
 
 -- KTMHOOK
 local specialAbTrans = {
-	["heroicstrike"] = DPSMate.BabbleSpell:GetTranslation("Heroic Strike"),
+	--[[["heroicstrike"] = DPSMate.BabbleSpell:GetTranslation("Heroic Strike"),
 	["maul"] = DPSMate.BabbleSpell:GetTranslation("Maul"),	
 	["swipe"] = DPSMate.BabbleSpell:GetTranslation("Swipe"),
 	["shieldslam"] = DPSMate.BabbleSpell:GetTranslation("Shield Slam"),
@@ -734,7 +736,7 @@ local specialAbTrans = {
 	["thunderfury"] = DPSMate.BabbleSpell:GetTranslation("Thunderfury"),
 	["graceofearth"] = DPSMate.BabbleSpell:GetTranslation("Grace of Earth"),
 	["blackamnesty"] = DPSMate.BabbleSpell:GetTranslation("Black Amnesty"),
-	["whitedamage"] = DPSMate.BabbleSpell:GetTranslation("AutoAttack"),
+	["whitedamage"] = DPSMate.L["AutoAttack"],--]]
 }
 
 if klhtm then
@@ -871,17 +873,19 @@ function DPSMate.DB:WeightedAverage(a, b, c, d)
 	return a*(c/(c+d))+b*(d/(c+d))
 end
 
-function DPSMate.DB:AddSpellSchool(ab, sc)
+function DPSMate.DB:AddSpellSchool(ab, sc, sid, bod)
 	if DPSMateAbility[ab] then
-		DPSMateAbility[ab][3] = sc
+		DPSMateAbility[ab][3] = sc or DPSMateAbility[ab][3]
+		DPSMateAbility[ab][4] = sid or DPSMateAbility[ab][4]
+		DPSMateAbility[ab][5] = bod or DPSMateAbility[ab][5]
 	else
-		self:BuildAbility(ab,nil,sc)
+		self:BuildAbility(ab,nil,sc,sid)
 	end
 end
 
 -- First crit/hit av value will be half if it is not the first hit actually. Didnt want to add an exception for it though. Maybe later :/
 local CastsBuffer = {[1]={[1]={},[2]={}},[2]={[1]={},[2]={}},[3]={[1]={},[2]={}}}
-local AAttack = DPSMate.BabbleSpell:GetTranslation("AutoAttack")
+local AAttack = DPSMate.L["AutoAttack"]
 local WFAttack = DPSMate.L["wfattack"]
 local Windfury = {}
 local WindfuryEDT = {}

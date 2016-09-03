@@ -121,6 +121,7 @@ DPSMate.Parser.procs = {
 	[GetSpellInfo(16240)] = true, -- Ancestral Healing
 	[GetSpellInfo(21169)] = true, -- Reincarnation
 	[GetSpellInfo(25504)] = true, -- WF Attack
+	[GetSpellInfo(2008)] = true, -- Ancestral Spirit
 	
 	-- Warlock
 	[GetSpellInfo(28839)] = true, -- Vampirism
@@ -433,36 +434,6 @@ function DPSMate.Parser:OnLoad()
 	if SW_FixLogStrings then
 		DPSMate:SendMessage("Please disable SW_StatsFixLogStrings and SW_Stats. Those addons causes issues.")
 	end
-	
-	-- Prevent error messages of NPCDB
-	local oldError = _G.error
-	_G.error = function(message, prio)
-		if string_find(message, "NPCDB") then
-			return
-		end
-		oldError(message, prio)
-	end
-	
-	-- Changing the GetTranslation function
-	local oldGetTranslation = DPSMate.BabbleSpell.GetTranslation
-	DPSMate.BabbleSpell.GetTranslation = function(self, msg)
-		if msg=="" or msg==" " then
-			return msg
-		else
-			if DPSMate.BabbleSpell:HasTranslation(msg) then
-				return oldGetTranslation(self, msg)
-			elseif DPSMate.BabbleSpell:HasReverseTranslation(msg) then
-				local revTra = DPSMate.BabbleSpell:GetReverseTranslation(msg)
-				if DPSMate.BabbleSpell:HasTranslation(revTra) then
-					return oldGetTranslation(self, revTra)
-				else
-					return msg
-				end
-			else
-				return msg
-			end
-		end
-	end
 end
 
 function DPSMate.Parser:GetPlayerValues()
@@ -534,6 +505,7 @@ function DPSMate.Parser:SwingDamage(timestamp, eventtype, srcGUID, srcName, srcF
 		if DPSMate.Parser.TargetParty[dstName] and DPSMate.Parser.TargetParty[srcName] then DB:BuildFail(1, dstName, srcName, DPSMate.L["AutoAttack"], amount) end
 	end
 	DB:DeathHistory(dstName, srcName, DPSMate.L["AutoAttack"], amount, t[1] or 1, t[2] or 0, 0, t[6] or 0)
+	DB:AddSpellSchool(DPSMate.L["AutoAttack"], "physical", 6603)
 	if absorbed then
 		DB:SetUnregisterVariables(absorbed, DPSMate.L["AutoAttack"], srcName)
 	end
@@ -581,7 +553,7 @@ function DPSMate.Parser:SpellDamage(timestamp, eventtype, srcGUID, srcName, srcF
 		if DPSMate.Parser.TargetParty[dstName] and DPSMate.Parser.TargetParty[srcName] then DB:BuildFail(1, dstName, srcName, spellName, amount) end
 	end
 	DB:UnregisterPotentialKick(srcName, spellName, GetTime())
-	DB:AddSpellSchool(spellName,spellSchoolToString[spellSchool])
+	DB:AddSpellSchool(spellName,spellSchoolToString[spellSchool],spellId)
 	DB:DeathHistory(dstName, srcName, spellName, amount, t[1] or 1, t[2] or 0, 0, t[6] or 0)
 	if absorbed then
 		DB:SetUnregisterVariables(absorbed, spellName, srcName)
@@ -608,6 +580,8 @@ function DPSMate.Parser:SpellMissed(timestamp, eventtype, srcGUID, srcName, srcF
 	end
 end
 
+
+-- custom spellid?
 function DPSMate.Parser:EnvironmentalDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,enviromentalType, amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing)
 	t = {}
 	if critical then t[1]=0;t[2]=1 end
@@ -637,13 +611,18 @@ function DPSMate.Parser:SpellHeal(timestamp, eventtype, srcGUID, srcName, srcFla
 		DB:Healing(2, DPSMateOverhealing, srcName, spellName, t[1] or 1, t[2] or 0, overheal, dstName)
 		DB:HealingTaken(DPSMateOverhealingTaken, dstName, spellName, t[1] or 1, t[2] or 0, overheal, srcName)
 	end
+	DB:AddSpellSchool(spellName,spellSchoolToString[spellSchool],spellId)
 end
 
 function DPSMate.Parser:SpellAuraDispelled(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, extraSpellId, extraSpellName, extraSpellSchool)
 	DPSMate.DB:Dispels(srcName, spellName, dstName, extraSpellName)
+	DB:AddSpellSchool(spellName,spellSchoolToString[spellSchool],spellId)
+	DB:AddSpellSchool(extraSpellName,spellSchoolToString[extraSpellSchool],extraSpellId)
 end
 
--- auraType: BUFF/DEBUFF => Replace DB in auras evaluation
+local BuffTypes = {
+	["DEBUFF"] = true
+}
 function DPSMate.Parser:SpellAuraApplied(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, auraType)
 	srcName = srcName or GetSpellSource(spellName, dstName)
 	if DPSMate:IsNPC(dstGUID) then
@@ -655,6 +634,7 @@ function DPSMate.Parser:SpellAuraApplied(timestamp, eventtype, srcGUID, srcName,
 	end
 	if DPSMate.Parser.Kicks[spellName] then DB:AssignPotentialKick(srcName, spellName, dstName, GetTime()); end
 	if DB.ShieldFlags[spellName] then DB:RegisterAbsorb(srcName, spellName, dstName) end
+	DB:AddSpellSchool(spellName,spellSchoolToString[spellSchool],spellId,BuffTypes[auraType])
 end
 
 function DPSMate.Parser:SpellAuraRemoved(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, auraType)
@@ -665,10 +645,13 @@ function DPSMate.Parser:SpellAuraRemoved(timestamp, eventtype, srcGUID, srcName,
 		DB:RemoveActiveCC(dstName, spellName) -- TO TEST
 	end
 	if DB.ShieldFlags[spellName] then DB:UnregisterAbsorb(spellName, dstName) end
+	DB:AddSpellSchool(spellName,spellSchoolToString[spellSchool],spellId,BuffTypes[auraType])
 end
 
 function DPSMate.Parser:Interrupt(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, extraSpellId, extraSpellName, extraSpellSchool)
 	DPSMate.DB:Kick(srcName, dstName, spellName, extraSpellName)
+	DB:AddSpellSchool(spellName,spellSchoolToString[spellSchool],spellId)
+	DB:AddSpellSchool(extraSpellName,spellSchoolToString[extraSpellSchool],extraSpellId)
 end
 
 function DPSMate.Parser:UnitDied(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags) -- Killingblows :D
@@ -679,7 +662,7 @@ function DPSMate.Parser:UnitDied(timestamp, eventtype, srcGUID, srcName, srcFlag
 	end
 end
 
-function DPSMate.Parser:Test(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, amount)
+function DPSMate.Parser:ExtraAttacks(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, amount)
 	DB.NextSwing[srcName] = {
 		[1] = amount,
 		[2] = spellName
@@ -690,6 +673,7 @@ function DPSMate.Parser:Test(timestamp, eventtype, srcGUID, srcName, srcFlags, d
 	}
 	DB:BuildBuffs(srcName, srcName, spellName, true)
 	DB:DestroyBuffs(srcName, spellName)
+	DB:AddSpellSchool(spellName,spellSchoolToString[spellSchool],spellId)
 end
 
 function DPSMate.Parser:SpellCastStart(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool)
@@ -697,10 +681,12 @@ function DPSMate.Parser:SpellCastStart(timestamp, eventtype, srcGUID, srcName, s
 		if DPSMate.Parser.RCD[spellName] then DPSMate:Broadcast(2, srcName, dstName or DPSMate.L["unknown"], spellName) end -- TO TEST MAYBE: SPELL_RESURRECT 
 	end
 	DB:RegisterPotentialKick(srcName, spellName, GetTime())
+	DB:AddSpellSchool(spellName,spellSchoolToString[spellSchool],spellId)
 end
 
 function DPSMate.Parser:SpellCastSuccess(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool)
 	tinsert(SuccessfulCasts, {GetTime(), spellName, srcName, dstName})
+	DB:AddSpellSchool(spellName,spellSchoolToString[spellSchool],spellId)
 end
 
 local linkQuality = {
@@ -726,6 +712,7 @@ function DPSMate.Parser:Energize(timestamp, eventtype, srcGUID, srcName, srcFlag
 	if DPSMate.Parser.procs[spellName] then
 		DB:BuildBuffs(srcName, dstName, spellName, true)
 		DB:DestroyBuffs(dstName, spellName)
+		DB:AddSpellSchool(spellName,spellSchoolToString[spellSchool],spellId)
 	end
 end
 
@@ -756,13 +743,10 @@ Execute = {
 	["UNIT_AURA"] = DPSMate.Parser.UnitAuraDispels,
 	["SPELL_ENERGIZE"] = DPSMate.Parser.Energize, -- Potential to add mana gained meter etc.
 	["SPELL_PERIODIC_ENERGIZE"] = DPSMate.Parser.Energize,
-	
+	["SPELL_EXTRA_ATTACKS"] = DPSMate.Parser.ExtraAttacks,
 	["CHAT_MSG_LOOT"] = DPSMate.Parser.Loot,
 	
 	--["SPELL_CAST_FAILED"] = DPSMate.Parser.Test2,
-	
-	-- TO BE FOUND OUT
-	["SPELL_EXTRA_ATTACKS"] = DPSMate.Parser.Test -- Will find out what that is 
 	
 	-- TO BE TESTED
 	--["SPELL_DRAIN"] = Recount.SpellDrainLeech, -- Elsia: Drains and leeches.

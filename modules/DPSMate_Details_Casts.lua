@@ -80,7 +80,7 @@ function DPSMate.Modules.DetailsCasts:UpdateBuffs(arg1, comp, cname)
 			if not a[pos] then break end
 			local ab = DPSMate:GetAbilityById(c[pos])
 			_G(path..i).id = c[pos]
-			_G(path..i.."_Icon"):SetTexture(DPSMate.BabbleSpell:GetSpellIcon(self:Replace(ab)))
+			_G(path..i.."_Icon"):SetTexture(DPSMate:GetSpellIcon(self:Replace(ab)))
 			_G(path..i.."_Name"):SetText(ab)
 			_G(path..i.."_Count"):SetText(a[pos])
 		end
@@ -94,7 +94,7 @@ function DPSMate.Modules.DetailsCasts:UpdateBuffs(arg1, comp, cname)
 			if not a[pos] then break end
 			local ab = DPSMate:GetAbilityById(c[pos])
 			_G(path..i).id = c[pos]
-			_G(path..i.."_Icon"):SetTexture(DPSMate.BabbleSpell:GetSpellIcon(self:Replace(ab)))
+			_G(path..i.."_Icon"):SetTexture(DPSMate:GetSpellIcon(self:Replace(ab)))
 			_G(path..i.."_Name"):SetText(ab)
 			_G(path..i.."_Count"):SetText(a[pos])
 		end

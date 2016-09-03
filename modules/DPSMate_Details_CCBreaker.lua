@@ -84,7 +84,7 @@ function DPSMate.Modules.DetailsCCBreaker:UpdateBuffs(arg1, comp, cname)
 			if not a[pos] then break end
 			local ab = DPSMate:GetAbilityById(a[pos][1])
 			_G(path..i).id = a[pos][1]
-			_G(path..i.."_Icon"):SetTexture(DPSMate.BabbleSpell:GetSpellIcon(self:Replace(ab)))
+			_G(path..i.."_Icon"):SetTexture(DPSMate:GetSpellIcon(self:Replace(ab)))
 			_G(path..i.."_Ability"):SetText(ab)
 			_G(path..i.."_Target"):SetText(DPSMate:GetUserById(a[pos][2]))
 			_G(path..i.."_Time"):SetText(a[pos][4])
@@ -100,7 +100,7 @@ function DPSMate.Modules.DetailsCCBreaker:UpdateBuffs(arg1, comp, cname)
 			if not a[pos] then break end
 			local ab = DPSMate:GetAbilityById(a[pos][1])
 			_G(path..i).id = a[pos][1]
-			_G(path..i.."_Icon"):SetTexture(DPSMate.BabbleSpell:GetSpellIcon(self:Replace(ab)))
+			_G(path..i.."_Icon"):SetTexture(DPSMate:GetSpellIcon(self:Replace(ab)))
 			_G(path..i.."_Ability"):SetText(ab)
 			_G(path..i.."_Target"):SetText(DPSMate:GetUserById(a[pos][2]))
 			_G(path..i.."_Time"):SetText(a[pos][4])
