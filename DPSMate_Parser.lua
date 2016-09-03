@@ -524,17 +524,17 @@ end
 
 function DPSMate.Parser:SwingDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,amount, school, resisted, blocked, absorbed, critical, glancing, crushing)
 	t = {}
-	if critical then t[1]=0;t[2]=critical end
-	if resisted then t[1]=0;t[3]=resisted end
-	if blocked then t[1]=0;t[4]=blocked end
-	if glancing then t[1]=0;t[5]=glancing end
-	if crushing then t[1]=0;t[6]=crushing end
+	if critical then t[1]=0;t[2]=1 end
+	if resisted then t[1]=0;t[3]=1 end
+	if blocked then t[1]=0;t[4]=1 end
+	if glancing then t[1]=0;t[5]=1; end
+	if crushing then t[1]=0;t[6]=1 end
 	if DPSMate:IsNPC(srcGUID) then
 		DB:EnemyDamage(false, DPSMateEDD, dstName, DPSMate.L["AutoAttack"], t[1] or 1, t[2] or 0, 0, 0, 0, 0, amount, srcName, t[4] or 0, t[6] or 0)
 		DB:DamageTaken(dstName, DPSMate.L["AutoAttack"], t[1] or 1, t[2] or 0, 0, 0, 0, 0, amount, srcName, t[6] or 0)
 	else
 		DB:EnemyDamage(true, DPSMateEDT, srcName, DPSMate.L["AutoAttack"], t[1] or 1, t[2] or 0, 0, 0, 0, t[3] or 0, amount, dstName, t[4] or 0, t[6] or 0)
-		DB:DamageDone(srcName, DPSMate.L["AutoAttack"], t[1] or 1, t[2] or 0, 0, 0, 0, t[3] or 0, amount, t[4] or 0, t[5] or 0)
+		DB:DamageDone(srcName, DPSMate.L["AutoAttack"], t[1] or 1, t[2] or 0, 0, 0, 0, t[3] or 0, amount, t[5] or 0, t[4] or 0)
 		if DPSMate.Parser.TargetParty[dstName] and DPSMate.Parser.TargetParty[srcName] then DB:BuildFail(1, dstName, srcName, DPSMate.L["AutoAttack"], amount) end
 	end
 	DB:DeathHistory(dstName, srcName, DPSMate.L["AutoAttack"], amount, t[1] or 1, t[2] or 0, 0, t[6] or 0)
@@ -582,7 +582,7 @@ function DPSMate.Parser:SpellDamage(timestamp, eventtype, srcGUID, srcName, srcF
 		if DPSMate.Parser.Kicks[spellName] then DB:AssignPotentialKick(srcName, spellName, dstName, GetTime()) end
 		if DPSMate.Parser.DmgProcs[spellName] then DB:BuildBuffs(srcName, srcName, spellName, true) end
 		DB:EnemyDamage(true, DPSMateEDT, srcName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, t[3] or 0, amount, dstName, t[4] or 0, t[6] or 0)
-		DB:DamageDone(srcName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, t[3] or 0, amount, t[4] or 0, t[5] or 0)
+		DB:DamageDone(srcName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, t[3] or 0, amount, t[5] or 0, t[4] or 0)
 		if DPSMate.Parser.TargetParty[dstName] and DPSMate.Parser.TargetParty[srcName] then DB:BuildFail(1, dstName, srcName, spellName, amount) end
 	end
 	DB:UnregisterPotentialKick(srcName, spellName, GetTime())

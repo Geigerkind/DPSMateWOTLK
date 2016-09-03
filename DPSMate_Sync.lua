@@ -170,10 +170,6 @@ function DPSMate.Sync:OnUpdate(elapsed)
 			self:EDAllOut(DPSMateEDT, "T")
 			self:EDAbilityOut(DPSMateEDT, "T")
 			self:EDStatOut(DPSMateEDT, "T")
-			iterator = 11
-		elseif time>=30 and iterator==11 then
-			self:ThreatOut()
-			self:ThreatStatsOut()
 			Buffer[cou] = {"DPSMate_SyncStatus", "0"}
 			cou = cou + 1
 			self.Async, iterator, time = false, 1, 0

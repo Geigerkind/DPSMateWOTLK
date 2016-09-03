@@ -765,7 +765,7 @@ function DPSMate.Options:PopUpAccept(bool, bypass)
 			DPSMateDeaths = {[1]={},[2]={}}
 			DPSMateInterrupts = {[1]={},[2]={}}
 			DPSMateAurasGained = {[1]={},[2]={}}
-			DPSMateThreat = {[1]={},[2]={}}
+			--DPSMateThreat = {[1]={},[2]={}}
 			DPSMateFails = {[1]={},[2]={}}
 			DPSMateCCBreaker = {[1]={},[2]={}}
 			DPSMateHistory = {
@@ -785,7 +785,7 @@ function DPSMate.Options:PopUpAccept(bool, bypass)
 				Interrupts = {},
 				Dispels = {},
 				Auras = {},
-				Threat = {},
+				--Threat = {},
 				Fails = {},
 				CCBreaker = {}
 			}
@@ -840,7 +840,7 @@ function DPSMate.Options:PopUpAccept(bool, bypass)
 			DPSMateDeaths[2] = {}
 			DPSMateInterrupts[2] = {}
 			DPSMateAurasGained[2] = {}
-			DPSMateThreat[2] = {}
+			--DPSMateThreat[2] = {}
 			DPSMateFails[2] = {}
 			DPSMateCCBreaker[2] = {}
 			DPSMateCombatTime["current"] = 1
@@ -880,8 +880,8 @@ function DPSMate.Options:PopUpAccept(bool, bypass)
 		DPSMate.Modules.AurasUptimers.DB = DPSMateAurasGained
 		DPSMate.Modules.Procs.DB = DPSMateAurasGained
 		DPSMate.Modules.Casts.DB = DPSMateEDT
-		DPSMate.Modules.Threat.DB = DPSMateThreat
-		DPSMate.Modules.TPS.DB = DPSMateThreat
+		--DPSMate.Modules.Threat.DB = DPSMateThreat
+		--DPSMate.Modules.TPS.DB = DPSMateThreat
 		DPSMate.Modules.Fails.DB = DPSMateFails
 		DPSMate.Modules.CCBreaker.DB = DPSMateCCBreaker
 		DPSMate.Modules.OHPS.DB = DPSMateOverhealing
@@ -1551,7 +1551,7 @@ function DPSMate.Options:NewSegment(segname)
 		DPSMateInterrupts[2] = {}
 		DPSMateDispels[2] = {}
 		DPSMateAurasGained[2] = {}
-		DPSMateThreat[2] = {}
+		--DPSMateThreat[2] = {}
 		DPSMateFails[2] = {}
 		DPSMateCCBreaker[2] = {}
 		DPSMateCombatTime["current"] = 1
