@@ -424,7 +424,7 @@ function DPSMate.DB:OnEvent(event)
 				Interrupts = {},
 				Dispels = {},
 				Auras = {},
-				Threat = {},
+				--Threat = {},
 				Fail = {},
 				CCBreaker = {}
 			}
@@ -446,7 +446,7 @@ function DPSMate.DB:OnEvent(event)
 		if DPSMateDeaths == nil then DPSMateDeaths = {[1]={},[2]={}} end
 		if DPSMateInterrupts == nil then DPSMateInterrupts = {[1]={},[2]={}} end
 		if DPSMateAurasGained == nil then DPSMateAurasGained = {[1]={},[2]={}} end
-		if DPSMateThreat == nil then DPSMateThreat = {[1]={},[2]={}} end
+		--if DPSMateThreat == nil then DPSMateThreat = {[1]={},[2]={}} end
 		if DPSMateFails == nil then DPSMateFails = {[1]={},[2]={}} end
 		if DPSMateCCBreaker == nil then DPSMateCCBreaker = {[1]={},[2]={}} end
 		-- Legacy Logs support
@@ -490,8 +490,8 @@ function DPSMate.DB:OnEvent(event)
 		DPSMate.Modules.AurasUptimers.DB = DPSMateAurasGained
 		DPSMate.Modules.Procs.DB = DPSMateAurasGained
 		DPSMate.Modules.Casts.DB = DPSMateEDT
-		DPSMate.Modules.Threat.DB = DPSMateThreat
-		DPSMate.Modules.TPS.DB = DPSMateThreat
+		--DPSMate.Modules.Threat.DB = DPSMateThreat
+		--DPSMate.Modules.TPS.DB = DPSMateThreat
 		DPSMate.Modules.Fails.DB = DPSMateFails
 		DPSMate.Modules.CCBreaker.DB = DPSMateCCBreaker
 		DPSMate.Modules.OHPS.DB = DPSMateOverhealing
@@ -723,142 +723,43 @@ function DPSMate.DB:BuildAbility(name, kind, school, sid, buffOrDebuff)
 	return false
 end
 
--- KTMHOOK
-local specialAbTrans = {
-	--[[["heroicstrike"] = DPSMate.BabbleSpell:GetTranslation("Heroic Strike"),
-	["maul"] = DPSMate.BabbleSpell:GetTranslation("Maul"),	
-	["swipe"] = DPSMate.BabbleSpell:GetTranslation("Swipe"),
-	["shieldslam"] = DPSMate.BabbleSpell:GetTranslation("Shield Slam"),
-	["revenge"] = DPSMate.BabbleSpell:GetTranslation("Revenge"),
-	["shieldbash"] = DPSMate.BabbleSpell:GetTranslation("Shield Bash"),
-	["sunder"] = DPSMate.BabbleSpell:GetTranslation("Sunder Armor"),
-	["cleave"] = DPSMate.BabbleSpell:GetTranslation("Cleave"),
-	--["feint"] = DPSMate.BabbleSpell:GetTranslation("Feint"),
-	--["cower"] = DPSMate.BabbleSpell:GetTranslation("Cower"),
-	["searingpain"] = DPSMate.BabbleSpell:GetTranslation("Searing Pain"),
-	["earthshock"] = DPSMate.BabbleSpell:GetTranslation("Earth Shock"),
-	["mindblast"] = DPSMate.BabbleSpell:GetTranslation("Mind Blast"),
-	["holyshield"] = DPSMate.BabbleSpell:GetTranslation("Holy Shield"),
-	--["distractingshot"] = DPSMate.BabbleSpell:GetTranslation("Distracting Shot"),
-	["heroicstrike"] = DPSMate.BabbleSpell:GetTranslation("Heroic Strike"),
-	["thunderfury"] = DPSMate.BabbleSpell:GetTranslation("Thunderfury"),
-	["graceofearth"] = DPSMate.BabbleSpell:GetTranslation("Grace of Earth"),
-	["blackamnesty"] = DPSMate.BabbleSpell:GetTranslation("Black Amnesty"),
-	["whitedamage"] = DPSMate.L["AutoAttack"],--]]
-}
-
-if klhtm then
-	local oldModSpecialAttack = klhtm.combat.specialattack
-	klhtm.combat.specialattack = function(abilityid, target, damage, iscrit, spellschool)
-		oldModSpecialAttack(abilityid, target, damage, iscrit, spellschool)
-		if specialAbTrans[abilityid] then
-			if not DPSMate.DB.KTMHOOK[specialAbTrans[abilityid]] then
-				DPSMate.DB.KTMHOOK[specialAbTrans[abilityid]] = {}
-			end
-			tinsert(DPSMate.DB.KTMHOOK[specialAbTrans[abilityid]], {target, klhtm.combat.event.threat})
-			DPSMate.DB:Threat(player, specialAbTrans[abilityid], target, klhtm.combat.event.threat, 1)
-		end
-	end
-
-	local oldModNormalAttack = klhtm.combat.normalattack
-	klhtm.combat.normalattack = function(spellname, spellid, damage, isdot, target, iscrit, spellschool)
-		oldModNormalAttack(spellname, spellid, damage, isdot, target, iscrit, spellschool)
-		if not DPSMate.DB.KTMHOOK[spellname] then
-			DPSMate.DB.KTMHOOK[spellname] = {}
-		end
-		tinsert(DPSMate.DB.KTMHOOK[spellname], {target, klhtm.combat.event.threat})
-		DPSMate.DB:Threat(player, spellname, target, klhtm.combat.event.threat, 1)
-	end
-
-	local oldModHeal = klhtm.combat.registerheal
-	klhtm.combat.registerheal = function(spellname, spellid, amount, target)
-		oldModNormalAttack(spellname, spellid, amount, target)
-		if not DPSMate.DB.KTMHOOK[spellname] then
-			DPSMate.DB.KTMHOOK[spellname] = {}
-		end
-		tinsert(DPSMate.DB.KTMHOOK[spellname], {target, klhtm.combat.event.threat})
-		DPSMate.DB:Threat(player, spellname, target, klhtm.combat.event.threat, 1)
-	end
-
-	local oldModPowerGain = klhtm.combat.powergain
-	klhtm.combat.powergain = function(amount, powertype, spellid)
-		oldModPowerGain(amount, powertype, spellid)
-		if not DPSMate.DB.KTMHOOK[powertype] then
-			DPSMate.DB.KTMHOOK[powertype] = {}
-		end
-		local target = UnitName("target") or player
-		tinsert(DPSMate.DB.KTMHOOK[powertype], {target, klhtm.combat.event.threat})
-		DPSMate.DB:Threat(player, powertype, target, klhtm.combat.event.threat, 1)
-	end
-end
-
-function DPSMate.DB:UpdateThreat()
-	if self.KTMHOOK ~= {} then
-		local str
-		for cat, val in pairs(self.KTMHOOK) do
-			local curNpc, curNpcNum = {}, 0
-			if str then
-				str = str..',["'..cat..'"]={'
-			else
-				str = '["'..cat..'"]={'
-			end
-			for ca, va in val do
-				if curNpc[va[1]] then
-					str = str..','..va[2]
-				else
-					if curNpcNum==0 then
-						str = str..'["'..va[1]..'"]={'..va[2]
-					else
-						str = str..'},["'..va[1]..'"]={'..va[2]
-					end
-					curNpc[va[1]] = true
-					curNpcNum = curNpcNum + 1
-				end
-			end
-			str = str..'}}'
-		end
-		if str then
-			self.KTMHOOK = {}
-			SendAddonMessage("KLHTMHOOK", str, "RAID")
-		end
-	end
-end
-
+--[[
 function DPSMate.DB:Threat(cause, spellname, target, value, amount)
 	if self:BuildUser(target, nil) or self:BuildUser(cause, nil) or self:BuildAbility(spellname, nil) or value==0 or cause=="" or spellname=="" or target=="" then return end
 	for cat, val in pairs({[1]="total", [2]="current"}) do
-		if not DPSMateThreat[cat][DPSMateUser[cause][1]] then
-			DPSMateThreat[cat][DPSMateUser[cause][1]] = {}
-		end
-		if not DPSMateThreat[cat][DPSMateUser[cause][1]][DPSMateUser[target][1]] then
-			DPSMateThreat[cat][DPSMateUser[cause][1]][DPSMateUser[target][1]] = {}
-		end
-		if not DPSMateThreat[cat][DPSMateUser[cause][1]][DPSMateUser[target][1]][DPSMateAbility[spellname][1]] then
-			DPSMateThreat[cat][DPSMateUser[cause][1]][DPSMateUser[target][1]][DPSMateAbility[spellname][1]] = {
-				[1] = 0, -- Amount
+		--if not DPSMateThreat[cat][DPSMateUser[cause][1]]-- then
+		--	DPSMateThreat[cat][DPSMateUser[cause][1]] = {}
+		--end
+		--if not DPSMateThreat[cat][DPSMateUser[cause][1]][DPSMateUser[target][1]] then
+		--	DPSMateThreat[cat][DPSMateUser[cause][1]][DPSMateUser[target][1]] = {}
+		--end
+		----if not DPSMateThreat[cat][DPSMateUser[cause][1]][DPSMateUser[target][1]][DPSMateAbility[spellname][1]] then
+		--	DPSMateThreat[cat][DPSMateUser[cause][1]][DPSMateUser[target][1]][DPSMateAbility[spellname][1]] = {
+		--[[		[1] = 0, -- Amount
 				[2] = 0, -- Min
 				[3] = 0, -- Max
 				[4] = 0, -- Hits
 				["i"] = {}
 			}
 		end
-		local path = DPSMateThreat[cat][DPSMateUser[cause][1]][DPSMateUser[target][1]][DPSMateAbility[spellname][1]]
-		path[1] = path[1] + value
-		path[4] = path[4] + amount
-		if path[2]==0 or path[2]>value then
-			path[2] = value
-		end
-		if path[3]<value then
-			path[3] = value
-		end
-		if path["i"][DPSMateCombatTime[val]] then
-			path["i"][DPSMateCombatTime[val]] = path["i"][DPSMateCombatTime[val]] + value
-		else
-			path["i"][DPSMateCombatTime[val]] = value
-		end
-	end
-	self.NeedUpdate = true
-end
+		--local path = DPSMateThreat[cat][DPSMateUser[cause][1]]--[DPSMateUser[target][1]][DPSMateAbility[spellname][1]]
+		--path[1] = path[1] + value
+		--path[4] = path[4] + amount
+		--if path[2]==0 or path[2]>value then
+		--	path[2] = value
+		--end
+		--if path[3]<value then
+		--	path[3] = value
+		--end
+		--if path["i"][DPSMateCombatTime[val]] then
+		--	path["i"][DPSMateCombatTime[val]] = path["i"][DPSMateCombatTime[val]] + value
+		--else
+		--	path["i"][DPSMateCombatTime[val]] = value
+		--end
+	--end
+	--self.NeedUpdate = true
+--end]]--
+
 
 local savedValue = {
 	["damage"] = 0,
@@ -1878,7 +1779,6 @@ function DPSMate.DB:CombatTime()
 				MainLastUpdate = MainLastUpdate + arg1
 				if MainLastUpdate>=MainUpdateTime then
 					DPSMate.DB:UpdateKicks()
-					DPSMate.DB:UpdateThreat()
 					DPSMate:SetStatusBarValue()
 					DPSMate.DB.NeedUpdate = false
 					MainLastUpdate = 0

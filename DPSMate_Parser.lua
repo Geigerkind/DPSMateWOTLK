@@ -493,6 +493,7 @@ function DPSMate.Parser:OnEvent(event)
 	end
 	if Execute[event] then
 		Execute[event](nil,arg1,arg2,arg3,arg4,arg5)
+		return
 	end
 end
 

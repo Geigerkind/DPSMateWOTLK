@@ -38,6 +38,7 @@ local strgsub = string.gsub
 local func = function(c) tinsert(t, c) end
 local strformat = string.format
 local tonumber = tonumber
+local strlower = string.lower
 
 -- Begin functions
 
@@ -447,7 +448,7 @@ end
 
 function DPSMate:GetClassColor(class)
 	if (class) then
-		if DPSMateUser[class] then class = DPSMateUser[class][2] end
+		if DPSMateUser[class] then if not DPSMateUser[class][2] then DPSMateUser[class][2] = strlower(UnitClass(class)) end; class = DPSMateUser[class][2] end
 		if classcolor[class] then
 			return classcolor[class].r, classcolor[class].g, classcolor[class].b, class
 		else

@@ -4896,6 +4896,7 @@
 									</CheckButton>
 								</Frames>
 							</Frame>
+							<!--
 							<Frame name="$parent_Threat" inherits="DPSMate_Template_BoxColumns">
 								<Anchors>
 									<Anchor point="TOP" relativeTo="$parent_Casts" relativePoint="BOTTOM">
@@ -5044,9 +5045,10 @@
 									</CheckButton>
 								</Frames>
 							</Frame>
+							-->
 							<Frame name="$parent_Fails" inherits="DPSMate_Template_BoxColumns">
 								<Anchors>
-									<Anchor point="TOP" relativeTo="$parent_TPS" relativePoint="BOTTOM">
+									<Anchor point="TOP" relativeTo="$parent_Casts" relativePoint="BOTTOM">
 										<Offset x="0" y="-20" />
 									</Anchor>
 								</Anchors>

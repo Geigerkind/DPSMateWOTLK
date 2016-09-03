@@ -1527,7 +1527,7 @@ DPSMate.Sync.Exec = {
 	["DPSMate_Participate"] = function() DPSMate.Sync:CountParticipants() end,
 	["DPSMate_SyncTimer"..DPSMate.SYNCVERSION] = function(arg2) DPSMate.Sync:SetTimer(arg2) end,
 	["DPSMate_SyncStatus"..DPSMate.SYNCVERSION] = function(arg2,arg4) DPSMate.Sync:SyncStatus(arg2, arg4) end,
-	["DPSMate_Threat"..DPSMate.SYNCVERSION] = function(arg2,arg4) DPSMate.Sync:ThreatAllIn(arg2, arg4) end,
-	["DPSMate_ThreatStats"..DPSMate.SYNCVERSION] = function(arg2,arg4) DPSMate.Sync:ThreatStatsIn(arg2, arg4) end,
-	["KLHTMHOOK"] = function(arg2,arg4) DPSMate.Sync:ThreatIn(arg2,arg4) end
+	--["DPSMate_Threat"..DPSMate.SYNCVERSION] = function(arg2,arg4) DPSMate.Sync:ThreatAllIn(arg2, arg4) end,
+	--["DPSMate_ThreatStats"..DPSMate.SYNCVERSION] = function(arg2,arg4) DPSMate.Sync:ThreatStatsIn(arg2, arg4) end,
+	--["KLHTMHOOK"] = function(arg2,arg4) DPSMate.Sync:ThreatIn(arg2,arg4) end
 }
