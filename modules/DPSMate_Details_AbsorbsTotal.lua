@@ -128,7 +128,7 @@ function DPSMate.Modules.DetailsAbsorbsTotal:UpdateStackedGraph()
 						end
 					end
 					if dmg==5 or dmg==0 then
-						dmg = ceil((1/15)*((DPSMateUser[ownername][8] or 60)/60)*DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])]*0.33)
+						dmg = ceil((1/15)*((DPSMateUser[ownername][8] or 70)/70)*DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])]*0.33)
 					end
 					if va[4] then
 						dmg = dmg + va[4]
@@ -232,7 +232,7 @@ function DPSMate.Modules.DetailsAbsorbsTotal:AddTotalDataSeries()
 						end
 					end
 					if dmg==5 or dmg==0 then
-						dmg = ceil((1/15)*((DPSMateUser[ownername][8] or 60)/60)*DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])]*0.33)
+						dmg = ceil((1/15)*((DPSMateUser[ownername][8] or 70)/70)*DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])]*0.33)
 					end
 					if va[4] then
 						dmg = dmg + va[4]
@@ -322,7 +322,7 @@ function DPSMate.Modules.DetailsAbsorbsTotal:GetTableValues()
 											end
 										end
 										if p==5 or p==0 then
-											p = ceil((1/totalHits)*((DPSMateUser[ownername][8] or 60)/60)*DPSMate.DB.FixedShieldAmounts[shieldname]*0.33)
+											p = ceil((1/totalHits)*((DPSMateUser[ownername][8] or 70)/70)*DPSMate.DB.FixedShieldAmounts[shieldname]*0.33)
 										end
 										PerShieldAbsorb=PerShieldAbsorb+ss*p
 									end
@@ -423,7 +423,7 @@ function DPSMate.Modules.DetailsAbsorbsTotal:SortLineTable(uid)
 					end
 				end
 				if dmg==5 or dmg==0 then
-					dmg = ceil((1/15)*((DPSMateUser[ownername][8] or 60)/60)*DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])]*0.33)
+					dmg = ceil((1/15)*((DPSMateUser[ownername][8] or 70)/70)*DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])]*0.33)
 				end
 				if va[4] then
 					dmg = dmg + va[4]
