@@ -530,6 +530,14 @@ function DPSMate.DB:OnEvent(event)
 			DPSMate.Options:PopUpAccept(true, true)
 		end
 		
+		-- Adding WF Attack
+		if not DPSMateAbility[DPSMate.L["wfattack"]] then
+			DPSMateAbility[DPSMate.L["wfattack"]] = {
+				[1] = 1,
+				[4] = 25504
+			}
+		end
+		
 		-- Look it up at NEC
 		--SetCVar("CombatLogRangeParty", 150);
 		--SetCVar("CombatLogRangePartyPet", 150);
@@ -889,14 +897,16 @@ local AAttack = DPSMate.L["AutoAttack"]
 local WFAttack = DPSMate.L["wfattack"]
 local Windfury = {}
 local WindfuryEDT = {}
-function DPSMate.DB:IsWindFuryAttack(arr, Dname, Duser)
+function DPSMate.DB:IsWindFuryAttack(arr, Dname, Duser, bool)
 	if Dname~=AAttack then return Dname end
 	local time = GetTime()
 	for c,v in pairs(arr) do
 		if v then
-			if (time-c)<=0.2 then
-				self:BuildBuffs(Duser, Duser, WFAttack, true)
-				self:DestroyBuffs(Duser, WFAttack)
+			if (time-c)<=0.05 then
+				if bool then
+					self:BuildBuffs(Duser, Duser, WFAttack, true)
+					self:DestroyBuffs(Duser, WFAttack)
+				end
 				return WFAttack
 			else
 				arr[c] = false
@@ -920,9 +930,11 @@ function DPSMate.DB:DamageDone(Duser, Dname, Dhit, Dcrit, Dmiss, Dparry, Ddodge,
 		if Dname == AAttack and self.NextSwing[Duser][1]>0 then
 			Dname = self.NextSwing[Duser][2]
 			self.NextSwing[Duser][1] = self.NextSwing[Duser][1] - 1
+		else
+			Dname = self:IsWindFuryAttack(Windfury, Dname, Duser, true)
 		end
 	else
-		Dname = self:IsWindFuryAttack(Windfury, Dname, Duser)
+		Dname = self:IsWindFuryAttack(Windfury, Dname, Duser, true)
 	end
 	
 	for cat, val in pairs({[1]="total", [2]="current"}) do 
@@ -1117,6 +1129,8 @@ function DPSMate.DB:EnemyDamage(mode, arr, Duser, Dname, Dhit, Dcrit, Dmiss, Dpa
 			if Dname == AAttack and self.NextSwingEDD[Duser][1]>0 then
 				Dname = self.NextSwingEDD[Duser][2]
 				self.NextSwingEDD[Duser][1] = self.NextSwingEDD[Duser][1] - 1
+			else
+				Dname = self:IsWindFuryAttack(WindfuryEDT, Dname, Duser)
 			end
 		else
 			Dname = self:IsWindFuryAttack(WindfuryEDT, Dname, Duser)
