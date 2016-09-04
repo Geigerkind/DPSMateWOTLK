@@ -1,6 +1,6 @@
 -- Global Variables
 DPSMate = {}
-DPSMate.VERSION = 3
+DPSMate.VERSION = 4
 DPSMate.LOCALE = GetLocale()
 DPSMate.SYNCVERSION = DPSMate.VERSION..DPSMate.LOCALE
 DPSMate.Parser = {}
@@ -357,7 +357,8 @@ end
 local savedNPCS = {}
 function DPSMate:IsNPC(guid)
 	if savedNPCS[guid] then return true end
-	if self:GetNPCID(guid)>0 then
+	local B = tonumber(guid:sub(5,5), 16) % 8;
+	if B~=4 and B~=0 then
 		savedNPCS[guid] = true
 		return true
 	end
