@@ -163,7 +163,9 @@ function DPSMate.DB:OnEvent(event)
 						},
 						filterpeople = "",
 						grouponly = false,
-						realtime = false
+						realtime = false,
+						barbg = false,
+						totopacity = 1,
 					}
 				},
 				lock = false,

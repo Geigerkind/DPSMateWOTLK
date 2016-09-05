@@ -274,9 +274,9 @@ function DPSMate.Sync:ReceiveStartVote()
 	end
 end
 
-local bc, am = false, 1
+local bc, am = 0, 1
 function DPSMate.Sync:HelloWorld()
-	bc = true
+	bc = GetTime()
 	am = 1
 	SDM("DPSMate_HelloWorld", "NaN", "RAID")
 end
@@ -286,7 +286,7 @@ function DPSMate.Sync:GreetBack()
 end
 
 function DPSMate.Sync:ReceiveGreet(arg2, arg4)
-	if bc then
+	if (GetTime()-bc)<=3 then
 		DPSMate:SendMessage(am..". "..arg4.." (v"..arg2..")")
 		am = am + 1
 	end

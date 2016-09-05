@@ -207,11 +207,13 @@
 							this:GetParent():GetParent().selected = "_Tab_Bars"
 							this:GetParent():GetParent().Key = this:GetParent().Key
 							DPSMate_ConfigMenu_Tab_Bars_BarFontSize:SetValue(DPSMateSettings["windows"][this:GetParent().Key]["barfontsize"])
+							DPSMate_ConfigMenu_Tab_Bars_TotalAlpha:SetValue(DPSMateSettings["windows"][this:GetParent().Key]["totopacity"] or 1)
 							DPSMate_ConfigMenu_Tab_Bars_BarSpacing:SetValue(DPSMateSettings["windows"][this:GetParent().Key]["barspacing"])
 							DPSMate_ConfigMenu_Tab_Bars_BarHeight:SetValue(DPSMateSettings["windows"][this:GetParent().Key]["barheight"])
 							DPSMate_ConfigMenu_Tab_Bars_ClassIcons:SetChecked(DPSMateSettings["windows"][this:GetParent().Key]["classicons"])
 							DPSMate_ConfigMenu_Tab_Bars_ClassIcons:SetChecked(DPSMateSettings["windows"][this:GetParent().Key]["classicons"])
 							DPSMate_ConfigMenu_Tab_Bars_Ranks:SetChecked(DPSMateSettings["windows"][this:GetParent().Key]["ranks"])
+							DPSMate_ConfigMenu_Tab_Bars_DisableBG:SetChecked(DPSMateSettings["windows"][this:GetParent().Key]["barbg"])
 							UIDropDownMenu_SetSelectedValue(DPSMate_ConfigMenu_Tab_Bars_BarFont, DPSMateSettings["windows"][this:GetParent().Key]["barfont"])
 							DPSMate_ConfigMenu_Tab_Bars_BarFontText:SetFont(DPSMate.Options.fonts[DPSMateSettings["windows"][this:GetParent().Key]["barfont"]], 12)
 							DPSMate_ConfigMenu_Tab_Bars_BarFontText:SetText(DPSMateSettings["windows"][this:GetParent().Key]["barfont"])
@@ -2001,6 +2003,52 @@
 							</OnClick>
 						</Scripts>
 					</CheckButton>
+					<CheckButton name="$parent_DisableBG" inherits="DPSMate_Template_CheckButton">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$Parent_Ranks" relativePoint="BOTTOMLEFT" />
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								this.aide = DPSMate.L["disablebarbgtooltip"]
+								getglobal(this:GetName().."_Title"):SetText(DPSMate.L["disablebarbg"])
+							</OnLoad>
+							<OnClick>
+								if DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["barbg"] then
+									DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["barbg"] = false
+									for i=1, 40 do
+										getglobal("DPSMate_"..DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["name"].."_ScrollFrame_Child_StatusBar"..i.."_BG"):SetAlpha(0.5)
+									end
+								else
+									DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["barbg"] = true
+									for i=1, 40 do
+										getglobal("DPSMate_"..DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["name"].."_ScrollFrame_Child_StatusBar"..i.."_BG"):SetAlpha(0)
+									end
+								end
+							</OnClick>
+						</Scripts>
+					</CheckButton>
+					<Slider name="$parent_TotalAlpha" inherits="DPSMate_Template_Slider">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent_DisableBG" relativePoint="BOTTOMLEFT">
+								<Offset x="0" y="-15" />
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								this.aide = DPSMate.L["totalbaropacitytooltip"]
+								this.func = function()
+									DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["totopacity"] = this:GetValue() 
+									getglobal("DPSMate_"..DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["name"].."_ScrollFrame_Child_Total_BG"):SetAlpha(this:GetValue()) 
+									getglobal("DPSMate_"..DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["name"].."_ScrollFrame_Child_Total"):SetStatusBarColor(1,1,1,this:GetValue()) 
+								end
+								this:SetMinMaxValues(0,1)
+								this:SetValueStep(0.1)
+								getglobal(this:GetName().."Text"):SetText(DPSMate.L["totalbaropacity"])
+								getglobal(this:GetName().."Low"):SetText("0")
+								getglobal(this:GetName().."High"):SetText("1")
+							</OnLoad>
+						</Scripts>
+					</Slider>
 				</Frames>
 			</Frame>
 			

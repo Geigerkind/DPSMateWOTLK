@@ -486,4 +486,8 @@ if (GetLocale() == "deDE") then
 	DPSMate.L["minion"] = "(Wächter)"
 	DPSMate.L["treant"] = "Treant"
 	DPSMate.L["minionregex"] = "(.+%s*)'?s (.+)"
+	DPSMate.L["disablebarbg"] = "Hintergrund deaktivieren"
+	DPSMate.L["disablebarbgtooltip"] = "Deaktiviere den Hintergrund von jeder Bar."
+	DPSMate.L["totalbaropacity"] = "Gesamtbar Transparenz"
+	DPSMate.L["totalbaropacitytooltip"] = "Bewege das, um die Transparenz von der Gesamtbar zu verändern."
 end
