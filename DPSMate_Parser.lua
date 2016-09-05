@@ -289,30 +289,29 @@ Tree of Life http://db.hellground.net/?spell=33891
 --]]
 
 DPSMate.Parser.CC = {
-	[GetSpellInfo(2070)] = true, -- Sap
-	[GetSpellInfo(12540)] = true, -- Gouge
-	[GetSpellInfo(12098)] = true, -- Sleep
-	[GetSpellInfo(118)] = true, -- Polymorph
-	[GetSpellInfo(22274)] = true, -- Greater Polymorph
-	[GetSpellInfo(228)] = true, -- Polymorph: Chicken
-	[GetSpellInfo(28272)] = true, -- Polymorph: Pig
-	[GetSpellInfo(851)] = true, -- Polymorph: Sheep
-	[GetSpellInfo(21060)] = true, -- Blind
-	[GetSpellInfo(14309)] = true, -- Freezing Trap Effect
-	[GetSpellInfo(5246)] = true, -- Intimidating Shout
-	[GetSpellInfo(19503)] = true, -- Scatter Shot
-	[GetSpellInfo(19386)] = true, -- Wyvern Sting
-	[GetSpellInfo(20407)] = true, -- Seduction
-	[GetSpellInfo(20066)] = true, -- Repentance
-	[GetSpellInfo(11444)] = true, -- Shackle Undead
-	[GetSpellInfo(13327)] = true, -- Reckless Charge
-	[GetSpellInfo(6358)] = true, -- Seduction (succubus)
+	[GetSpellInfo(2070)] = 40, -- Sap
+	[GetSpellInfo(12540)] = 5, -- Gouge
+	[GetSpellInfo(12098)] = 30, -- Sleep
+	[GetSpellInfo(118)] = 35, -- Polymorph
+	[GetSpellInfo(22274)] = 35, -- Greater Polymorph
+	[GetSpellInfo(228)] = 35, -- Polymorph: Chicken
+	[GetSpellInfo(28272)] = 35, -- Polymorph: Pig
+	[GetSpellInfo(851)] = 35, -- Polymorph: Sheep
+	[GetSpellInfo(21060)] = 8, -- Blind
+	[GetSpellInfo(14309)] = 15, -- Freezing Trap Effect
+	[GetSpellInfo(5246)] = 5, -- Intimidating Shout
+	[GetSpellInfo(19503)] = 3, -- Scatter Shot
+	[GetSpellInfo(19386)] = 10, -- Wyvern Sting
+	[GetSpellInfo(20407)] = 5, -- Seduction
+	[GetSpellInfo(20066)] = 5, -- Repentance
+	[GetSpellInfo(11444)] = 40, -- Shackle Undead
+	[GetSpellInfo(13327)] = 25, -- Reckless Charge
 	
 	-- New
-	[GetSpellInfo(18658)] = true, -- Hibernate
-	[GetSpellInfo(26989)] = true, -- Entangling Roots
-	[GetSpellInfo(5782)] = true, -- Fear
-	[GetSpellInfo(8122)] = true, -- Psychic Scream
+	[GetSpellInfo(18658)] = 30, -- Hibernate
+	[GetSpellInfo(26989)] = 18, -- Entangling Roots
+	[GetSpellInfo(5782)] = 8, -- Fear
+	[GetSpellInfo(8122)] = 6, -- Psychic Scream
 }
 
 DPSMate.Parser.Dispels = {
@@ -467,7 +466,7 @@ local overheal = 0
 local GetTime = GetTime
 local SuccessfulCasts = {}
 local GetSpellSource = function(spellName, dstName)
-	local owner, secPrio = DPSMate.L["unknown"]
+	local owner, secPrio = dstName
 	for c, v in pairs(SuccessfulCasts) do
 		if v then
 			if (GetTime()-v[1])>2 then
@@ -589,14 +588,15 @@ function DPSMate.Parser:SwingDamage(timestamp, eventtype, srcGUID, srcName, srcF
 	if DPSMate:IsNPC(srcGUID) then
 		DB:EnemyDamage(false, DPSMateEDD, dstName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, 0, amount, srcName, t[4] or 0, t[6] or 0)
 		DB:DamageTaken(dstName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, 0, amount, srcName, t[6] or 0)
-		DB:EvaluateLastHitWithPOM(dstName)
 	else
 		DB:EnemyDamage(true, DPSMateEDT, srcName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, t[3] or 0, amount, dstName, t[4] or 0, t[6] or 0)
 		DB:DamageDone(srcName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, t[3] or 0, amount, t[5] or 0, t[4] or 0)
 		if DPSMate.Parser.TargetParty[dstName] and DPSMate.Parser.TargetParty[srcName] then DB:BuildFail(1, dstName, srcName, spellName, amount) end
 	end
+	DB:EvaluateLastHitWithPOM(dstName)
 	DB:DeathHistory(dstName, srcName, spellName, amount, t[1] or 1, t[2] or 0, 0, t[6] or 0)
 	DB:AddSpellSchool(spellName, "physical", 6603)
+	DB:AssignLastHit(dstName, srcName, spellName)
 	if absorbed then
 		DB:SetUnregisterVariables(absorbed, spellName, srcName)
 	end
@@ -640,7 +640,6 @@ function DPSMate.Parser:SpellDamage(timestamp, eventtype, srcGUID, srcName, srcF
 		if DPSMate.Parser.FailDT[spellName] then DB:BuildFail(2, srcName, dstName, spellName, amount) end
 		DB:EnemyDamage(false, DPSMateEDD, dstName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, 0, amount, srcName, t[4] or 0, t[6] or 0)
 		DB:DamageTaken(dstName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, 0, amount, srcName, t[6] or 0)
-		DB:EvaluateLastHitWithPOM(dstName)
 	else
 		if DPSMate.Parser.Kicks[spellName] then DB:AssignPotentialKick(srcName, spellName, dstName, GetTime()) end
 		if DPSMate.Parser.DmgProcs[spellName] then DB:BuildBuffs(srcName, srcName, spellName, true) end
@@ -648,9 +647,11 @@ function DPSMate.Parser:SpellDamage(timestamp, eventtype, srcGUID, srcName, srcF
 		DB:DamageDone(srcName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, t[3] or 0, amount, t[5] or 0, t[4] or 0)
 		if DPSMate.Parser.TargetParty[dstName] and DPSMate.Parser.TargetParty[srcName] then DB:BuildFail(1, dstName, srcName, spellName, amount) end
 	end
+	DB:EvaluateLastHitWithPOM(dstName)
 	DB:UnregisterPotentialKick(srcName, spellName, GetTime())
 	DB:AddSpellSchool(spellName,spellSchoolToString[spellSchool],spellId)
 	DB:DeathHistory(dstName, srcName, spellName, amount, t[1] or 1, t[2] or 0, 0, t[6] or 0)
+	DB:AssignLastHit(dstName, srcName, spellName)
 	if absorbed then
 		DB:SetUnregisterVariables(absorbed, spellName, srcName)
 	end

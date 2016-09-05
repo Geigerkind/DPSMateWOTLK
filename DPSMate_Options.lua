@@ -21,6 +21,7 @@ DPSMate.Options.fonts = {
 	["Ultima_Campagnoli"] = "Interface\\AddOns\\DPSMate\\fonts\\Ultima_Campagnoli.TTF",
 	["VeraSe"] = "Interface\\AddOns\\DPSMate\\fonts\\VeraSe.TTF",
 	["Yellowjacket"] = "Interface\\AddOns\\DPSMate\\fonts\\Yellowjacket.TTF",
+	["visitor2"] = "Interface\\AddOns\\DPSMate\\fonts\\visitor2.TTF",
 }
 DPSMate.Options.fontflags = {
 	["None"] = "NONE",
@@ -1355,9 +1356,9 @@ end
 function DPSMate.Options:Report()
 	local channel = UIDropDownMenu_GetSelectedValue(DPSMate_Report_Channel)
 	SelectedChannel = channel
-	local arr, cbt = DPSMate:GetMode(DPSMate_Report.PaKey)
+	local arr, cbt, ecbt = DPSMate:GetMode(DPSMate_Report.PaKey)
 	local chn, index, name, value, perc = nil, nil, nil, nil, nil
-	name, value, perc, b = DPSMate:GetSettingValues(arr, cbt, DPSMate_Report.PaKey)
+	name, value, perc, b = DPSMate:GetSettingValues(arr, cbt, DPSMate_Report.PaKey, ecbt)
 	if (channel == DPSMate.L["whisper"]) then
 		chn = "WHISPER"; index = DPSMate_Report_Editbox:GetText();
 	elseif DPSMate:TContains(DPSMate.L["gchannel"], channel) then
@@ -1376,8 +1377,8 @@ end
 local AbilityModes = {"damage", "dps", "healing", "hps", "OHPS", "overhealing", "effectivehealing", "effectivehps", "deaths", "interrupts", "dispels", "decurses", "curedisease", "curepoison", "liftmagic", "aurasgained", "auraslost", "aurasuptime", "procs", "casts", "ccbreaker"}
 function DPSMate.Options:ReportUserDetails(obj, channel, name)
 	local Key, user = obj:GetParent():GetParent():GetParent().Key, obj.user
-	local _, cbt = DPSMate:GetMode(Key)
-	local a,b,c = DPSMate.RegistredModules[DPSMateSettings["windows"][Key]["CurMode"]]:EvalTable(DPSMateUser[user], Key, cbt)
+	local _, cbt, ecbt = DPSMate:GetMode(Key)
+	local a,b,c = DPSMate.RegistredModules[DPSMateSettings["windows"][Key]["CurMode"]]:EvalTable(DPSMateUser[user], Key, cbt, ecbt)
 	local chn, index
 	if (channel == DPSMate.L["whisper"]) then
 		chn = "WHISPER"; index = name;

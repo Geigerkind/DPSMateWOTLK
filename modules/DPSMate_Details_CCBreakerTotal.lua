@@ -43,13 +43,14 @@ function DPSMate.Modules.DetailsCCBreakerTotal:EvalTable()
 		if DPSMate:ApplyFilter(curKey, user) then
 			for ca, va in pairs(val) do -- each ab?
 				local ab = DPSMate:GetAbilityById(va[1])
+				local causeab = DPSMate:GetAbilityById(va[5])
 				local i=1
 				while true do
 					if not a[i] then
-						tinsert(a, i, {ab, DPSMate:GetSpellIcon(self:Replace(ab)), DPSMate:GetUserById(va[2]), va[4], va[3], user})
+						tinsert(a, i, {ab, DPSMate:GetSpellIcon(self:Replace(ab)), DPSMate:GetUserById(va[2]), va[4], va[3], user, DPSMate:GetSpellIcon(self:Replace(causeab)), causeab})
 						break
 					elseif a[i][5]<va[3] then
-						tinsert(a, i, {ab, DPSMate:GetSpellIcon(self:Replace(ab)), DPSMate:GetUserById(va[2]), va[4], va[3], user})
+						tinsert(a, i, {ab, DPSMate:GetSpellIcon(self:Replace(ab)), DPSMate:GetUserById(va[2]), va[4], va[3], user, DPSMate:GetSpellIcon(self:Replace(causeab)), causeab})
 						break
 					end
 					i = i +1
@@ -64,12 +65,13 @@ function DPSMate.Modules.DetailsCCBreakerTotal:CreateGraphTable(obj)
 	local lines = {}
 	for i=1, 6 do
 		-- Horizontal
-		DPSMate.Options.graph:DrawLine(obj, 5, 223-i*30, 670, 223-i*30, 20, {0.5,0.5,0.5,0.5}, "BACKGROUND")
+		DPSMate.Options.graph:DrawLine(obj, 5, 223-i*30, 655, 223-i*30, 20, {0.5,0.5,0.5,0.5}, "BACKGROUND")
 	end
 	-- Vertical
 	DPSMate.Options.graph:DrawLine(obj, 70, 215, 70, 15, 20, {0.5,0.5,0.5,0.5}, "BACKGROUND")
 	DPSMate.Options.graph:DrawLine(obj, 150, 215, 150, 15, 20, {0.5,0.5,0.5,0.5}, "BACKGROUND")
-	DPSMate.Options.graph:DrawLine(obj, 400, 215, 400, 15, 20, {0.5,0.5,0.5,0.5}, "BACKGROUND")
+	DPSMate.Options.graph:DrawLine(obj, 330, 215, 330, 15, 20, {0.5,0.5,0.5,0.5}, "BACKGROUND")
+	DPSMate.Options.graph:DrawLine(obj, 510, 215, 510, 15, 20, {0.5,0.5,0.5,0.5}, "BACKGROUND")
 end
 
 function DPSMate.Modules.DetailsCCBreakerTotal:CleanTables()
@@ -77,7 +79,9 @@ function DPSMate.Modules.DetailsCCBreakerTotal:CleanTables()
 	for i=1, 6 do
 		_G(path..i).user = nil
 		_G(path..i.."_Icon"):SetTexture()
+		_G(path..i.."_IconCause"):SetTexture()
 		_G(path..i.."_Ability"):SetText()
+		_G(path..i.."_CauseAb"):SetText()
 		_G(path..i.."_Target"):SetText()
 		_G(path..i.."_Time"):SetText()
 		_G(path..i.."_CBT"):SetText()
@@ -103,7 +107,9 @@ function DPSMate.Modules.DetailsCCBreakerTotal:UpdateBuffs(arg1)
 		if not DetailsArr[pos] then break end
 		_G(path..i).user = DetailsArr[pos][6]
 		_G(path..i.."_Icon"):SetTexture(DetailsArr[pos][2])
+		_G(path..i.."_IconCause"):SetTexture(DetailsArr[pos][7])
 		_G(path..i.."_Ability"):SetText(DetailsArr[pos][1])
+		_G(path..i.."_CauseAb"):SetText(DetailsArr[pos][8])
 		_G(path..i.."_Target"):SetText("|cFF"..hexClassColor[DPSMateUser[DetailsArr[pos][3]][2] or "warrior"]..DetailsArr[pos][3].."|r")
 		_G(path..i.."_Time"):SetText(DetailsArr[pos][4])
 		_G(path..i.."_CBT"):SetText(strformat("%.2f", DetailsArr[pos][5]).."s")

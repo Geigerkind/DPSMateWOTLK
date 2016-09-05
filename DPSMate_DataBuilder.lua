@@ -1128,7 +1128,6 @@ function DPSMate.DB:EnemyDamage(mode, arr, Duser, Dname, Dhit, Dcrit, Dmiss, Dpa
 			end
 		end
 	end
-	if Damount>0 then self:CheckActiveCC(Duser, cause) end
 	self.NeedUpdate = true
 end
 
@@ -1900,39 +1899,34 @@ function DPSMate.DB:BuildFail(type, user, cause, ability, amount)
 end
 
 local ActiveCC = {}
+local LastHitOnTarget = {}
 function DPSMate.DB:BuildActiveCC(target, ability)
 	if not ActiveCC[target] then
 		ActiveCC[target] = {}
 	end
-	ActiveCC[target][ability] = true
+	ActiveCC[target][ability] = GetTime()
+	LastHitOnTarget[target] = nil
 end
 
 function DPSMate.DB:RemoveActiveCC(target, ability)
-	if not ActiveCC[target] then
-		ActiveCC[target] = {}
-	end
-	if ActiveCC[target][ability] then
-		ActiveCC[target][ability] = false;
-	end
-end
-
-function DPSMate.DB:CheckActiveCC(cause, target)
-	if ActiveCC[target] then
-		for cat, val in pairs(ActiveCC[target]) do
-			if val then
-				for c, v in pairs(ActiveCC[target]) do
-					ActiveCC[target][c] = false
-				end
-				self:CCBreaker(target, cat, cause)
-				return true
-			end
+	if not ActiveCC[target] then return end
+	if ActiveCC[target][ability] and LastHitOnTarget[target] then
+		if (GetTime()-ActiveCC[target][ability])<=DPSMate.Parser.CC[ability] then
+			self:CCBreaker(target, ability, LastHitOnTarget[target][1], LastHitOnTarget[target][2])
 		end
 	end
-	return false
+	ActiveCC[target][ability] = false;
 end
 
-function DPSMate.DB:CCBreaker(target, ability, cause)
+function DPSMate.DB:AssignLastHit(target, cause, spellName)
+	LastHitOnTarget[target] = {cause, spellName}
+end
+
+function DPSMate.DB:CCBreaker(target, ability, cause, spellName)
 	self:BuildAbility(ability)
+	self:BuildAbility(spellName)
+	self:BuildUser(target)
+	self:BuildUser(cause)
 	for cat, val in pairs({[1]="total",[2]="current"}) do
 		if not DPSMateCCBreaker[cat][DPSMateUser[cause][1]] then
 			DPSMateCCBreaker[cat][DPSMateUser[cause][1]] = {}
@@ -1941,7 +1935,8 @@ function DPSMate.DB:CCBreaker(target, ability, cause)
 			[1] = DPSMateAbility[ability][1],
 			[2] = DPSMateUser[target][1],
 			[3] = DPSMateCombatTime[val],
-			[4] = GameTime_GetTime()
+			[4] = GameTime_GetTime(),
+			[5] = DPSMateAbility[spellName][1]
 		})
 	end
 end

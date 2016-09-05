@@ -45,14 +45,17 @@ function DPSMate.Modules.DetailsCCBreaker:CreateGraphTable(obj)
 	-- Vertical
 	DPSMate.Options.graph:DrawLine(obj, 70, 215, 70, 15, 20, {0.5,0.5,0.5,0.5}, "BACKGROUND")
 	DPSMate.Options.graph:DrawLine(obj, 150, 215, 150, 15, 20, {0.5,0.5,0.5,0.5}, "BACKGROUND")
-	DPSMate.Options.graph:DrawLine(obj, 400, 215, 400, 15, 20, {0.5,0.5,0.5,0.5}, "BACKGROUND")
+	DPSMate.Options.graph:DrawLine(obj, 330, 215, 330, 15, 20, {0.5,0.5,0.5,0.5}, "BACKGROUND")
+	DPSMate.Options.graph:DrawLine(obj, 510, 215, 510, 15, 20, {0.5,0.5,0.5,0.5}, "BACKGROUND")
 end
 
 function DPSMate.Modules.DetailsCCBreaker:CleanTables(comp)
 	local path = "DPSMate_Details_"..comp.."CCBreaker_Buffs_Row"
 	for i=1, 6 do
 		_G(path..i.."_Icon"):SetTexture()
+		_G(path..i.."_IconCause"):SetTexture()
 		_G(path..i.."_Ability"):SetText()
+		_G(path..i.."_CauseAb"):SetText()
 		_G(path..i.."_Target"):SetText()
 		_G(path..i.."_Time"):SetText()
 		_G(path..i.."_CBT"):SetText()
@@ -83,9 +86,12 @@ function DPSMate.Modules.DetailsCCBreaker:UpdateBuffs(arg1, comp, cname)
 			local pos = BuffposComp + i
 			if not a[pos] then break end
 			local ab = DPSMate:GetAbilityById(a[pos][1])
+			local causeab = DPSMate:GetAbilityById(a[pos][5])
 			_G(path..i).id = a[pos][1]
 			_G(path..i.."_Icon"):SetTexture(DPSMate:GetSpellIcon(self:Replace(ab)))
+			_G(path..i.."_IconCause"):SetTexture(DPSMate:GetSpellIcon(self:Replace(causeab)))
 			_G(path..i.."_Ability"):SetText(ab)
+			_G(path..i.."_CauseAb"):SetText(causeab)
 			_G(path..i.."_Target"):SetText(DPSMate:GetUserById(a[pos][2]))
 			_G(path..i.."_Time"):SetText(a[pos][4])
 			_G(path..i.."_CBT"):SetText(strformat("%.2f", a[pos][3]).."s")
@@ -99,9 +105,12 @@ function DPSMate.Modules.DetailsCCBreaker:UpdateBuffs(arg1, comp, cname)
 			local pos = Buffpos + i
 			if not a[pos] then break end
 			local ab = DPSMate:GetAbilityById(a[pos][1])
+			local causeab = DPSMate:GetAbilityById(a[pos][5])
 			_G(path..i).id = a[pos][1]
 			_G(path..i.."_Icon"):SetTexture(DPSMate:GetSpellIcon(self:Replace(ab)))
+			_G(path..i.."_IconCause"):SetTexture(DPSMate:GetSpellIcon(self:Replace(causeab)))
 			_G(path..i.."_Ability"):SetText(ab)
+			_G(path..i.."_CauseAb"):SetText(causeab)
 			_G(path..i.."_Target"):SetText(DPSMate:GetUserById(a[pos][2]))
 			_G(path..i.."_Time"):SetText(a[pos][4])
 			_G(path..i.."_CBT"):SetText(strformat("%.2f", a[pos][3]).."s")

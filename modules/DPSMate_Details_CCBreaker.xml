@@ -34,7 +34,7 @@
 					</Anchors>
 				</Texture>
 				<FontString name="$parent_Ability" inherits="GameFontNormalSmall" justifyH="LEFT">
-					<Size x="250" y="30" />
+					<Size x="180" y="30" />
 					<Anchors>
 						<Anchor point="LEFT" relativeTo="$parent_CBT" relativePoint="RIGHT">
 							<Offset x="35" y="0" />
@@ -43,10 +43,27 @@
 					<Color r="1" g="1" b="1" />
 				</FontString>
 				<FontString name="$parent_Target" inherits="GameFontNormalSmall" justifyH="LEFT">
-					<Size x="250" y="30" />
+					<Size x="170" y="30" />
 					<Anchors>
 						<Anchor point="LEFT" relativeTo="$parent_Ability" relativePoint="RIGHT">
 							<Offset x="-25" y="0" />
+						</Anchor>
+					</Anchors>
+					<Color r="1" g="1" b="1" />
+				</FontString>
+				<Texture name="$parent_IconCause" file="Interface\AddOns\DPSMate\images\dummy">
+					<Size x="24" y="24" />
+					<Anchors>
+						<Anchor point="LEFT" relativeTo="$parent_Target" relativePoint="RIGHT">
+							<Offset x="5" y="0" />
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<FontString name="$parent_CauseAb" inherits="GameFontNormalSmall" justifyH="LEFT">
+					<Size x="120" y="30" />
+					<Anchors>
+						<Anchor point="LEFT" relativeTo="$parent_Target" relativePoint="RIGHT">
+							<Offset x="35" y="0" />
 						</Anchor>
 					</Anchors>
 					<Color r="1" g="1" b="1" />
@@ -91,7 +108,7 @@
 					</Anchors>
 				</FontString>
 				<FontString name="$parent_Ability" inherits="GameFontNormal">
-					<Size x="250" y="30" />
+					<Size x="180" y="30" />
 					<Anchors>
 						<Anchor point="LEFT" relativeTo="$parent_CBT" relativePoint="RIGHT">
 							<Offset x="0" y="0" />
@@ -99,9 +116,17 @@
 					</Anchors>
 				</FontString>
 				<FontString name="$parent_Target" inherits="GameFontNormal">
-					<Size x="250" y="30" />
+					<Size x="180" y="30" />
 					<Anchors>
 						<Anchor point="LEFT" relativeTo="$parent_Ability" relativePoint="RIGHT">
+							<Offset x="0" y="0" />
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parent_CauseAb" inherits="GameFontNormal">
+					<Size x="180" y="30" />
+					<Anchors>
+						<Anchor point="LEFT" relativeTo="$parent_Target" relativePoint="RIGHT">
 							<Offset x="0" y="0" />
 						</Anchor>
 					</Anchors>
@@ -220,6 +245,7 @@
 						getglobal(this:GetName().."_CBT"):SetText(DPSMate.L["cbt"])
 						getglobal(this:GetName().."_Ability"):SetText(DPSMate.L["ability"])
 						getglobal(this:GetName().."_Target"):SetText(DPSMate.L["target"])
+						getglobal(this:GetName().."_CauseAb"):SetText(DPSMate.L["cause"])
 						DPSMate.Modules.DetailsCCBreaker:CreateGraphTable(this)
 						this:SetVerticalScroll(0)
 					</OnLoad>
