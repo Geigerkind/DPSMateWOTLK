@@ -479,4 +479,11 @@ if (GetLocale() == "deDE") then
 	DPSMate.L["loot1"] = "(.-) bekommt Beute: |cff(.-)|Hitem:(%d+)(.+)%[(.+)%]|h|r"
 	DPSMate.L["loot2"] = "Ihr erhaltet Beute: |cff(.-)|Hitem:(%d+)(.+)%[(.+)%]|h|r"
 	DPSMate.L["wfattack"] = "Windzornangriff"
+	
+	DPSMate.L["fireelemental"] = "Großer Feuerelementar"
+	DPSMate.L["earthelemental"] = "Großer Erdelementar"
+	DPSMate.L["guardian"] = "(Wächter)"
+	DPSMate.L["minion"] = "(Wächter)"
+	DPSMate.L["treant"] = "Treant"
+	DPSMate.L["minionregex"] = "(.+%s*)'?s (.+)"
 end

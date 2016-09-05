@@ -1945,3 +1945,206 @@ function DPSMate.DB:CCBreaker(target, ability, cause)
 		})
 	end
 end
+
+
+
+
+-- Prayer Of Mending
+-- POM only 1 time per player
+
+function DPSMate.DB:GetClass(name)
+	if DPSMateUser[name] then
+		if DPSMateUser[name][2] then
+			return DPSMateUser[name][2]
+		end
+	end
+	local class = UnitClass(name)
+	if class then return slower(class) end
+	return false
+end
+
+local POM_Owner = {}
+local LastHitWithPOM
+local HasPOM = {}
+function DPSMate.DB:GetPOMOwner(dstName)
+	local class = self:GetClass(dstName)
+	for name, target in pairs(POM_Owner) do
+		if target==dstName then
+			return name
+		end
+	end
+	return false
+end
+
+function DPSMate.DB:EvaluateLastHitWithPOM(dstName)
+	if HasPOM[dstName] then
+		LastHitWithPOM = dstName
+	end
+end
+
+function DPSMate.DB:POM_Gained(dstName)
+	if LastHitWithPOM then
+		local owner = self:GetPOMOwner(LastHitWithPOM)
+		if owner then
+			POM_Owner[owner] = dstName
+		end
+	end
+	HasPOM[dstName] = true
+end
+
+function DPSMate.DB:POM_Faded(dstName)
+	HasPOM[dstName] = false
+end
+
+function DPSMate.DB:POM_Casted(srcName,dstName) -- POM_Jumped
+	local class = self:GetClass(srcName)
+	if not class or class == "priest" then -- Assuming its a new one from a priest
+		POM_Owner[srcName] = dstName
+		return
+	else -- Assuming it just jumps to the next target
+		local owner = self:GetPOMOwner(srcName)
+		if owner then
+			POM_Owner[owner] = dstName -- Assigning new target
+		end
+		return -- Guess we cant do shiet then
+	end
+end
+
+function DPSMate.DB:POM_Healed(srcName) -- return original source
+	for c,v in pairs(POM_Owner) do
+		if v==srcName then
+			return c
+		end
+	end
+	return srcName -- Return old name if you can't find it
+end
+
+
+
+-- Trying to get the guardians sorted
+
+local GuardianWaitingForAssignment = {}
+local GuardianOwnerByGGUID = {}
+local validGuardians = {
+	--[GetSpellInfo(1535).." I"] = true, -- Fire Nova 1
+	--[GetSpellInfo(8498).." II"] = true, -- Fire Nova 2
+	--[GetSpellInfo(8499).." III"] = true, -- Fire Nova 3
+	--[GetSpellInfo(11314).." IV"] = true, -- Fire Nova 4
+	[GetSpellInfo(11315)] = true, -- Fire Nova 5
+	--[GetSpellInfo(3599).." I"] = true, -- Searing Totem 1
+	--[GetSpellInfo(6363).." II"] = true, -- Searing Totem 2
+	--[GetSpellInfo(6364).." III"] = true, -- Searing Totem 3
+	--[GetSpellInfo(6365).." IV"] = true, -- Searing Totem 4
+	--[GetSpellInfo(10437).." V"] = true, -- Searing Totem 5
+	[GetSpellInfo(10438)] = true, -- Searing Totem 6
+	--[GetSpellInfo(8190).." I"] = true, -- Magma Totem 1
+	--[GetSpellInfo(10585).." II"] = true, -- Magma Totem 2
+	--[GetSpellInfo(10586).." II"] = true, -- Magma Totem 3
+	[GetSpellInfo(10587)] = true, -- Magma Totem 4
+	[GetSpellInfo(2894)] = true, -- Greater Fire Elemental Totem
+	[GetSpellInfo(2062)] = true, -- Greater Earth Elemental Totem
+}
+
+local TranslateElementalGuardians = {
+	[DPSMate.L["fireelemental"]] = GetSpellInfo(2894),
+	[DPSMate.L["earthelemental"]] = GetSpellInfo(2062),
+}
+
+local forceofnature = GetSpellInfo(33831)
+local treant = DPSMate.L["treant"]
+local treantWaitingForOwner = {}
+local treantOwner = {}
+
+function DPSMate.DB:AddPotentialGuardianForOwner(spellName, ownerGUID, ownerName)
+	if spellName==forceofnature then tinsert(treantWaitingForOwner, {ownerGUID, ownerName}) end
+	if not GuardianWaitingForAssignment[spellName] then GuardianWaitingForAssignment[spellName] = {} end
+	tinsert(GuardianWaitingForAssignment[spellName], {ownerGUID, ownerName})
+end
+
+function DPSMate.DB:AssignGuardianToOwner(guardianGUID, guardianName)
+	if GuardianWaitingForAssignment[guardianName] then
+		for cat, val in pairs(GuardianWaitingForAssignment[guardianName]) do
+			GuardianOwnerByGGUID[guardianGUID] = val
+			tremove(GuardianWaitingForAssignment[guardianName], cat)
+			break;
+		end
+	end
+end
+
+function DPSMate.DB:GetMinionOwner(name, spellName)
+	local nName = name:match(DPSMate.L["minionregex"]) -- Gotta test that on the german client
+	if nName then
+		return nName, spellName..DPSMate.L["minion"]
+	end
+	return name, spellName
+end
+
+function DPSMate.DB:AssignEnslavedDemon(dstGUID, srcGUID, srcName)
+	GuardianOwnerByGGUID[dstGUID] = {srcGUID, srcName}
+end
+
+function DPSMate.DB:GetGuardianOwnerByGUID(guid, name, spellName)
+	local Gname, rank = name:match("(.+) (%a%a?)")
+	if TranslateElementalGuardians[name] then
+		Gname = TranslateElementalGuardians[name]
+	end
+	if validGuardians[Gname] or GuardianOwnerByGGUID[guid] then
+		if GuardianOwnerByGGUID[guid] then
+			return GuardianOwnerByGGUID[guid][1], GuardianOwnerByGGUID[guid][2], spellName..DPSMate.L["guardian"]
+		else
+			self:AssignGuardianToOwner(guid, Gname)
+			if GuardianOwnerByGGUID[guid] then
+				return GuardianOwnerByGGUID[guid][1], GuardianOwnerByGGUID[guid][2], spellName..DPSMate.L["guardian"]
+			else
+				return guid, name, spellName
+			end
+		end
+	end
+	if name==treant then
+		if treantWaitingForOwner[1] then
+			if treantOwner[treantWaitingForOwner[1][2]] then
+				if treantOwner[treantWaitingForOwner[1][2]]>=3 then
+					tremove(treantWaitingForOwner, 1)
+				end
+			end
+			if treantWaitingForOwner[1] then
+				if not treantOwner[treantWaitingForOwner[1][2]] then
+					treantOwner[treantWaitingForOwner[1][2]] = 0
+				end
+				GuardianOwnerByGGUID[guid] = treantWaitingForOwner[1]
+				treantOwner[treantWaitingForOwner[1][2]] = treantOwner[treantWaitingForOwner[1][2]] + 1
+				return GuardianOwnerByGGUID[guid][1], GuardianOwnerByGGUID[guid][2], spellName..DPSMate.L["guardian"]
+			end
+		end
+	end
+	return guid, self:GetMinionOwner(name, spellName)
+end
+
+-- earthshield
+
+local EarthShieldByPlayer = {}
+function DPSMate.DB:RegisterEarthShield(dstName, srcName)
+	EarthShieldByPlayer[dstName] = srcName
+end
+
+function DPSMate.DB:GetEarthShieldOwner(srcName)
+	if EarthShieldByPlayer[srcName] then
+		return EarthShieldByPlayer[srcName]
+	end
+	return srcName
+end
+
+
+-- lifebloom
+
+local LifeBloomByPlayer = {}
+function DPSMate.DB:RegisterLifeBloom(dstName, srcName)
+	LifeBloomByPlayer[dstName] = srcName
+end
+
+function DPSMate.DB:LifeBloomOwner(srcName)
+	if LifeBloomByPlayer[srcName] then
+		return LifeBloomByPlayer[srcName]
+	end
+	return srcName
+end

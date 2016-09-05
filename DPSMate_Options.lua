@@ -1012,15 +1012,15 @@ function DPSMate.Options:UpdateConfigModes(obj, o, p)
 end
 
 DPSMate.Options.ShowMenu = UnitPopup_ShowMenu
-function UnitPopup_ShowMenu(dropdownMenu, which, unit, name, userData)
+function UnitPopup_ShowMenu(dropdownMenu, which, unit, name, userData, id)
 	DPSMate.Options:DropDownStyleReset()
-	DPSMate.Options.ShowMenu(dropdownMenu, which, unit, name, userData)
+	DPSMate.Options.ShowMenu(dropdownMenu, which, unit, name, userData, id)
 end
 
 DPSMate.Options.UIDDI = UIDropDownMenu_Initialize
-function UIDropDownMenu_Initialize(frame, initFunction, displayMode, level)
+function UIDropDownMenu_Initialize(frame, initFunction, displayMode, level, menuList)
 	DPSMate.Options:DropDownStyleReset()
-	DPSMate.Options.UIDDI(frame, initFunction, displayMode, level)
+	DPSMate.Options.UIDDI(frame, initFunction, displayMode, level, menuList)
 end
 
 function DPSMate.Options:ChannelDropDown()
@@ -1631,7 +1631,7 @@ function DPSMate.Options:OnVerticalScroll(obj, arg1, pre, spec)
 	if spec then maxScroll = maxScroll + 100 end
 	local Scroll = obj:GetVerticalScroll()
 	local toScroll = (Scroll - (pre*arg1))
-	if toScroll < 0 then
+	if toScroll < 0 or maxScroll < 0 then
 		obj:SetVerticalScroll(0)
 	elseif toScroll > maxScroll then
 		obj:SetVerticalScroll(maxScroll)

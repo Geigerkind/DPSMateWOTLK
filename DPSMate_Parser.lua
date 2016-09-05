@@ -92,6 +92,8 @@ DPSMate.Parser.procs = {
 	[GetSpellInfo(27818)] = true, -- Blessed Recovery
 	[GetSpellInfo(14743)] = true, -- Focused Casting
 	[GetSpellInfo(15338)] = true, -- Spirit Tap
+	[GetSpellInfo(25431)] = true, -- Inner Fire
+	[GetSpellInfo(14751)] = true, -- Inner Focus
 	
 	-- Druid
 	[GetSpellInfo(26107)] = true, -- Symbols of Unending Life Finisher Bonus
@@ -166,6 +168,11 @@ DPSMate.Parser.procs = {
 	[GetSpellInfo(28622)] = true, -- Web Wrap
 	[GetSpellInfo(28169)] = true, -- Mutating Injection
 	[GetSpellInfo(14100)] = true, -- Terrifying Roar
+	
+	-- New to be added to special snowflaks
+	[GetSpellInfo(27521)] = true, -- Mana Restore
+	[GetSpellInfo(34460)] = true, -- Ferocious Inperation
+	[GetSpellInfo(33370)] = true, -- Spell Haste
 }
 
 DPSMate.Parser.BuffExceptions = {
@@ -220,6 +227,10 @@ DPSMate.Parser.RCD = {
 	[GetSpellInfo(21169)] = true, -- Reincarnation
 	[GetSpellInfo(2008)] = true, -- Ancestral Spirit
 	[GetSpellInfo(20765)] = true, -- Soulstone Resurrection
+	
+	-- Casted on ?
+	[GetSpellInfo(34477)] = true, -- Missdirection
+	[GetSpellInfo(6346)] = true, -- Fearward
 }
 DPSMate.Parser.FailDT = {
 	-- PRE TBC
@@ -262,6 +273,21 @@ DPSMate.Parser.FailDB = {
 	[GetSpellInfo(22247)] = true, -- Suppression Aura
 	[GetSpellInfo(18431)] = true, -- Bellowing Roar
 }
+
+--[[ CCBREAKER REWORK!
+Maybe as dispell for certain effects:
+Shapeshifting for Druids: 
+Moonkin http://db.hellground.net/?spell=24858
+Dire Bear http://db.hellground.net/?spell=9634
+Bear http://db.hellground.net/?spell=5487
+Cat http://db.hellground.net/?spell=768
+Travel http://db.hellground.net/?spell=783
+Aquatic http://db.hellground.net/?spell=1066
+Flight http://db.hellground.net/?spell=33943
+Swift Flight http://db.hellground.net/?spell=40120
+Tree of Life http://db.hellground.net/?spell=33891
+--]]
+
 DPSMate.Parser.CC = {
 	[GetSpellInfo(2070)] = true, -- Sap
 	[GetSpellInfo(12540)] = true, -- Gouge
@@ -280,6 +306,13 @@ DPSMate.Parser.CC = {
 	[GetSpellInfo(20066)] = true, -- Repentance
 	[GetSpellInfo(11444)] = true, -- Shackle Undead
 	[GetSpellInfo(13327)] = true, -- Reckless Charge
+	[GetSpellInfo(6358)] = true, -- Seduction (succubus)
+	
+	-- New
+	[GetSpellInfo(18658)] = true, -- Hibernate
+	[GetSpellInfo(26989)] = true, -- Entangling Roots
+	[GetSpellInfo(5782)] = true, -- Fear
+	[GetSpellInfo(8122)] = true, -- Psychic Scream
 }
 
 DPSMate.Parser.Dispels = {
@@ -301,6 +334,7 @@ DPSMate.Parser.Dispels = {
 	[GetSpellInfo(17550)] = true, -- Purification
 	[GetSpellInfo(17572)] = true, -- Purification Potion
 	[GetSpellInfo(11522)] = true, -- Restorative Potion
+	[GetSpellInfo(39897)] = true, -- Mass Dispel -- Does it work?
 }
 DPSMate.Parser.DeCurse = {
 	[GetSpellInfo(15729)] = true, -- Remove Curse
@@ -314,6 +348,7 @@ DPSMate.Parser.DeMagic = {
 	[GetSpellInfo(20428)] = true, -- Devour Magic
 	[GetSpellInfo(370)] = true, -- Purge
 	[GetSpellInfo(11359)] = true, -- Restoration
+	[GetSpellInfo(39897)] = true, -- Mass Dispel
 }
 DPSMate.Parser.DeDisease = {
 	[GetSpellInfo(1152)] = true, -- Purify
@@ -365,7 +400,11 @@ DPSMate.Parser.Kicks = {
 	[GetSpellInfo(15326)] = true, -- Blackout
 	[GetSpellInfo(835)] = true, -- Tidal Charm
 	[GetSpellInfo(13327)] = true, -- Reckless Charge
+	
+	-- New
 	[GetSpellInfo(28730)] = true, -- Arcane Torrent
+	[GetSpellInfo(16924)] = true, -- Celestial Focus
+	[GetSpellInfo(20549)] = true, -- War Stomp
 }
 DPSMate.Parser.player = UnitName("player")
 DPSMate.Parser.playerclass = nil
@@ -451,6 +490,22 @@ local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
 local UnitName = UnitName
 
+local PrayerOfMendingCastId = 33076 -- Prayer of Mending (rank 1)
+local PrayerOfMendingAuraId = 41635 -- Prayer of Mending (when Aura is applied)
+local PrayerOfMendingHealId = 33110 -- Prayer of Mending (when healing)
+local enslaveDemons = GetSpellInfo(11726)
+local castingED
+
+local LifebloomId = 33763
+local LifebloomHealId = 33778
+local EarthShieldTickId = 379
+
+local EarthShieldId = {
+	[974]=true, -- Earth Shield (rank 1)
+	[32593]=true, -- Earth Shield (rank 2)
+	[32594]=true, -- Earth Shield (rank 3)
+}
+
 -- Begin Functions
 
 function DPSMate.Parser:OnLoad()
@@ -523,24 +578,27 @@ function DPSMate.Parser:UnitAuraDispels(unit)
 end
 
 function DPSMate.Parser:SwingDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,amount, school, resisted, blocked, absorbed, critical, glancing, crushing)
+	local spellName = DPSMate.L["AutoAttack"]
 	t = {}
 	if critical then t[1]=0;t[2]=1 end
 	if resisted then t[1]=0;t[3]=1 end
 	if blocked then t[1]=0;t[4]=1 end
 	if glancing then t[1]=0;t[5]=1; end
 	if crushing then t[1]=0;t[6]=1 end
+	srcGUID, srcName, spellName = DB:GetGuardianOwnerByGUID(srcGUID, srcName, spellName)
 	if DPSMate:IsNPC(srcGUID) then
-		DB:EnemyDamage(false, DPSMateEDD, dstName, DPSMate.L["AutoAttack"], t[1] or 1, t[2] or 0, 0, 0, 0, 0, amount, srcName, t[4] or 0, t[6] or 0)
-		DB:DamageTaken(dstName, DPSMate.L["AutoAttack"], t[1] or 1, t[2] or 0, 0, 0, 0, 0, amount, srcName, t[6] or 0)
+		DB:EnemyDamage(false, DPSMateEDD, dstName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, 0, amount, srcName, t[4] or 0, t[6] or 0)
+		DB:DamageTaken(dstName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, 0, amount, srcName, t[6] or 0)
+		DB:EvaluateLastHitWithPOM(dstName)
 	else
-		DB:EnemyDamage(true, DPSMateEDT, srcName, DPSMate.L["AutoAttack"], t[1] or 1, t[2] or 0, 0, 0, 0, t[3] or 0, amount, dstName, t[4] or 0, t[6] or 0)
-		DB:DamageDone(srcName, DPSMate.L["AutoAttack"], t[1] or 1, t[2] or 0, 0, 0, 0, t[3] or 0, amount, t[5] or 0, t[4] or 0)
-		if DPSMate.Parser.TargetParty[dstName] and DPSMate.Parser.TargetParty[srcName] then DB:BuildFail(1, dstName, srcName, DPSMate.L["AutoAttack"], amount) end
+		DB:EnemyDamage(true, DPSMateEDT, srcName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, t[3] or 0, amount, dstName, t[4] or 0, t[6] or 0)
+		DB:DamageDone(srcName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, t[3] or 0, amount, t[5] or 0, t[4] or 0)
+		if DPSMate.Parser.TargetParty[dstName] and DPSMate.Parser.TargetParty[srcName] then DB:BuildFail(1, dstName, srcName, spellName, amount) end
 	end
-	DB:DeathHistory(dstName, srcName, DPSMate.L["AutoAttack"], amount, t[1] or 1, t[2] or 0, 0, t[6] or 0)
-	DB:AddSpellSchool(DPSMate.L["AutoAttack"], "physical", 6603)
+	DB:DeathHistory(dstName, srcName, spellName, amount, t[1] or 1, t[2] or 0, 0, t[6] or 0)
+	DB:AddSpellSchool(spellName, "physical", 6603)
 	if absorbed then
-		DB:SetUnregisterVariables(absorbed, DPSMate.L["AutoAttack"], srcName)
+		DB:SetUnregisterVariables(absorbed, spellName, srcName)
 	end
 end
 
@@ -574,10 +632,15 @@ function DPSMate.Parser:SpellDamage(timestamp, eventtype, srcGUID, srcName, srcF
 	if eventtype == "SPELL_PERIODIC_DAMAGE" then
 		spellName = spellName..DPSMate.L["periodic"]
 	end
+	srcGUID, srcName, spellName = DB:GetGuardianOwnerByGUID(srcGUID, srcName, spellName)
+	if spellName == DPSMate.L["AutoAttack"] then
+		spellName = spellName..DPSMate.L["guardian"]
+	end
 	if DPSMate:IsNPC(srcGUID) then
-		if DPSMate.Parser.FailDT[spellName] then DB:BuildFail(2, spellName, dstName, srcName, amount) end -- TO TEST
+		if DPSMate.Parser.FailDT[spellName] then DB:BuildFail(2, srcName, dstName, spellName, amount) end
 		DB:EnemyDamage(false, DPSMateEDD, dstName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, 0, amount, srcName, t[4] or 0, t[6] or 0)
 		DB:DamageTaken(dstName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, 0, amount, srcName, t[6] or 0)
+		DB:EvaluateLastHitWithPOM(dstName)
 	else
 		if DPSMate.Parser.Kicks[spellName] then DB:AssignPotentialKick(srcName, spellName, dstName, GetTime()) end
 		if DPSMate.Parser.DmgProcs[spellName] then DB:BuildBuffs(srcName, srcName, spellName, true) end
@@ -614,7 +677,7 @@ function DPSMate.Parser:SpellMissed(timestamp, eventtype, srcGUID, srcName, srcF
 end
 
 
--- custom spellid?
+-- custom spellId?
 function DPSMate.Parser:EnvironmentalDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,enviromentalType, amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing)
 	t = {}
 	if critical then t[1]=0;t[2]=1 end
@@ -632,6 +695,15 @@ function DPSMate.Parser:SpellHeal(timestamp, eventtype, srcGUID, srcName, srcFla
 	if critical then t[1]=0;t[2]=critical end
 	if eventtype == "SPELL_PERIODIC_HEAL" then
 		spellName = spellName..DPSMate.L["periodic"]
+	end
+	if spellId == PrayerOfMendingHealId then
+		srcName = DB:POM_Healed(srcName)
+	end
+	if spellId == EarthShieldTickId then
+		srcName = DB:GetEarthShieldOwner(srcName)
+	end
+	if spellId == LifebloomHealId then
+		srcName = DB:LifeBloomOwner(srcName)
 	end
 	DB:UnregisterPotentialKick(srcName, spellName, GetTime())
 	overheal = GetOverhealByName(amount, dstName)
@@ -661,7 +733,15 @@ function DPSMate.Parser:SpellAuraApplied(timestamp, eventtype, srcGUID, srcName,
 	if not DPSMate:IsNPC(dstGUID) then
 		if DPSMate.Parser.RCD[spellName] then DPSMate:Broadcast(1, dstName, spellName) end
 		if DPSMate.Parser.FailDB[spellName] then DB:BuildFail(3, srcName, dstName, spellName, 0) end
+		if spellId == PrayerOfMendingAuraId then
+			DB:POM_Gained(dstName)
+		end
 		DPSMate.DB:BuildBuffs(srcName, dstName, spellName, false)
+	else
+		if spellName == enslaveDemons then
+			DB:AssignEnslavedDemon(dstGUID, castingED[1], castingED[2])
+			return
+		end
 	end
 	if DPSMate.Parser.CC[spellName] then DB:BuildActiveCC(dstName, spellName) end
 	if DPSMate.Parser.Kicks[spellName] then DB:AssignPotentialKick(srcName, spellName, dstName, GetTime()); end
@@ -674,6 +754,9 @@ function DPSMate.Parser:SpellAuraRemoved(timestamp, eventtype, srcGUID, srcName,
 		DB:UnregisterPotentialKick(dstName, spellName, GetTime())
 		DPSMate.DB:DestroyBuffs(dstName, spellName)
 		if DPSMate.Parser.RCD[spellName] then DPSMate:Broadcast(6, dstName, spellName) end
+		if spellId == PrayerOfMendingAuraId then
+			DB:POM_Faded(dstName)
+		end
 	end
 	DB:RemoveActiveCC(dstName, spellName)
 	if DB.ShieldFlags[spellName] then DB:UnregisterAbsorb(spellName, dstName) end
@@ -714,9 +797,30 @@ function DPSMate.Parser:SpellCastStart(timestamp, eventtype, srcGUID, srcName, s
 	end
 	DB:RegisterPotentialKick(srcName, spellName, GetTime())
 	DB:AddSpellSchool(spellName,spellSchoolToString[spellSchool],spellId)
+	if spellName == enslaveDemons then
+		castingED = {srcGUID, srcName}
+		return
+	end
 end
 
 function DPSMate.Parser:SpellCastSuccess(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool)
+	if eventtype=="SPELL_INSTAKILL"then
+		DB:UnregisterDeath(dstName)
+		return
+	end
+	if spellId == PrayerOfMendingCastId then
+		DB:POM_Casted(srcName,dstName)
+		return
+	end
+	if EarthShieldId[spellId] then
+		DB:RegisterEarthShield(dstName, srcName)
+		return
+	end
+	if spellId == LifebloomId then
+		DB:RegisterLifeBloom(dstName, srcName)
+		return
+	end
+	if DPSMate.Parser.RCD[spellName] then DPSMate:Broadcast(1, srcName, spellName) end
 	tinsert(SuccessfulCasts, {GetTime(), spellName, srcName, dstName})
 	DB:AddSpellSchool(spellName,spellSchoolToString[spellSchool],spellId)
 end
@@ -748,6 +852,10 @@ function DPSMate.Parser:Energize(timestamp, eventtype, srcGUID, srcName, srcFlag
 	end
 end
 
+function DPSMate.Parser:Summon(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool)
+	DB:AddPotentialGuardianForOwner(dstName or spellName, srcGUID, srcName)
+end
+
 Execute = {
 	["SWING_DAMAGE"] = DPSMate.Parser.SwingDamage, 
 	["SWING_MISSED"] = DPSMate.Parser.SwingMissed,
@@ -772,11 +880,15 @@ Execute = {
 	["UNIT_DESTROYED"] = DPSMate.Parser.UnitDied,
 	["SPELL_CAST_START"] = DPSMate.Parser.SpellCastStart,
 	["SPELL_CAST_SUCCESS"] = DPSMate.Parser.SpellCastSuccess,
+	["SPELL_INSTAKILL"] = DPSMate.Parser.SpellCastSuccess,
 	["UNIT_AURA"] = DPSMate.Parser.UnitAuraDispels,
 	["SPELL_ENERGIZE"] = DPSMate.Parser.Energize, -- Potential to add mana gained meter etc.
 	["SPELL_PERIODIC_ENERGIZE"] = DPSMate.Parser.Energize,
 	["SPELL_EXTRA_ATTACKS"] = DPSMate.Parser.ExtraAttacks,
 	["CHAT_MSG_LOOT"] = DPSMate.Parser.Loot,
+	
+	["SPELL_SUMMON"] = DPSMate.Parser.Summon,
+	
 	
 	--["SPELL_CAST_FAILED"] = DPSMate.Parser.Test2,
 	

@@ -584,7 +584,7 @@ function DPSMate.Modules.DetailsEDD:SortLineTable(arr, b, cname)
 		end	
 	else
 		for cat, val in pairs(arr[DPSMateUser[cname or DetailsUser][1]]) do
-			for ca, va in val do
+			for ca, va in pairs(val) do
 				if ca~="i" and va["i"] then
 					for c,v in pairs(va["i"]) do
 						local i = 1
