@@ -40,22 +40,24 @@ function DPSMate.Modules.Decurses:GetSortedTable(arr,k)
 					end
 				end
 			end
-			local i = 1
-			while true do
-				if (not b[i]) then
-					tinsert(b, i, CV)
-					tinsert(a, i, cat)
-					break
-				else
-					if b[i] < CV then
+			if CV>0 then
+				local i = 1
+				while true do
+					if (not b[i]) then
 						tinsert(b, i, CV)
 						tinsert(a, i, cat)
 						break
+					else
+						if b[i] < CV then
+							tinsert(b, i, CV)
+							tinsert(a, i, cat)
+							break
+						end
 					end
+					i=i+1
 				end
-				i=i+1
+				total = total + CV
 			end
-			total = total + CV
 		end
 	end
 	return b, total, a
@@ -99,10 +101,10 @@ end
 
 function DPSMate.Modules.Decurses:GetSettingValues(arr, cbt, k)
 	local name, value, perc, sortedTable, total, a, p, strt = {}, {}, {}, {}, 0, 0, "", {[1]="",[2]=""}
-	if DPSMateSettings["windows"][k]["numberformat"] == 2 then p = "K" end
+	
 	sortedTable, total, a = DPSMate.Modules.Decurses:GetSortedTable(arr,k)
 	for cat, val in pairs(sortedTable) do
-		local dmg, tot, sort = DPSMate:FormatNumbers(val, total, sortedTable[1], k)
+		local dmg, tot, sort = val, total, sortedTable[1]
 		if dmg==0 then break end
 		local str = {[1]="",[2]="",[3]=""}
 		if DPSMateSettings["columnsdecurses"][1] then str[1] = " "..dmg..p; strt[2] = tot..p end

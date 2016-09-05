@@ -604,6 +604,7 @@ end
 
 function DPSMate.Parser:SwingMissed(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, missType)
 	t = {}
+	srcName = srcName or DPSMate.L["unknown"]
 	if missType == DPSMate.L["pabsorb"] then
 		DB:Absorb(DPSMate.L["AutoAttack"], dstName, srcName)
 		return -- Cant rly return here, can I?
@@ -659,6 +660,7 @@ end
 
 function DPSMate.Parser:SpellMissed(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, missType)
 	t = {}
+	srcName = srcName or DPSMate.L["unknown"]
 	if missType == DPSMate.L["pabsorb"] then
 		DB:Absorb(spellName, dstName, srcName)
 		return -- Cant rly return here, can I?
@@ -693,6 +695,7 @@ end
 
 function DPSMate.Parser:SpellHeal(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName, spellSchool, amount, critical)
 	t = {}
+	srcName = srcName or DPSMate.L["unknown"]
 	if critical then t[1]=0;t[2]=critical end
 	if eventtype == "SPELL_PERIODIC_HEAL" then
 		spellName = spellName..DPSMate.L["periodic"]
@@ -721,6 +724,7 @@ function DPSMate.Parser:SpellHeal(timestamp, eventtype, srcGUID, srcName, srcFla
 end
 
 function DPSMate.Parser:SpellAuraDispelled(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, extraSpellId, extraSpellName, extraSpellSchool)
+	srcName = srcName or DPSMate.L["unknown"]
 	DPSMate.DB:Dispels(srcName, spellName, dstName, extraSpellName)
 	DB:AddSpellSchool(spellName,spellSchoolToString[spellSchool],spellId)
 	DB:AddSpellSchool(extraSpellName,spellSchoolToString[extraSpellSchool],extraSpellId)
@@ -751,6 +755,7 @@ function DPSMate.Parser:SpellAuraApplied(timestamp, eventtype, srcGUID, srcName,
 end
 
 function DPSMate.Parser:SpellAuraRemoved(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, auraType)
+	srcName = srcName or DPSMate.L["unknown"]
 	if not DPSMate:IsNPC(dstGUID) then
 		DB:UnregisterPotentialKick(dstName, spellName, GetTime())
 		DPSMate.DB:DestroyBuffs(dstName, spellName)
@@ -765,6 +770,7 @@ function DPSMate.Parser:SpellAuraRemoved(timestamp, eventtype, srcGUID, srcName,
 end
 
 function DPSMate.Parser:Interrupt(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, extraSpellId, extraSpellName, extraSpellSchool)
+	srcName = srcName or DPSMate.L["unknown"]
 	DPSMate.DB:Kick(srcName, dstName, spellName, extraSpellName)
 	DB:AddSpellSchool(spellName,spellSchoolToString[spellSchool],spellId)
 	DB:AddSpellSchool(extraSpellName,spellSchoolToString[extraSpellSchool],extraSpellId)
@@ -779,6 +785,7 @@ function DPSMate.Parser:UnitDied(timestamp, eventtype, srcGUID, srcName, srcFlag
 end
 
 function DPSMate.Parser:ExtraAttacks(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, amount)
+	srcName = srcName or DPSMate.L["unknown"]
 	DB.NextSwing[srcName] = {
 		[1] = amount,
 		[2] = spellName
@@ -793,6 +800,7 @@ function DPSMate.Parser:ExtraAttacks(timestamp, eventtype, srcGUID, srcName, src
 end
 
 function DPSMate.Parser:SpellCastStart(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool)
+	srcName = srcName or DPSMate.L["unknown"]
 	if not DPSMate:IsNPC(srcGUID) then
 		if DPSMate.Parser.RCD[spellName] then DPSMate:Broadcast(2, srcName, dstName or DPSMate.L["unknown"], spellName) end
 	end
@@ -809,6 +817,7 @@ function DPSMate.Parser:SpellCastSuccess(timestamp, eventtype, srcGUID, srcName,
 		DB:UnregisterDeath(dstName)
 		return
 	end
+	srcName = srcName or DPSMate.L["unknown"]
 	if spellId == PrayerOfMendingCastId then
 		DB:POM_Casted(srcName,dstName)
 		return
@@ -847,6 +856,7 @@ end
 
 function DPSMate.Parser:Energize(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, amount, powerType) -- Potential to add here mana etc. gained mode
 	if DPSMate.Parser.procs[spellName] then
+		srcName = srcName or DPSMate.L["unknown"]
 		DB:BuildBuffs(srcName, dstName, spellName, true)
 		DB:DestroyBuffs(dstName, spellName)
 		DB:AddSpellSchool(spellName,spellSchoolToString[spellSchool],spellId)
@@ -854,6 +864,7 @@ function DPSMate.Parser:Energize(timestamp, eventtype, srcGUID, srcName, srcFlag
 end
 
 function DPSMate.Parser:Summon(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool)
+	srcName = srcName or DPSMate.L["unknown"]
 	DB:AddPotentialGuardianForOwner(dstName or spellName, srcGUID, srcName)
 end
 

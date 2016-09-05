@@ -401,9 +401,15 @@ end
 
 function DPSMate:FormatNumbers(dmg,total,sort,k)
 	if DPSMateSettings["windows"][k]["numberformat"] == 2 then
-		dmg = strformat("%.1f", (dmg/1000))
-		total = strformat("%.1f", (total/1000))
-		sort = strformat("%.1f", (sort/1000))
+		if dmg>0 then
+			dmg = strformat("%.1f", (dmg/1000))
+		end
+		if total>0 then
+			total = strformat("%.1f", (total/1000))
+		end
+		if sort>0 then
+			sort = strformat("%.1f", (sort/1000))
+		end
 	end
 	return dmg, total, sort
 end

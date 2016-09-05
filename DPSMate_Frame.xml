@@ -268,8 +268,12 @@
 						<Size x="14" y="14" />
 						<Scripts>
 							<OnEnter>
+								local status = "on";
+								if not DPSMateSettings["sync"] then
+									status = "off"
+								end
 								GameTooltip:SetOwner(this, "TOPLEFT")
-								GameTooltip:AddLine(DPSMate.L["sync"])
+								GameTooltip:AddLine(DPSMate.L["sync"]..": "..status)
 								GameTooltip:Show()
 							</OnEnter>
 							<OnLeave>
@@ -277,6 +281,13 @@
 							</OnLeave>
 							<OnClick>
 								DPSMate.Options:ToggleSync()
+								local status = "on";
+								if not DPSMateSettings["sync"] then
+									status = "off"
+								end
+								GameTooltip:SetOwner(this, "TOPLEFT")
+								GameTooltip:AddLine(DPSMate.L["sync"]..": "..status)
+								GameTooltip:Show()
 							</OnClick>
 						</Scripts>
 						<HighlightTexture file="Interface\AddOns\DPSMate\images\sync" alphaMode="ADD"/>

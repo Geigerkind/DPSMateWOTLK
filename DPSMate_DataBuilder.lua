@@ -2079,6 +2079,7 @@ function DPSMate.DB:AssignEnslavedDemon(dstGUID, srcGUID, srcName)
 end
 
 function DPSMate.DB:GetGuardianOwnerByGUID(guid, name, spellName)
+	name = name or DPSMate.L["unknown"]
 	local Gname, rank = name:match("(.+) (%a%a?)")
 	if TranslateElementalGuardians[name] then
 		Gname = TranslateElementalGuardians[name]
