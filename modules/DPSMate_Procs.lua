@@ -48,6 +48,7 @@ local nonProcProcs = {
 	[GetSpellInfo(12974)] = true, -- Flurry
 	[GetSpellInfo(12880)] = true, -- Enrage
 	[GetSpellInfo(6150)] = true, -- Quick Shots
+	[GetSpellInfo(27521)] = true, -- Mana Restore
 }
 
 function DPSMate.Modules.Procs:GetSortedTable(arr,k)

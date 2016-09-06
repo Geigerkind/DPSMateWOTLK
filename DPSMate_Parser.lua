@@ -92,8 +92,6 @@ DPSMate.Parser.procs = {
 	[GetSpellInfo(27818)] = true, -- Blessed Recovery
 	[GetSpellInfo(14743)] = true, -- Focused Casting
 	[GetSpellInfo(15338)] = true, -- Spirit Tap
-	[GetSpellInfo(25431)] = true, -- Inner Fire
-	[GetSpellInfo(14751)] = true, -- Inner Focus
 	
 	-- Druid
 	[GetSpellInfo(26107)] = true, -- Symbols of Unending Life Finisher Bonus
@@ -249,7 +247,6 @@ DPSMate.Parser.FailDT = {
 	[GetSpellInfo(23316)] = true, -- Ignite Flesh
 	[GetSpellInfo(23312)] = true, -- Time Lapse
 	[GetSpellInfo(9633)] = true, -- Whirlwind
-	[GetSpellInfo(6178)] = true, -- Charge
 	[GetSpellInfo(12766)] = true, -- Poison Cloud
 	[GetSpellInfo(25672)] = true, -- Arcane Eruption
 	[GetSpellInfo(10093)] = true, -- Harsh Winds
@@ -686,7 +683,7 @@ function DPSMate.Parser:SpellDamage(timestamp, eventtype, srcGUID, srcName, srcF
 		spellName = spellName..DPSMate.L["guardian"]
 	end
 	if DPSMate:IsNPC(srcGUID) then
-		if DPSMate.Parser.FailDT[spellName] then DB:BuildFail(2, srcName, dstName, spellName, amount) end
+		if DPSMate.Parser.FailDT[spellName] then DB:BuildFail(2, dstName, srcName, spellName, amount) end
 		DB:EnemyDamage(false, DPSMateEDD, dstName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, 0, amount, srcName, t[4] or 0, t[6] or 0)
 		DB:DamageTaken(dstName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, 0, amount, srcName, t[6] or 0)
 	else

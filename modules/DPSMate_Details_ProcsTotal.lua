@@ -151,6 +151,23 @@ local specialSnowflakesHealDone = {
 		[GetSpellInfo(331)] = true, -- Healing Wave
 		[GetSpellInfo(8004)] = true, -- Lesser Healing Wave
 	},
+	[GetSpellInfo(27521)] = {
+		[GetSpellInfo(2061)] = true, -- Flash Heal
+		[GetSpellInfo(10965)] = true, -- Greater Heal
+		[GetSpellInfo(12039)] = true, -- Heal
+		[GetSpellInfo(596)] = true, -- Prayer of Healing
+		[GetSpellInfo(2050)] = true, -- Lesser Heal
+		[GetSpellInfo(13908)] = true, -- Desperate Prayer
+		[GetSpellInfo(19750)] = true, -- Flash of Light
+		[GetSpellInfo(635)] = true, -- Holy Light
+		[GetSpellInfo(20473)] = true, -- Holy Shock
+		[GetSpellInfo(8936)] = true, -- Regrowth
+		[GetSpellInfo(18562)] = true, -- Swiftmend
+		[GetSpellInfo(5185)] = true, -- Healing Touch
+		[GetSpellInfo(1064)] = true, -- Chain Heal
+		[GetSpellInfo(331)] = true, -- Healing Wave
+		[GetSpellInfo(8004)] = true, -- Lesser Healing Wave
+	},
 }
 
 function DPSMate.Modules.DetailsProcsTotal:UpdateDetails(obj, key)
