@@ -490,4 +490,6 @@ if (GetLocale() == "deDE") then
 	DPSMate.L["disablebarbgtooltip"] = "Deaktiviere den Hintergrund von jeder Bar."
 	DPSMate.L["totalbaropacity"] = "Gesamtbar Transparenz"
 	DPSMate.L["totalbaropacitytooltip"] = "Bewege das, um die Transparenz von der Gesamtbar zu verändern."
+	DPSMate.L["abortvote"] = "Reset abbrechen. Als Assistent oder Schlachtzugsleiter kannst du den reset abbrechen, wenn du schnell genug bist."
+	DPSMate.L["resetaborted"] = "Die Resetabstimmung wurde abgebrochen. Es wurde ein Cooldown von 20 Sekunden zum nächsten Reset gesetzt."
 end

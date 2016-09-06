@@ -176,7 +176,7 @@ function DPSMate.DB:OnEvent(event)
 				dataresetsleaveparty = 2,
 				dataresetspartyamount = 2,
 				dataresetssync = 3,
-				dataresetslogout = 3,
+				dataresetslogout = 2,
 				showminimapbutton = true,
 				showtotals = true,
 				hidewhensolo = false,
@@ -564,6 +564,7 @@ function DPSMate.DB:OnEvent(event)
 			end
 		end
 		DPSMate.Options:HideWhenSolo()
+		CombatState = true
 	elseif event == "PLAYER_REGEN_ENABLED" then
 		if DPSMateSettings["hideincombat"] then
 			for _, val in pairs(DPSMateSettings["windows"]) do
@@ -622,6 +623,12 @@ function DPSMate.DB:OnGroupUpdate()
 		if level and level>0 then
 			DPSMateUser[name][8] = level
 		end
+		if type=="party" then
+			DPSMate.Parser.SubGroups[name] = 9
+		else
+			local _,_,sg = GetRaidRosterInfo(i)
+			DPSMate.Parser.SubGroups[name] = sg
+		end
 	end
 	local pet = UnitName("pet")
 	local name = UnitName("player")
@@ -633,6 +640,9 @@ function DPSMate.DB:OnGroupUpdate()
 		DPSMateUser[pet][6] = DPSMateUser[name][1]
 	end
 	DPSMate.Parser.TargetParty[name] = "player"
+	if num<=0 then
+		DPSMate.Parser.SubGroups[name] = 9
+	end
 end
 
 -- Deprecated
@@ -762,6 +772,10 @@ function DPSMate.DB:Threat(cause, spellname, target, value, amount)
 	--self.NeedUpdate = true
 --end]]--
 
+
+function DPSMate.DB:InCombat()
+	return CombatState
+end
 
 local savedValue = {
 	["damage"] = 0,
@@ -2038,6 +2052,7 @@ local validGuardians = {
 	--[GetSpellInfo(10585).." II"] = true, -- Magma Totem 2
 	--[GetSpellInfo(10586).." II"] = true, -- Magma Totem 3
 	[GetSpellInfo(10587)] = true, -- Magma Totem 4
+	[GetSpellInfo(25567)] = true, -- Healing Stream Totem
 	[GetSpellInfo(2894)] = true, -- Greater Fire Elemental Totem
 	[GetSpellInfo(2062)] = true, -- Greater Earth Elemental Totem
 }

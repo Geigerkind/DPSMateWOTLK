@@ -407,6 +407,7 @@ DPSMate.Parser.Kicks = {
 }
 DPSMate.Parser.player = UnitName("player")
 DPSMate.Parser.playerclass = nil
+DPSMate.Parser.SubGroups = {}
 
 -- Local Variables
 local Execute = {}
@@ -505,6 +506,46 @@ local EarthShieldId = {
 	[32594]=true, -- Earth Shield (rank 3)
 }
 
+local cacheDebuffExpirePoison = {}
+local cacheDebuffExpireDisease = {}
+local poisoncleansingTotem = GetSpellInfo(38396)
+local diseasecleansingTotem = GetSpellInfo(8170)
+local activeTotem = {}
+local isTotemActive = function()
+	local time = GetTime()
+	for c,v in pairs(activeTotem) do
+		if v and (GetTime()-v[2])<=120 then
+			return true
+		else
+			activeTotem = false
+		end
+	end
+	return false
+end
+local findDispelOwner = function(totem, dstName, spellName)
+	for c,v in pairs(activeTotem) do
+		if v[1]==totem and (GetTime()-v[2])<=120 then
+			if DPSMate.Parser.SubGroups[c]==DPSMate.Parser.SubGroups[dstName] then
+				DB:Dispels(c, totem, dstName, spellName)
+				return
+			end
+		end
+	end
+end
+local getActiveTotemDispel = function(spellName, dstName)
+	if isTotemActive() then
+		if cacheDebuffExpirePoison[spellName] then
+			if (cacheDebuffExpirePoison[spellName]-GetTime())>=1.5 then
+				findDispelOwner(poisoncleansingTotem, dstName, spellName)
+			end
+		elseif cacheDebuffExpireDisease[spellName] then
+			if (cacheDebuffExpireDisease[spellName]-GetTime())>1.5 then
+				findDispelOwner(diseasecleansingTotem, dstName, spellName)
+			end
+		end
+	end
+end
+
 -- Begin Functions
 
 function DPSMate.Parser:OnLoad()
@@ -568,11 +609,18 @@ local GetOverhealByName = function(amount, target)
 	if result<0 then return 0 else return result end 
 end
 function DPSMate.Parser:UnitAuraDispels(unit)
-	for i=1, 4 do
-		local name, _, _, _, dispelType = UnitDebuff(unit, i)
+	for i=1, 8 do
+		local name, _, _, _, dispelType, _, expTime = UnitDebuff(unit, i)
 		if not name then break end
 		DB:BuildAbility(name, dispelType)
 		DPSMateAbility[name][2] = dispelType
+		
+		-- Dispel Totem Part
+		if dispelType == DPSMate.L["poison"] then
+			cacheDebuffExpirePoison[name] = GetTime()+expTime
+		elseif dispelType == DPSMate.L["disease"] then
+			cacheDebuffExpireDisease[name] = GetTime()+expTime
+		end
 	end
 end
 
@@ -696,31 +744,37 @@ end
 function DPSMate.Parser:SpellHeal(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName, spellSchool, amount, critical)
 	t = {}
 	srcName = srcName or DPSMate.L["unknown"]
-	if critical then t[1]=0;t[2]=critical end
-	if eventtype == "SPELL_PERIODIC_HEAL" then
-		spellName = spellName..DPSMate.L["periodic"]
+	if not DB:InCombat() then
+		return
 	end
-	if spellId == PrayerOfMendingHealId then
-		srcName = DB:POM_Healed(srcName)
+	srcGUID, srcName, spellName = DB:GetGuardianOwnerByGUID(srcGUID, srcName, spellName)
+	if not DPSMate:IsNPC(srcGUID) then
+		if critical then t[1]=0;t[2]=critical end
+		if eventtype == "SPELL_PERIODIC_HEAL" then
+			spellName = spellName..DPSMate.L["periodic"]
+		end
+		if spellId == PrayerOfMendingHealId then
+			srcName = DB:POM_Healed(srcName)
+		end
+		if spellId == EarthShieldTickId then
+			srcName = DB:GetEarthShieldOwner(srcName)
+		end
+		if spellId == LifebloomHealId then
+			srcName = DB:LifeBloomOwner(srcName)
+		end
+		DB:UnregisterPotentialKick(srcName, spellName, GetTime())
+		overheal = GetOverhealByName(amount, dstName)
+		DB:HealingTaken(DPSMateHealingTaken, dstName, spellName, t[1] or 1, t[2] or 0, amount, srcName)
+		DB:HealingTaken(DPSMateEHealingTaken, dstName, spellName, t[1] or 1, t[2] or 0, amount-overheal, srcName)
+		DB:Healing(0, DPSMateEHealing, srcName, spellName, t[1] or 1, t[2] or 0, amount-overheal, dstName)
+		DB:Healing(1, DPSMateTHealing, srcName, spellName, t[1] or 1, t[2] or 0, amount, dstName)
+		DB:DeathHistory(dstName, srcName, spellName, amount, t[1] or 1, t[2] or 0, 1, 0)
+		if overheal>0 then
+			DB:Healing(2, DPSMateOverhealing, srcName, spellName, t[1] or 1, t[2] or 0, overheal, dstName)
+			DB:HealingTaken(DPSMateOverhealingTaken, dstName, spellName, t[1] or 1, t[2] or 0, overheal, srcName)
+		end
+		DB:AddSpellSchool(spellName,spellSchoolToString[spellSchool],spellId)
 	end
-	if spellId == EarthShieldTickId then
-		srcName = DB:GetEarthShieldOwner(srcName)
-	end
-	if spellId == LifebloomHealId then
-		srcName = DB:LifeBloomOwner(srcName)
-	end
-	DB:UnregisterPotentialKick(srcName, spellName, GetTime())
-	overheal = GetOverhealByName(amount, dstName)
-	DB:HealingTaken(DPSMateHealingTaken, dstName, spellName, t[1] or 1, t[2] or 0, amount, srcName)
-	DB:HealingTaken(DPSMateEHealingTaken, dstName, spellName, t[1] or 1, t[2] or 0, amount-overheal, srcName)
-	DB:Healing(0, DPSMateEHealing, srcName, spellName, t[1] or 1, t[2] or 0, amount-overheal, dstName)
-	DB:Healing(1, DPSMateTHealing, srcName, spellName, t[1] or 1, t[2] or 0, amount, dstName)
-	DB:DeathHistory(dstName, srcName, spellName, amount, t[1] or 1, t[2] or 0, 1, 0)
-	if overheal>0 then
-		DB:Healing(2, DPSMateOverhealing, srcName, spellName, t[1] or 1, t[2] or 0, overheal, dstName)
-		DB:HealingTaken(DPSMateOverhealingTaken, dstName, spellName, t[1] or 1, t[2] or 0, overheal, srcName)
-	end
-	DB:AddSpellSchool(spellName,spellSchoolToString[spellSchool],spellId)
 end
 
 function DPSMate.Parser:SpellAuraDispelled(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, extraSpellId, extraSpellName, extraSpellSchool)
@@ -749,7 +803,7 @@ function DPSMate.Parser:SpellAuraApplied(timestamp, eventtype, srcGUID, srcName,
 		end
 	end
 	if DPSMate.Parser.CC[spellName] then DB:BuildActiveCC(dstName, spellName) end
-	if DPSMate.Parser.Kicks[spellName] then DB:AssignPotentialKick(srcName, spellName, dstName, GetTime()); end
+	if DPSMate.Parser.Kicks[spellName] and srcName~=DPSMate.L["unknown"] then DB:AssignPotentialKick(srcName, spellName, dstName, GetTime()); end
 	if DB.ShieldFlags[spellName] then DB:RegisterAbsorb(srcName, spellName, dstName) end
 	DB:AddSpellSchool(spellName,spellSchoolToString[spellSchool],spellId,BuffTypes[auraType])
 end
@@ -767,6 +821,7 @@ function DPSMate.Parser:SpellAuraRemoved(timestamp, eventtype, srcGUID, srcName,
 	DB:RemoveActiveCC(dstName, spellName)
 	if DB.ShieldFlags[spellName] then DB:UnregisterAbsorb(spellName, dstName) end
 	DB:AddSpellSchool(spellName,spellSchoolToString[spellSchool],spellId,BuffTypes[auraType])
+	getActiveTotemDispel(spellName, dstName)
 end
 
 function DPSMate.Parser:Interrupt(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, extraSpellId, extraSpellName, extraSpellSchool)
@@ -866,6 +921,9 @@ end
 function DPSMate.Parser:Summon(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool)
 	srcName = srcName or DPSMate.L["unknown"]
 	DB:AddPotentialGuardianForOwner(dstName or spellName, srcGUID, srcName)
+	if DispelTypeByTotem[spellName] then
+		activeTotem[srcName] = {spellName, GetTime()}
+	end
 end
 
 Execute = {

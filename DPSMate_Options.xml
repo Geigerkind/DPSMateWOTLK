@@ -944,6 +944,13 @@
 			<OnMouseUp>
 				this:StopMovingOrSizing()
 			</OnMouseUp>
+			<OnShow>
+				if IsPartyLeader() or IsRaidOfficer() or IsRaidLeader() then
+					DPSMate_Vote_Abort:Show()
+				else
+					DPSMate_Vote_Abort:Hide()
+				end
+			</OnShow>
 			<OnLoad>
 				DPSMate_Vote_Text:SetText(DPSMate.L["popup"])
 				DPSMate_Vote_AcceptText:SetText(DPSMate.L["accept"])
@@ -1007,6 +1014,28 @@
 				<NormalTexture file="Interface\Buttons\UI-DialogBox-Button-Up"/>
 				<PushedTexture file="Interface\Buttons\UI-DialogBox-Button-Down"/>
 				<HighlightTexture file="Interface\Buttons\UI-DialogBox-Button-Highlight" alphaMode="ADD"/>
+			</Button>
+			<Button name="$parent_Abort">
+				<Size x="20" y="20" />
+				<Anchors>
+					<Anchor point="TOPRIGHT" />
+				</Anchors>
+				<Scripts>
+					<OnEnter>
+						GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
+						GameTooltip:SetText(DPSMate.L["abortvote"], nil, nil, nil, nil, 1)
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide()
+					</OnLeave>
+					<OnClick>
+						DPSMate.Sync:AbortVote()
+						DPSMate_Vote:Hide()
+					</OnClick>
+				</Scripts>
+				<NormalTexture file="Interface\Buttons\UI-Panel-MinimizeButton-Up"/>
+				<PushedTexture file="Interface\Buttons\UI-Panel-MinimizeButton-Down"/>
+				<HighlightTexture file="Interface\Buttons\UI-Panel-MinimizeButton-Highlight" alphaMode="ADD"/>
 			</Button>
 		</Frames>
 	</Frame>
