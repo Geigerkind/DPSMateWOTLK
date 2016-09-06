@@ -292,9 +292,11 @@ end
 
 local bc, am = 0, 1
 function DPSMate.Sync:HelloWorld()
-	bc = GetTime()
-	am = 1
-	SDM("DPSMate_HelloWorld", "NaN", "RAID")
+	if (GetTime()-bc)>=3 then
+		bc = GetTime()
+		am = 1
+		SDM("DPSMate_HelloWorld", "NaN", "RAID")
+	end
 end
 
 function DPSMate.Sync:GreetBack()
