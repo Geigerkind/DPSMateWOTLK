@@ -632,7 +632,7 @@ function DPSMate.Options:OnEvent(event)
 						LastPopUp = GetTime()
 					end
 				elseif DPSMateSettings["dataresetsjoinparty"] == 1 then
-					DPSMate.Options:PopUpAccept(true)
+					DPSMate.Options:PopUpAccept(true, true)
 				end
 				DPSMate.DB:OnGroupUpdate()
 			elseif LastPartyNum ~= PartyNum	then

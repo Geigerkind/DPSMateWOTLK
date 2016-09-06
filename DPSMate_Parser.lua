@@ -507,6 +507,10 @@ local cacheDebuffExpirePoison = {}
 local cacheDebuffExpireDisease = {}
 local poisoncleansingTotem = GetSpellInfo(38396)
 local diseasecleansingTotem = GetSpellInfo(8170)
+local DispelTypeByTotem = {
+	[diseasecleansingTotem] = DPSMate.L["disease"],
+	[poisoncleansingTotem] = DPSMate.L["poison"],
+}
 local activeTotem = {}
 local isTotemActive = function()
 	local time = GetTime()
@@ -613,9 +617,9 @@ function DPSMate.Parser:UnitAuraDispels(unit)
 		DPSMateAbility[name][2] = dispelType
 		
 		-- Dispel Totem Part
-		if dispelType == DPSMate.L["poison"] then
+		if dispelType == "Poison" then
 			cacheDebuffExpirePoison[name] = GetTime()+expTime
-		elseif dispelType == DPSMate.L["disease"] then
+		elseif dispelType == "Disease" then
 			cacheDebuffExpireDisease[name] = GetTime()+expTime
 		end
 	end
