@@ -618,9 +618,9 @@ function DPSMate.Parser:UnitAuraDispels(unit)
 		
 		-- Dispel Totem Part
 		if dispelType == "Poison" then
-			cacheDebuffExpirePoison[name] = GetTime()+expTime
+			cacheDebuffExpirePoison[name] = GetTime()+(expTime or -1)
 		elseif dispelType == "Disease" then
-			cacheDebuffExpireDisease[name] = GetTime()+expTime
+			cacheDebuffExpireDisease[name] = GetTime()+(expTime or -1)
 		end
 	end
 end
