@@ -564,7 +564,10 @@ function DPSMate.DB:OnEvent(event)
 			end
 		end
 		DPSMate.Options:HideWhenSolo()
-		CombatState = true
+		if (not CombatState and cheatCombat+10<GetTime()) then
+			DPSMate.Options:NewSegment()
+		end
+		CombatState, CombatTime = true, 0
 	elseif event == "PLAYER_REGEN_ENABLED" then
 		if DPSMateSettings["hideincombat"] then
 			for _, val in pairs(DPSMateSettings["windows"]) do

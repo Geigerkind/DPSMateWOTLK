@@ -258,7 +258,7 @@ function DPSMate.Modules.HealingAndAbsorbs:GetSettingValues(arr, cbt, k,ecbt)
 		local pname = DPSMate:GetUserById(a[cat])
 		if DPSMateSettings["columnshab"][1] then str[1] = " "..va..p; strt[2] = " "..tot..p end
 		if DPSMateSettings["columnshab"][3] then str[2] = " ("..strformat("%.1f", 100*va/tot).."%)" end
-		if DPSMateSettings["columnshab"][2] then str[3] = "("..strformat("%.1f", va/cbt)..")"; strt[1] = "("..strformat("%.1f", tot/cbt)..")" end
+		if DPSMateSettings["columnshab"][2] then str[3] = "("..strformat("%.1f", va/cbt)..p..")"; strt[1] = "("..strformat("%.1f", tot/cbt)..")" end
 		if DPSMateSettings["columnshab"][4] then str[4] = " ("..strformat("%.1f", va/(ecbt[pname] or cbt))..p..")" end
 		tinsert(name, pname)
 		tinsert(value, str[3]..str[1]..str[4]..str[2])
