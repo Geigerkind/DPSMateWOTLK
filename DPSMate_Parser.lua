@@ -171,6 +171,9 @@ DPSMate.Parser.procs = {
 	[GetSpellInfo(27521)] = true, -- Mana Restore
 	[GetSpellInfo(34460)] = true, -- Ferocious Inperation
 	[GetSpellInfo(33370)] = true, -- Spell Haste
+	[GetSpellInfo(28093)] = true, -- Lightning Speed
+	[GetSpellInfo(37515)] = true, -- Blade Turning
+	[GetSpellInfo(29801)] = true, -- Rampage
 }
 
 DPSMate.Parser.BuffExceptions = {
@@ -518,7 +521,7 @@ local isTotemActive = function()
 		if v and (GetTime()-v[2])<=120 then
 			return true
 		else
-			activeTotem = false
+			activeTotem[c] = false
 		end
 	end
 	return false

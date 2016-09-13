@@ -22,7 +22,7 @@ DPSMate.DB.ShieldFlags = {
 	[GetSpellInfo(16892)] = 7, -- Holy Protection
 }
 DPSMate.DB.FixedShieldAmounts = {
-	[GetSpellInfo(37515)] = 200, -- Blade Turning
+	[GetSpellInfo(37515)] = 200, -- Blade Turning -- ADD THIS AS PROC TO THIS AND LL!
 	
 	[GetSpellInfo(11974)] = 1300, -- All  -- Power Word: Shield
 	[GetSpellInfo(11426)] = 1075, -- All -- Ice Barrier
@@ -715,7 +715,13 @@ function DPSMate.DB:BuildUser(Dname, Dclass)
 	if (not DPSMateUser[Dname] and Dname) then
 		DPSMateUser[Dname] = {
 			[1] = DPSMate:TableLength(DPSMateUser)+1,
-			[2] = Dclass,
+			[2] = Dclass or "",
+			[3] = 0,
+			[4] = false,
+			[5] = 0,
+			[6] = 0,
+			[7] = "",
+			[8] = 70,
 		}
 		DPSMate.UserId = nil
 	end
@@ -728,10 +734,10 @@ function DPSMate.DB:BuildAbility(name, kind, school, sid, buffOrDebuff)
 	if not DPSMateAbility[name] then
 		DPSMateAbility[name] = {
 			[1] = DPSMate:TableLength(DPSMateAbility)+1,
-			[2] = kind,
-			[3] = school,
-			[4] = sid,
-			[5] = buffOrDebuff,
+			[2] = kind or "",
+			[3] = school or "",
+			[4] = sid or 0,
+			[5] = buffOrDebuff or false,
 		}
 		DPSMate.AbilityId = nil
 	end
@@ -1487,7 +1493,7 @@ function DPSMate.DB:Dispels(cause, Dname, target, ability)
 		end
 		DPSMateDispels[cat][DPSMateUser[cause][1]][DPSMateAbility[Dname][1]][DPSMateUser[target][1]][DPSMateAbility[ability][1]] = DPSMateDispels[cat][DPSMateUser[cause][1]][DPSMateAbility[Dname][1]][DPSMateUser[target][1]][DPSMateAbility[ability][1]]+1
 		DPSMateDispels[cat][DPSMateUser[cause][1]]["i"][1] = DPSMateDispels[cat][DPSMateUser[cause][1]]["i"][1]+1
-		tinsert(DPSMateDispels[cat][DPSMateUser[cause][1]]["i"][2], {DPSMateCombatTime[val], DPSMateAbility[ability][1], DPSMateUser[target][1], GameTime_GetTime()})
+		tinsert(DPSMateDispels[cat][DPSMateUser[cause][1]]["i"][2], {DPSMateCombatTime[val], DPSMateAbility[ability][1], DPSMateUser[target][1], GetRealTime()})
 	end
 	self.NeedUpdate = true
 end
@@ -1497,7 +1503,7 @@ function DPSMate.DB:UnregisterDeath(target)
 	for cat, val in pairs({[1]="total", [2]="current"}) do 
 		if DPSMateDeaths[cat][DPSMateUser[target][1]] then
 			DPSMateDeaths[cat][DPSMateUser[target][1]][1]["i"][1]=1
-			DPSMateDeaths[cat][DPSMateUser[target][1]][1]["i"][2]=GameTime_GetTime()
+			DPSMateDeaths[cat][DPSMateUser[target][1]][1]["i"][2]=GetRealTime()
 			if cat==1 and DPSMate.Parser.TargetParty[target] then 
 				local p = DPSMateDeaths[cat][DPSMateUser[target][1]][1][1]
 				DPSMate:Broadcast(4, target, DPSMate:GetUserById(p[1]), DPSMate:GetAbilityById(p[2]), p[3]) 
@@ -1532,7 +1538,7 @@ function DPSMate.DB:DeathHistory(target, cause, ability, amount, hit, crit, type
 			[4] = hitCritCrush,
 			[5] = type,
 			[6] = DPSMateCombatTime[val],
-			[7] = GameTime_GetTime(),
+			[7] = GetRealTime(),
 		})
 		if DPSMateDeaths[cat][DPSMateUser[target][1]][1][21] then
 			tremove(DPSMateDeaths[cat][DPSMateUser[target][1]][1], 21)
@@ -1630,7 +1636,7 @@ function DPSMate.DB:Kick(cause, target, causeAbility, targetAbility)
 			DPSMateInterrupts[cat][DPSMateUser[cause][1]][DPSMateAbility[causeAbility][1]][DPSMateUser[target][1]][DPSMateAbility[targetAbility][1]] = 0
 		end
 		DPSMateInterrupts[cat][DPSMateUser[cause][1]]["i"][1] = DPSMateInterrupts[cat][DPSMateUser[cause][1]]["i"][1] + 1
-		tinsert(DPSMateInterrupts[cat][DPSMateUser[cause][1]]["i"][2], {DPSMateCombatTime[val], GameTime_GetTime(), DPSMateAbility[targetAbility][1], DPSMateUser[target][1]})
+		tinsert(DPSMateInterrupts[cat][DPSMateUser[cause][1]]["i"][2], {DPSMateCombatTime[val], GetRealTime(), DPSMateAbility[targetAbility][1], DPSMateUser[target][1]})
 		DPSMateInterrupts[cat][DPSMateUser[cause][1]][DPSMateAbility[causeAbility][1]][DPSMateUser[target][1]][DPSMateAbility[targetAbility][1]]=DPSMateInterrupts[cat][DPSMateUser[cause][1]][DPSMateAbility[causeAbility][1]][DPSMateUser[target][1]][DPSMateAbility[targetAbility][1]]+1
 	end
 end
@@ -1868,7 +1874,7 @@ function DPSMate.DB:Attempt(mode, check, tar)
 				tinsert(DPSMateAttempts[zone], 1, {
 					[1] = DPSMate.L["unknown"],
 					[2] = DPSMateCombatTime["total"],
-					[3] = GameTime_GetTime(),
+					[3] = GetRealTime(),
 					[6] = {}
 				})
 			end
@@ -1878,7 +1884,8 @@ end
 
 local banedItems = {
 	[20725] = true,
-	[18562] = true
+	[18562] = true,
+	[22450] = true,
 }
 function DPSMate.DB:Loot(user, quality, itemid)
 	if quality>3 and not banedItems[itemid] then
@@ -1910,7 +1917,7 @@ function DPSMate.DB:BuildFail(type, user, cause, ability, amount)
 			[3] = DPSMateAbility[ability][1],
 			[4] = amount,
 			[5] = DPSMateCombatTime[val],
-			[6] = GameTime_GetTime(),
+			[6] = GetRealTime(),
 		})
 	end
 	DPSMate:Broadcast(3, user, cause, ability, amount, type)
@@ -1954,7 +1961,7 @@ function DPSMate.DB:CCBreaker(target, ability, cause, spellName)
 			[1] = DPSMateAbility[ability][1],
 			[2] = DPSMateUser[target][1],
 			[3] = DPSMateCombatTime[val],
-			[4] = GameTime_GetTime(),
+			[4] = GetRealTime(),
 			[5] = DPSMateAbility[spellName][1]
 		})
 	end

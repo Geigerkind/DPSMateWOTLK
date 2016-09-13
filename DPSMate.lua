@@ -1,6 +1,6 @@
 -- Global Variables
 DPSMate = {}
-DPSMate.VERSION = 7
+DPSMate.VERSION = 9
 DPSMate.LOCALE = GetLocale()
 DPSMate.SYNCVERSION = DPSMate.VERSION..DPSMate.LOCALE
 DPSMate.Parser = {}
@@ -40,6 +40,14 @@ local func = function(c) tinsert(t, c) end
 local strformat = string.format
 local tonumber = tonumber
 local strlower = string.lower
+
+GetRealTime = function()
+	local hour, minutes = GetGameTime();
+	if minutes<10 then
+		return hour..":0"..minutes
+	end
+	return hour..":"..minutes
+end
 
 -- Begin functions
 

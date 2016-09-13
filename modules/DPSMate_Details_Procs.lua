@@ -28,6 +28,12 @@ local mab = {
 	[GetSpellInfo(12170)] = true, -- Revenge
 	[GetSpellInfo(11971)] = true, -- Sunder Armor
 	[GetSpellInfo(9080)] = true, -- Hamstring
+	[GetSpellInfo(22689)] = true, -- Mangle
+	[GetSpellInfo(35395)] = true, -- Crusader Strike
+	[GetSpellInfo(31935)] = true, -- Avenger's Shield
+	[GetSpellInfo(1329)] = true, -- Mutilate
+	[GetSpellInfo(14251)] = true, -- Riposte
+	[GetSpellInfo(20243)] = true -- Devastate
 }
 local specialSnowflakes = {
 	[GetSpellInfo(14181)] = {
@@ -105,6 +111,9 @@ local specialSnowflakesDmgTaken = {
 		[GetSpellInfo(12880)] = true, -- Enrage
 		[GetSpellInfo(27818)] = true, -- Blessed Recovery
 		[GetSpellInfo(14743)] = true, -- Focused Casting
+	}, -- Just Parry
+	[3] = {
+		[GetSpellInfo(37515)] = true,
 	}
 }
 local specialSnowflakesHealTaken = {
@@ -250,6 +259,18 @@ function DPSMate.Modules.DetailsProcs:GetSpecialSnowFlakeHits(ability, cname)
 					if ca~="i" then
 						if DPSMate:GetAbilityById(ca) == DPSMate.BabbleSpell:GetTranslation("AutoAttack") then
 							num = num + va[5]
+						end
+					end
+				end
+			end
+		end
+	elseif specialSnowflakesDmgTaken[3][ability] then
+		for cat, val in pairs(DPSMateDamageTaken[1][DPSMateUser[cname or DetailsUser][1]]) do
+			if cat~="i" then
+				for ca, va in pairs(val) do
+					if ca~="i" then
+						if DPSMate:GetAbilityById(ca) == DPSMate.BabbleSpell:GetTranslation("AutoAttack") then
+							num = num + va[10]
 						end
 					end
 				end
