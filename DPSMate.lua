@@ -1,6 +1,6 @@
 -- Global Variables
 DPSMate = {}
-DPSMate.VERSION = 9
+DPSMate.VERSION = 10
 DPSMate.LOCALE = GetLocale()
 DPSMate.SYNCVERSION = DPSMate.VERSION..DPSMate.LOCALE
 DPSMate.Parser = {}
@@ -40,6 +40,7 @@ local func = function(c) tinsert(t, c) end
 local strformat = string.format
 local tonumber = tonumber
 local strlower = string.lower
+local tnbr = tonumber
 
 GetRealTime = function()
 	local hour, minutes = GetGameTime();
@@ -410,6 +411,16 @@ function DPSMate:SetStatusBarValue()
 				statusbar:Show()
 			end
 		end
+	end
+end
+
+function DPSMate:Commas(n,k)
+	if DPSMateSettings["windows"][k]["numberformat"] == 3 then 
+		n = ("%.0f"):format(n)
+		local left,num,right = string.match(n,'^([^%d]*%d)(%d+)(.-)$')
+		return left and left..(num:reverse():gsub('(%d%d%d)','%1,'):reverse()) or n --..right
+	else
+		return n;
 	end
 end
 

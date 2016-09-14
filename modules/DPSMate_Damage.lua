@@ -52,7 +52,7 @@ function DPSMate.Modules.Damage:EvalTable(user, k)
 	local a, u, p, d, total, pet = {}, {}, {}, {}, 0, false
 	local arr = DPSMate:GetMode(k)
 	if not arr[user[1]] then return end
-	if (user[5] and user[5] ~= DPSMate.L["unknown"] and arr[DPSMateUser[user[5]][1]]) and DPSMateSettings["mergepets"] then u={user[1],DPSMateUser[user[5]][1]} else u={user[1]} end
+	if (user[5] and user[5] ~= DPSMate.L["unknown"] and DPSMateUser[user[5]] and arr[DPSMateUser[user[5]][1]]) and DPSMateSettings["mergepets"] then u={user[1],DPSMateUser[user[5]][1]} else u={user[1]} end
 	for _, v in pairs(u) do
 		for cat, val in pairs(arr[v]) do
 			if (type(val) == "table" and cat~="i") then
@@ -90,7 +90,7 @@ function DPSMate.Modules.Damage:GetSettingValues(arr, cbt, k,ecbt)
 		if dmg==0 then break end
 		local str = {[1]="",[2]="",[3]="",[4]=""}
 		local pname = DPSMate:GetUserById(a[cat])
-		if DPSMateSettings["columnsdmg"][1] then str[1] = " "..dmg..p; strt[2] = tot..p end
+		if DPSMateSettings["columnsdmg"][1] then str[1] = " "..DPSMate:Commas(dmg, k)..p; strt[2] = DPSMate:Commas(tot, k)..p end
 		if DPSMateSettings["columnsdmg"][2] then str[2] = "("..strformat("%.1f", (dmg/cbt))..p..")"; strt[1] = "("..strformat("%.1f", (tot/cbt))..p..") " end
 		if DPSMateSettings["columnsdmg"][3] then str[3] = " ("..strformat("%.1f", 100*dmg/tot).."%)" end
 		if DPSMateSettings["columnsdmg"][4] then str[4] = " ("..strformat("%.1f", dmg/(ecbt[pname] or cbt))..p..")" end

@@ -1314,7 +1314,7 @@ function DPSMate.Options:DataResetsDropDown()
 end
 
 function DPSMate.Options:NumberFormatDropDown()
-	local btns = {DPSMate.L["normal"], DPSMate.L["condensed"]}
+	local btns = {DPSMate.L["normal"], DPSMate.L["condensed"], DPSMate.L["commas"]}
 	
 	local function on_click()
 		DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["numberformat"] = this.value

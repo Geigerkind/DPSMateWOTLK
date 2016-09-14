@@ -5,6 +5,11 @@
 -- CHAT_MSG_SPELL_FAILED_LOCALPLAYER -> Examples: You fail to cast Heal: Interrupted. You fail to perform Bear Form: Not enough mana
 -- SPELLCAST_INTERRUPTED
 
+BINDING_HEADER_DPSMATE = "DPSMate"
+BINDING_NAME_DPSMATE_REPORT = DPSMate.L["togglereportframe"]
+BINDING_NAME_DPSMATE_TOGGLE = DPSMate.L["toggleframes"]
+BINDING_NAME_DPSMATE_RESET = DPSMate.L["resetdpsmate"]
+
 -- Global Variables
 DPSMate.Parser.procs = {
 	-- General
@@ -889,7 +894,7 @@ function DPSMate.Parser:SpellCastSuccess(timestamp, eventtype, srcGUID, srcName,
 		DB:RegisterLifeBloom(dstName, srcName)
 		return
 	end
-	if DPSMate.Parser.RCD[spellName] then DPSMate:Broadcast(1, srcName, spellName) end
+	--if DPSMate.Parser.RCD[spellName] then DPSMate:Broadcast(1, srcName, spellName) end
 	tinsert(SuccessfulCasts, {GetTime(), spellName, srcName, dstName})
 	DB:AddSpellSchool(spellName,spellSchoolToString[spellSchool],spellId)
 end

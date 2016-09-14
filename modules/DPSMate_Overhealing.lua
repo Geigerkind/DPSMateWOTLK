@@ -76,7 +76,7 @@ function DPSMate.Modules.Overhealing:GetSettingValues(arr, cbt, k,ecbt)
 		if va==0 then break end
 		local str = {[1]="",[2]="",[3]="",[4]=""}
 		local pname = DPSMate:GetUserById(a[cat])
-		if DPSMateSettings["columnsoverhealing"][1] then str[1] = " "..va..p; strt[2] = " "..tot..p end
+		if DPSMateSettings["columnsoverhealing"][1] then str[1] = " "..DPSMate:Commas(va, k)..p; strt[2] = " "..DPSMate:Commas(tot, k)..p end
 		if DPSMateSettings["columnsoverhealing"][3] then str[2] = " ("..strformat("%.1f", 100*va/tot).."%)" end
 		if DPSMateSettings["columnsoverhealing"][2] then str[3] = "("..strformat("%.1f", va/cbt)..p..")"; strt[1] = "("..strformat("%.1f", tot/cbt)..")"  end
 		if DPSMateSettings["columnsoverhealing"][4] then str[4] = " ("..strformat("%.1f", va/(ecbt[pname] or cbt))..p..")" end

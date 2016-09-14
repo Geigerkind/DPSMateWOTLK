@@ -117,7 +117,7 @@ function DPSMate.Modules.FriendlyFire:GetSettingValues(arr, cbt, k,ecbt)
 		if dmg==0 then break end
 		local str = {[1]="",[2]="",[3]="",[4]=""}
 		local pname = DPSMate:GetUserById(a[cat])
-		if DPSMateSettings["columnsfriendlyfire"][1] then str[1] = " "..dmg..p; strt[2] = " "..tot..p end
+		if DPSMateSettings["columnsfriendlyfire"][1] then str[1] = " "..DPSMate:Commas(dmg, k)..p; strt[2] = " "..DPSMate:Commas(tot, k)..p end
 		if DPSMateSettings["columnsfriendlyfire"][3] then str[2] = " ("..strformat("%.1f", 100*dmg/tot).."%)" end
 		if DPSMateSettings["columnsfriendlyfire"][2] then str[3] = "("..strformat("%.1f", dmg/cbt)..")"; strt[1] = "("..strformat("%.1f", tot/cbt)..")" end
 		if DPSMateSettings["columnsfriendlyfire"][4] then str[4] = " ("..strformat("%.1f", dmg/(ecbt[pname] or cbt))..p..")" end

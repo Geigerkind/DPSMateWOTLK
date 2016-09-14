@@ -188,3 +188,4 @@ modules\DPSMate_Details_FriendlyFireTakenTotal.xml
 
 DPSMate_Frame.xml
 DPSMate_Options.xml
+Bindings.xml

@@ -306,6 +306,7 @@ end
 function DPSMate.Sync:ReceiveGreet(arg2, arg4)
 	if (GetTime()-bc)<=3 then
 		DPSMate:SendMessage(am..". "..arg4.." (v"..arg2..")")
+		am = am + 1
 	end
 end
 

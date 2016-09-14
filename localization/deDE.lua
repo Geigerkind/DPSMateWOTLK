@@ -280,8 +280,8 @@ if (GetLocale() == "deDE") then
 	DPSMate.L["whocreateddpsmate"] = "Wer erstellt DPSMate?"
 	DPSMate.L["whocreateddpsmateText"] = "DPSMate wurde von Shino (Albea) <Synced> programmiert, der dieses AddOn auf Kronos (Twinstar.cz) entwickelt. Er ist auch als Geigerkind in der Twinstar-Community bekannt."
 	DPSMate.L["thanksto"] = "Dank geht an folgende Unterstützer:"
-	DPSMate.L["thankstoText"] = "Weasel - Für Testen des Addons und Verbesserungsvorschläge. \nBambustreppe - Für die deutsche Übersetzung."
-	DPSMate.L["remove"] = "Entferne"
+	DPSMate.L["thankstoText"] = "Weasel - Für Testen des Addons und Verbesserungsvorschläge. \nBambustreppe - Für die deutsche Übersetzung. \nDreamstate - Für Testen des Addons (TBC) und Verbesserungsvorschläge."
+	DPSMate.L["remove"] = "Entferne" 
 	DPSMate.L["removeTooltip"] = "Klicke hier, um das ausgewählte Fenster zu entfernen."
 	DPSMate.L["copy"] = "Kopiere"
 	DPSMate.L["copyTooltip"] = "Klicke hier, um die Konfiguration auf das ausgewählte Fenster zu kopieren."
@@ -492,4 +492,12 @@ if (GetLocale() == "deDE") then
 	DPSMate.L["totalbaropacitytooltip"] = "Bewege das, um die Transparenz von der Gesamtbar zu verändern."
 	DPSMate.L["abortvote"] = "Reset abbrechen. Als Assistent oder Schlachtzugsleiter kannst du den reset abbrechen, wenn du schnell genug bist."
 	DPSMate.L["resetaborted"] = "Die Resetabstimmung wurde abgebrochen. Es wurde ein Cooldown von 20 Sekunden zum nächsten Reset gesetzt."
+	
+	DPSMate.L["vreset"] = "Reset"
+	DPSMate.L["vdreset"] = "Nicht Resetten"
+	DPSMate.L["togglereportframe"] = "Report fenster an/aus"
+	DPSMate.L["toggleframes"] = "Hauptfenster an/aus"
+	DPSMate.L["resetdpsmate"] = "DPSMate resetten"
+	DPSMate.L["columnstooltip"] = "Aktiviere das, um diese Extrainformation in diesem Modus zu zeigen."
+	DPSMate.L["commas"] = "Komma"
 end

@@ -52,7 +52,7 @@ function DPSMate.Modules.Interrupts:EvalTable(user, k)
 	local a, b, total, pet, u = {}, {}, 0, false, {}
 	local arr = DPSMate:GetMode(k)
 	if not arr[user[1]] then return end
-	if (user[5] and user[5] ~= DPSMate.L["unknown"] and arr[DPSMateUser[user[5]][1]]) and DPSMateSettings["mergepets"] then u={user[1],DPSMateUser[user[5]][1]} else u={user[1]} end
+	if (user[5] and user[5] ~= DPSMate.L["unknown"] and arr[DPSMateUser[user[5]][1]]) and DPSMateUser[user[5]] and DPSMateSettings["mergepets"] then u={user[1],DPSMateUser[user[5]][1]} else u={user[1]} end
 	for _, vvv in pairs(u) do
 		for cat, val in pairs(arr[vvv]) do -- 41 Ability
 			if cat~="i" then
@@ -113,7 +113,7 @@ function DPSMate.Modules.Interrupts:GetSettingValues(arr, cbt, k)
 		local dmg, tot, sort = val, total, sortedTable[1]
 		if dmg==0 then break end
 		local str = {[1]="",[2]="",[3]=""}
-		if DPSMateSettings["columnsinterrupts"][1] then str[1] = " "..dmg..p; strt[2] = tot..p end
+		if DPSMateSettings["columnsinterrupts"][1] then str[1] = " "..DPSMate:Commas(dmg, k)..p; strt[2] = DPSMate:Commas(tot, k)..p end
 		if DPSMateSettings["columnsinterrupts"][2] then str[3] = " ("..strformat("%.1f", 100*dmg/tot).."%)" end
 		tinsert(name, DPSMate:GetUserById(a[cat]))
 		tinsert(value, str[1]..str[3])

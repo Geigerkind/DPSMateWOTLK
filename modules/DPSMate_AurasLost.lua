@@ -94,7 +94,7 @@ function DPSMate.Modules.AurasLost:GetSettingValues(arr, cbt, k)
 		local dmg, tot, sort = val, total, sortedTable[1]
 		if dmg==0 then break end
 		local str = {[1]="",[2]="",[3]=""}
-		if DPSMateSettings["columnsauraslost"][1] then str[1] = " "..dmg..p; strt[2] = tot..p end
+		if DPSMateSettings["columnsauraslost"][1] then str[1] = " "..DPSMate:Commas(dmg, k)..p; strt[2] = DPSMate:Commas(tot, k)..p end
 		if DPSMateSettings["columnsauraslost"][2] then str[3] = " ("..strformat("%.1f", 100*dmg/tot).."%)" end
 		tinsert(name, DPSMate:GetUserById(a[cat]))
 		tinsert(value, str[1]..str[3])
