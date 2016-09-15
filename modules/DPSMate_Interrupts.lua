@@ -52,7 +52,7 @@ function DPSMate.Modules.Interrupts:EvalTable(user, k)
 	local a, b, total, pet, u = {}, {}, 0, false, {}
 	local arr = DPSMate:GetMode(k)
 	if not arr[user[1]] then return end
-	if (user[5] and user[5] ~= DPSMate.L["unknown"] and arr[DPSMateUser[user[5]][1]]) and DPSMateUser[user[5]] and DPSMateSettings["mergepets"] then u={user[1],DPSMateUser[user[5]][1]} else u={user[1]} end
+	if (user[5] and user[5] ~= DPSMate.L["unknown"] and DPSMateUser[user[5]] and arr[DPSMateUser[user[5]][1]]) and DPSMateSettings["mergepets"] then u={user[1],DPSMateUser[user[5]][1]} else u={user[1]} end
 	for _, vvv in pairs(u) do
 		for cat, val in pairs(arr[vvv]) do -- 41 Ability
 			if cat~="i" then

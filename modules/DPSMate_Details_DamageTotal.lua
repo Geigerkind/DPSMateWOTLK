@@ -307,6 +307,7 @@ function DPSMate.Modules.DetailsDamageTotal:CheckButtonCheckAll(obj)
 		for i=1, 30 do 
 			local ob = _G("DPSMate_Details_DamageTotal_PlayerList_Child_R"..i)
 			if ob.user then
+				self:RemoveLinesButton(ob.user, ob)
 				self:AddLinesButton(ob.user, ob)
 				_G("DPSMate_Details_DamageTotal_PlayerList_Child_R"..i.."_CB"):SetChecked(obj.act)
 			end
@@ -416,6 +417,7 @@ function DPSMate.Modules.DetailsDamageTotal:LoadLegendButtons()
 		_G("DPSMate_Details_DamageTotal_DiagramLegend_Child_C"..i):Hide()
 	end
 	for cat, val in pairs(buttons) do
+		if cat>30 then break end
 		local name = DPSMate:GetUserById(val[2])
 		local font = _G("DPSMate_Details_DamageTotal_DiagramLegend_Child_C"..cat.."_Font")
 		font:SetText(name)

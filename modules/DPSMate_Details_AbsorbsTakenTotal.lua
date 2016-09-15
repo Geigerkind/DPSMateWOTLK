@@ -415,6 +415,7 @@ function DPSMate.Modules.DetailsAbsorbsTakenTotal:CheckButtonCheckAll(obj)
 		for i=1, 30 do 
 			local ob = _G("DPSMate_Details_AbsorbsTakenTotal_PlayerList_Child_R"..i)
 			if ob.user then
+				self:RemoveLinesButton(ob.user, ob)
 				self:AddLinesButton(ob.user, ob)
 				_G("DPSMate_Details_AbsorbsTakenTotal_PlayerList_Child_R"..i.."_CB"):SetChecked(obj.act)
 			end
@@ -424,38 +425,40 @@ end
 
 function DPSMate.Modules.DetailsAbsorbsTakenTotal:SortLineTable(uid)
 	local newArr = {}
-	for cat, val in pairs(db[uid]) do
-		local ownername = DPSMate:GetUserById(cat)
-		for ca, va in pairs(val["i"]) do
-			local i, dmg = 1, 5
-			if DPSMateDamageTaken[1][cat] then
-				if DPSMateDamageTaken[1][cat][va[2]] then
-					if DPSMateDamageTaken[1][cat][va[2]][va[3]] then
-						dmg = DPSMateDamageTaken[1][cat][va[2]][va[3]][14]
-						if dmg>DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])] then
-							dmg = DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])]
+	if db[uid] then
+		for cat, val in pairs(db[uid]) do
+			local ownername = DPSMate:GetUserById(cat)
+			for ca, va in pairs(val["i"]) do
+				local i, dmg = 1, 5
+				if DPSMateDamageTaken[1][cat] then
+					if DPSMateDamageTaken[1][cat][va[2]] then
+						if DPSMateDamageTaken[1][cat][va[2]][va[3]] then
+							dmg = DPSMateDamageTaken[1][cat][va[2]][va[3]][14]
+							if dmg>DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])] then
+								dmg = DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])]
+							end
 						end
 					end
 				end
-			end
-			if dmg==5 or dmg==0 then
-				dmg = ceil((1/15)*((DPSMateUser[ownername][8] or 70)/70)*DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])]*0.33)
-			end
-			if va[4] then
-				dmg = dmg + va[4]
-			end
-			if dmg>0 then
-				while true do
-					if (not newArr[i]) then
-						tinsert(newArr, i, {va[1], dmg})
-						break
-					else
-						if newArr[i][1] > va[1] then
+				if dmg==5 or dmg==0 then
+					dmg = ceil((1/15)*((DPSMateUser[ownername][8] or 70)/70)*DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])]*0.33)
+				end
+				if va[4] then
+					dmg = dmg + va[4]
+				end
+				if dmg>0 then
+					while true do
+						if (not newArr[i]) then
 							tinsert(newArr, i, {va[1], dmg})
 							break
+						else
+							if newArr[i][1] > va[1] then
+								tinsert(newArr, i, {va[1], dmg})
+								break
+							end
 						end
+						i=i+1
 					end
-					i=i+1
 				end
 			end
 		end
@@ -519,10 +522,9 @@ function DPSMate.Modules.DetailsAbsorbsTakenTotal:LoadLegendButtons()
 		_G("DPSMate_Details_AbsorbsTakenTotal_DiagramLegend_Child_C"..i):Hide()
 	end
 	for cat, val in pairs(buttons) do
-		local name = DPSMate:GetUserById(val[2])
 		local font = _G("DPSMate_Details_AbsorbsTakenTotal_DiagramLegend_Child_C"..cat.."_Font")
-		font:SetText(name)
-		font:SetTextColor(DPSMate:GetClassColor(DPSMateUser[name][2]))
+		font:SetText(val[2])
+		font:SetTextColor(DPSMate:GetClassColor(val[2]))
 		_G("DPSMate_Details_AbsorbsTakenTotal_DiagramLegend_Child_C"..cat.."_SwatchBg"):SetTexture(val[1][1],val[1][2],val[1][3],1)
 		_G("DPSMate_Details_AbsorbsTakenTotal_DiagramLegend_Child_C"..cat):Show()
 	end

@@ -21,6 +21,7 @@ local hexClassColor = {
 	paladin = "F58CBA",
 	shaman = "0070DE",
 }
+hexClassColor[""] = "C79C6E"
 
 function DPSMate.Modules.DetailsFailsTotal:UpdateDetails(obj, key)
 	curKey = key

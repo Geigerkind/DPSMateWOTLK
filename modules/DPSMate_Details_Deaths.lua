@@ -9,6 +9,7 @@ local curKey = 1
 local db, cbt = {}, 0
 local _G = getglobal
 local tinsert = table.insert
+local strformat = string.format
 
 function DPSMate.Modules.DetailsDeaths:UpdateDetails(obj, key)
 	DPSMate_Details_CompareDeaths:Hide()
@@ -113,7 +114,7 @@ function DPSMate.Modules.DetailsDeaths:SelectDetailsButton(i, comp)
 			local type,r,g,b = "HIT", DPSMate:GetClassColor(DPSMateUser[name][2])
 			if val[4]==1 then type="CRIT" elseif val[4]==2 then type="CRUSH" end
 			_G("DPSMate_Details_"..comp.."Deaths_LogDetails_Child_Row"..cat.."_Time"):SetText(val[7])
-			_G("DPSMate_Details_"..comp.."Deaths_LogDetails_Child_Row"..cat.."_CombatTime"):SetText(ceil(val[6]).."s")
+			_G("DPSMate_Details_"..comp.."Deaths_LogDetails_Child_Row"..cat.."_CombatTime"):SetText(strformat("%.2f", val[6]).."s")
 			_G("DPSMate_Details_"..comp.."Deaths_LogDetails_Child_Row"..cat.."_Cause"):SetText(name)
 			_G("DPSMate_Details_"..comp.."Deaths_LogDetails_Child_Row"..cat.."_Cause"):SetTextColor(r,g,b,1)
 			_G("DPSMate_Details_"..comp.."Deaths_LogDetails_Child_Row"..cat.."_Ability"):SetText(DPSMate:GetAbilityById(val[2]))

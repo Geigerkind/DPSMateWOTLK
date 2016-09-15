@@ -339,6 +339,7 @@ DPSMate.Parser.Dispels = {
 	[GetSpellInfo(17572)] = true, -- Purification Potion
 	[GetSpellInfo(11522)] = true, -- Restorative Potion
 	[GetSpellInfo(39897)] = true, -- Mass Dispel -- Does it work?
+	[GetSpellInfo(30449)] = true, -- Spellsteal
 }
 DPSMate.Parser.DeCurse = {
 	[GetSpellInfo(15729)] = true, -- Remove Curse
@@ -353,6 +354,7 @@ DPSMate.Parser.DeMagic = {
 	[GetSpellInfo(370)] = true, -- Purge
 	[GetSpellInfo(11359)] = true, -- Restoration
 	[GetSpellInfo(39897)] = true, -- Mass Dispel
+	[GetSpellInfo(30449)] = true, -- Spellsteal
 }
 DPSMate.Parser.DeDisease = {
 	[GetSpellInfo(1152)] = true, -- Purify
@@ -557,6 +559,39 @@ end
 
 -- Begin Functions
 
+local unitStatus = {}
+local uduptime = 0
+local unitdiednotwork = true
+local GNRM = GetNumRaidMembers
+local GNPM = GetNumPartyMembers
+local UID = UnitIsDead
+local UN = UnitName
+function DPSMate.Parser:UnitDiedHackFix(elapsed)
+	if unitdiednotwork then
+		uduptime = uduptime + elapsed
+		if uduptime>=5 then
+			local type = "raid"
+			local num = GNRM()
+			if num<=0 then
+				type = "party"
+				num = GNPM()
+			end
+			for i=1, num do
+				local name = UN(type..i)
+				if UID(type..num) then
+					if unitStatus[name] then
+						unitStatus[name] = false
+						DB:UnregisterDeath(name)
+					end
+				else
+					unitStatus[name] = true
+				end
+			end
+			uduptime = 0
+		end
+	end
+end
+
 function DPSMate.Parser:OnLoad()
 	if (not DPSMateUser[self.player]) then
 		DPSMateUser[self.player] = {
@@ -649,11 +684,11 @@ function DPSMate.Parser:SwingDamage(timestamp, eventtype, srcGUID, srcName, srcF
 		DB:EnemyDamage(true, DPSMateEDT, srcName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, t[3] or 0, amount, dstName, t[4] or 0, t[6] or 0)
 		DB:DamageDone(srcName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, t[3] or 0, amount, t[5] or 0, t[4] or 0)
 		if DPSMate.Parser.TargetParty[dstName] and DPSMate.Parser.TargetParty[srcName] then DB:BuildFail(1, dstName, srcName, spellName, amount) end
+		DB:AssignLastHit(dstName, srcName, spellName)
 	end
 	DB:EvaluateLastHitWithPOM(dstName)
 	DB:DeathHistory(dstName, srcName, spellName, amount, t[1] or 1, t[2] or 0, 0, t[6] or 0)
 	DB:AddSpellSchool(spellName, "physical", 6603)
-	DB:AssignLastHit(dstName, srcName, spellName)
 	if absorbed then
 		DB:SetUnregisterVariables(absorbed, spellName, srcName)
 	end
@@ -682,6 +717,7 @@ end
 
 function DPSMate.Parser:SpellDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, amount, school, resisted, blocked, absorbed, critical, glancing, crushing)
 	t = {}
+	srcName = srcName or dstName
 	if critical then t[1]=0;t[2]=1 end
 	if resisted then t[1]=0;t[3]=1 end
 	if blocked then t[1]=0;t[4]=1 end
@@ -695,7 +731,7 @@ function DPSMate.Parser:SpellDamage(timestamp, eventtype, srcGUID, srcName, srcF
 		spellName = spellName..DPSMate.L["guardian"]
 	end
 	if DPSMate:IsNPC(srcGUID) then
-		if DPSMate.Parser.FailDT[spellName] then DB:BuildFail(2, dstName, srcName, spellName, amount) end
+		if DPSMate.Parser.FailDT[spellName] then DB:BuildFail(2, srcName, dstName, spellName, amount) end
 		DB:EnemyDamage(false, DPSMateEDD, dstName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, 0, amount, srcName, t[4] or 0, t[6] or 0)
 		DB:DamageTaken(dstName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, 0, amount, srcName, t[6] or 0)
 	else
@@ -704,12 +740,12 @@ function DPSMate.Parser:SpellDamage(timestamp, eventtype, srcGUID, srcName, srcF
 		DB:EnemyDamage(true, DPSMateEDT, srcName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, t[3] or 0, amount, dstName, t[4] or 0, t[6] or 0)
 		DB:DamageDone(srcName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, t[3] or 0, amount, t[5] or 0, t[4] or 0)
 		if DPSMate.Parser.TargetParty[dstName] and DPSMate.Parser.TargetParty[srcName] then DB:BuildFail(1, dstName, srcName, spellName, amount) end
+		DB:AssignLastHit(dstName, srcName, spellName)
 	end
 	DB:EvaluateLastHitWithPOM(dstName)
 	DB:UnregisterPotentialKick(srcName, spellName, GetTime())
 	DB:AddSpellSchool(spellName,spellSchoolToString[spellSchool],spellId)
 	DB:DeathHistory(dstName, srcName, spellName, amount, t[1] or 1, t[2] or 0, 0, t[6] or 0)
-	DB:AssignLastHit(dstName, srcName, spellName)
 	if absorbed then
 		DB:SetUnregisterVariables(absorbed, spellName, srcName)
 	end
@@ -794,7 +830,8 @@ function DPSMate.Parser:SpellAuraDispelled(timestamp, eventtype, srcGUID, srcNam
 end
 
 local BuffTypes = {
-	["DEBUFF"] = true
+	["DEBUFF"] = true,
+	["BUFF"] = false,
 }
 function DPSMate.Parser:SpellAuraApplied(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, auraType)
 	srcName = srcName or GetSpellSource(spellName, dstName)
@@ -844,6 +881,9 @@ function DPSMate.Parser:UnitDied(timestamp, eventtype, srcGUID, srcName, srcFlag
 	if DPSMate:IsNPC(dstGUID) then
 		DB:Attempt(false, true, dstName)
 	else
+		if dstName~=player then
+			unitdiednotwork = false
+		end
 		DB:UnregisterDeath(dstName)
 	end
 end
@@ -919,7 +959,7 @@ function DPSMate.Parser:Loot(msg)
 end
 
 function DPSMate.Parser:Energize(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, amount, powerType) -- Potential to add here mana etc. gained mode
-	if DPSMate.Parser.procs[spellName] then
+	if DPSMate.Parser.procs[spellName] and not DPSMate.Parser.OtherExceptions[spellName] then
 		srcName = srcName or DPSMate.L["unknown"]
 		DB:BuildBuffs(srcName, dstName, spellName, true)
 		DB:DestroyBuffs(dstName, spellName)

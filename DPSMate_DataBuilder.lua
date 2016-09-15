@@ -844,7 +844,7 @@ function DPSMate.DB:IsWindFuryAttack(arr, Dname, Duser, bool)
 end
 
 function DPSMate.DB:DamageDone(Duser, Dname, Dhit, Dcrit, Dmiss, Dparry, Ddodge, Dresist, Damount, Dglance, Dblock)
-	if self:BuildUser(Duser, nil) or self:BuildAbility(Dname, nil) then return end -- Attempt to fix this problem?
+	if self:BuildUser(Duser, nil) or self:BuildAbility(Dname, nil) or Duser == DPSMate.L["unknown"] then return end -- Attempt to fix this problem?
 	
 	if (not CombatState and cheatCombat+10<GetTime()) then
 		DPSMate.Options:NewSegment()
@@ -992,22 +992,23 @@ function DPSMate.DB:DamageTaken(Duser, Dname, Dhit, Dcrit, Dmiss, Dparry, Ddodge
 		end
 		local path = DPSMateDamageTaken[cat][DPSMateUser[Duser][1]][DPSMateUser[cause][1]][DPSMateAbility[Dname][1]]
 		-- Casts evaluation
-		local time = GT()
-		if CastsBuffer[2][cat][Duser] then
-			if CastsBuffer[2][cat][Duser][Dname] then
-				if time>=(CastsBuffer[2][cat][Duser][Dname]+0.1) then
-					CastsBuffer[2][cat][Duser][Dname] = time
-					path[19] = path[19] + 1
-				end
-			else
-				CastsBuffer[2][cat][Duser][Dname] = time
-				path[19] = path[19] + 1
-			end
-		else
-			CastsBuffer[2][cat][Duser] = {}
-			CastsBuffer[2][cat][Duser][Dname] = time
-			path[19] = path[19] + 1
-		end
+		-- No clue rly why this is not working. Commenting it out for now.
+		--local time = GT()
+		--if CastsBuffer[2][cat][Duser] then
+		--	if CastsBuffer[2][cat][Duser][Dname] then
+		--		if time>=(CastsBuffer[2][cat][Duser][Dname]+0.1) then
+		--			CastsBuffer[2][cat][Duser][Dname] = time
+		--			path[19] = path[19] + 1
+		--		end
+		--	else
+		--		CastsBuffer[2][cat][Duser][Dname] = time
+		--		path[19] = path[19] + 1
+		--	end
+	--	else
+		--	CastsBuffer[2][cat][Duser] = {}
+		--	CastsBuffer[2][cat][Duser][Dname] = time
+		--	path[19] = path[19] + 1
+		--end
 		path[1] = path[1] + Dhit
 		path[5] = path[5] + Dcrit
 		path[9] = path[9] + Dmiss
@@ -1824,6 +1825,7 @@ function DPSMate.DB:CombatTime()
 					InitialLoad = false
 				end
 			end
+			DPSMate.Parser:UnitDiedHackFix(arg1)
 			DPSMate.Sync:DismissVote(arg1)
 		end)
 	end

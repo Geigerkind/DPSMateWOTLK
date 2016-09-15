@@ -500,4 +500,5 @@ if (GetLocale() == "deDE") then
 	DPSMate.L["resetdpsmate"] = "DPSMate resetten"
 	DPSMate.L["columnstooltip"] = "Aktiviere das, um diese Extrainformation in diesem Modus zu zeigen."
 	DPSMate.L["commas"] = "Komma"
+	DPSMate.L["versionisold"] = "Deine DPSMate-Version ist veraltet. Update besser mal. DPSMate synchronisiert nur aktuellen Versionen."
 end

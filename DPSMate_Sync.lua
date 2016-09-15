@@ -303,10 +303,19 @@ function DPSMate.Sync:GreetBack()
 	SDM("DPSMate_Greet", DPSMate.SYNCVERSION, "RAID")
 end
 
+local old = 0
 function DPSMate.Sync:ReceiveGreet(arg2, arg4)
 	if (GetTime()-bc)<=3 then
 		DPSMate:SendMessage(am..". "..arg4.." (v"..arg2..")")
 		am = am + 1
+	else
+		if (GetTime()-old)>=3 then
+			local ver = tnbr(arg2:match("%d+") or 0)
+			if ver>DPSMate.VERSION then
+				DPSMate:SendMessage(DPSMate.L["versionisold"])
+				old = GetTime()
+			end
+		end
 	end
 end
 

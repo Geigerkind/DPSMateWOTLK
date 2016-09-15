@@ -410,6 +410,7 @@ function DPSMate.Modules.DetailsAbsorbsTotal:CheckButtonCheckAll(obj)
 		for i=1, 30 do 
 			local ob = _G("DPSMate_Details_AbsorbsTotal_PlayerList_Child_R"..i)
 			if ob.user then
+				self:RemoveLinesButton(ob.user, ob)
 				self:AddLinesButton(ob.user, ob)
 				_G("DPSMate_Details_AbsorbsTotal_PlayerList_Child_R"..i.."_CB"):SetChecked(obj.act)
 			end
@@ -516,10 +517,9 @@ function DPSMate.Modules.DetailsAbsorbsTotal:LoadLegendButtons()
 		_G("DPSMate_Details_AbsorbsTotal_DiagramLegend_Child_C"..i):Hide()
 	end
 	for cat, val in pairs(buttons) do
-		local name = DPSMate:GetUserById(val[2])
 		local font = _G("DPSMate_Details_AbsorbsTotal_DiagramLegend_Child_C"..cat.."_Font")
-		font:SetText(name)
-		font:SetTextColor(DPSMate:GetClassColor(DPSMateUser[name][2]))
+		font:SetText(val[2])
+		font:SetTextColor(DPSMate:GetClassColor(val[2]))
 		_G("DPSMate_Details_AbsorbsTotal_DiagramLegend_Child_C"..cat.."_SwatchBg"):SetTexture(val[1][1],val[1][2],val[1][3],1)
 		_G("DPSMate_Details_AbsorbsTotal_DiagramLegend_Child_C"..cat):Show()
 	end

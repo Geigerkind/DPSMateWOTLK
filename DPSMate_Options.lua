@@ -401,6 +401,7 @@ function DPSMate.Options:SelectRealtime(obj, kind)
 					g:AddTimeData(DPSMate.DB:GetAlpha(key)) 
 				end
 			end)
+			g:SetToplevel(true)
 			f:Show()
 			g:Show()
 		else
@@ -634,6 +635,7 @@ function DPSMate.Options:OnEvent(event)
 				elseif DPSMateSettings["dataresetsjoinparty"] == 1 then
 					DPSMate.Options:PopUpAccept(true, true)
 				end
+				SendAddonMessage("DPSMate_HelloWorld", "NaN", "RAID")
 				DPSMate.DB:OnGroupUpdate()
 			elseif LastPartyNum ~= PartyNum	then
 				if DPSMateSettings["dataresetspartyamount"] == 3 then
@@ -1378,7 +1380,12 @@ local AbilityModes = {"damage", "dps", "healing", "hps", "OHPS", "overhealing", 
 function DPSMate.Options:ReportUserDetails(obj, channel, name)
 	local Key, user = obj:GetParent():GetParent():GetParent().Key, obj.user
 	local _, cbt, ecbt = DPSMate:GetMode(Key)
-	local a,b,c = DPSMate.RegistredModules[DPSMateSettings["windows"][Key]["CurMode"]]:EvalTable(DPSMateUser[user], Key, cbt, ecbt)
+	local a,b,c
+	if DPSMateSettings["windows"][Key]["CurMode"] == "deaths" then
+		a,b,c = DPSMate.RegistredModules[DPSMateSettings["windows"][Key]["CurMode"]]:EvalTable(DPSMateUser[user], Key)
+	else
+		a,b,c = DPSMate.RegistredModules[DPSMateSettings["windows"][Key]["CurMode"]]:EvalTable(DPSMateUser[user], Key, cbt, ecbt)
+	end
 	local chn, index
 	if (channel == DPSMate.L["whisper"]) then
 		chn = "WHISPER"; index = name;
@@ -1432,6 +1439,7 @@ local hexClassColor = {
 	paladin = "F58CBA",
 	shaman = "0070DE",
 }
+hexClassColor[""] = "C79C6E"
 
 local CompareExcept = {
 	[DPSMate.L["enemydamagedone"]] = true,

@@ -1,6 +1,6 @@
 -- Global Variables
 DPSMate = {}
-DPSMate.VERSION = 10
+DPSMate.VERSION = 11
 DPSMate.LOCALE = GetLocale()
 DPSMate.SYNCVERSION = DPSMate.VERSION..DPSMate.LOCALE
 DPSMate.Parser = {}
@@ -115,6 +115,8 @@ function DPSMate:InitializeFrames()
 			f.Key=k
 		end
 		local frame = _G("DPSMate_"..val["name"])
+		
+		frame:SetToplevel(true)
 			
 		DPSMate.Options:ToggleDrewDrop(1, DPSMate.DB:GetOptionsTrue(1, k), frame)
 		DPSMate.Options:ToggleDrewDrop(2, DPSMate.DB:GetOptionsTrue(2, k), frame)
@@ -213,6 +215,17 @@ function DPSMate:InitializeFrames()
 	if not DPSMateSettings["enable"] then
 		self:Disable()
 	end
+	
+	local frames = {"", "_Absorbs", "_AbsorbsTaken", "_Auras", "_Casts", "_CCBreaker", "_CureDisease", "_CureDiseaseReceived", "_CurePoison", "_CurePoisonReceived", "_DamageTaken", "_DamageTakenTotal", "_DamageTotal", "_Deaths", "_Decurses", "_DecursesReceived", "_Dispels", "_DispelsReceived", "_EDD", "_EDT", "_EHealing", "_EHealingTaken", "_Fails", "_FF", "_FFT", "_Healing", "_HealingTaken", "_Interrupts", "_LiftMagic", "_LiftMagicReceived", "_OHealingTaken", "_Overhealing", "_Procs", "_AbsorbsTakenTotal", "_AbsorbsTotal", "_AurasTotal", "_CastsTotal", "_CCBreakerTotal", "_CureDisease_Total", "_CurePoison_Total", "_Deaths_Total", "_Decurses_Total", "_Dispels_Total", "_EDDTotal", "_EDTTotal", "_EHealingTakenTotal", "_EHealingTotal", "_FailsTotal", "_FFTotal", "_FFTTotal", "_HABTotal", "_HealingTakenTotal", "_HealingTotal", "_Interrupts_Total", "_LiftMagic_Total", "_OverhealingTakenTotal", "_OverhealingTotal", "_ProcsTotal"}
+	for cat, val in pairs(frames) do
+		_G("DPSMate_Details"..val):SetToplevel(true)
+	end
+	DPSMate_MiniMap:SetToplevel(true)
+	DPSMate_PopUp:SetToplevel(true)
+	DPSMate_Vote:SetToplevel(true)
+	DPSMate_Logout:SetToplevel(true)
+	DPSMate_Report:SetToplevel(true)
+	DPSMate_ConfigMenu:SetToplevel(true)
 end
 
 function DPSMate:WindowsExist()
@@ -442,6 +455,7 @@ end
 function DPSMate:ApplyFilter(key, name)
 	if not key or not name or not DPSMateUser[name] then return true end
 	local class = DPSMateUser[name][2] or "warrior"
+	if class == "" then class = "warrior" end
 	local path = DPSMateSettings["windows"][key]
 	t = {}
 	if path["grouponly"] then
@@ -459,14 +473,16 @@ function DPSMate:ApplyFilter(key, name)
 	if path["filterpeople"] == "" then
 		-- classes
 		for cat, val in pairs(path["filterclasses"]) do
-			if val then
+			if not val then
 				if cat == class then
-					return true
+					return false
 				end
 			end
 		end
+	else
+		return false
 	end
-	return false
+	return true
 end
 
 function DPSMate:GetSettingValues(arr, cbt, k, ecbt)

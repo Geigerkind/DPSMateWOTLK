@@ -245,7 +245,7 @@ function DPSMate.Modules.DetailsProcs:GetSpecialSnowFlakeHits(ability, cname)
 			if cat~="i" then
 				for ca, va in pairs(val) do
 					if ca~="i" then
-						if DPSMate:GetAbilityById(ca) == DPSMate.BabbleSpell:GetTranslation("AutoAttack") then
+						if DPSMate:GetAbilityById(ca) == DPSMate.L["AutoAttack"] then
 							num = num + va[1] + va[5] + va[15]
 						end
 					end
@@ -257,7 +257,7 @@ function DPSMate.Modules.DetailsProcs:GetSpecialSnowFlakeHits(ability, cname)
 			if cat~="i" then
 				for ca, va in pairs(val) do
 					if ca~="i" then
-						if DPSMate:GetAbilityById(ca) == DPSMate.BabbleSpell:GetTranslation("AutoAttack") then
+						if DPSMate:GetAbilityById(ca) == DPSMate.L["AutoAttack"] then
 							num = num + va[5]
 						end
 					end
@@ -269,7 +269,7 @@ function DPSMate.Modules.DetailsProcs:GetSpecialSnowFlakeHits(ability, cname)
 			if cat~="i" then
 				for ca, va in pairs(val) do
 					if ca~="i" then
-						if DPSMate:GetAbilityById(ca) == DPSMate.BabbleSpell:GetTranslation("AutoAttack") then
+						if DPSMate:GetAbilityById(ca) == DPSMate.L["AutoAttack"] then
 							num = num + va[10]
 						end
 					end
@@ -294,7 +294,7 @@ function DPSMate.Modules.DetailsProcs:GetSpecialSnowFlakeHits(ability, cname)
 				end
 			end
 		end
-	elseif ability == DPSMate.BabbleSpell:GetTranslation("Vengeance") or ability == DPSMate.BabbleSpell:GetTranslation("Flurry") then
+	elseif ability == GetSpellInfo(8602) or ability == GetSpellInfo(12974) then
 		for cat, val in pairs(DPSMateDamageDone[1][DPSMateUser[cname or DetailsUser][1]]) do
 			if cat~="i" then
 				num = num + val[5]
@@ -306,7 +306,7 @@ function DPSMate.Modules.DetailsProcs:GetSpecialSnowFlakeHits(ability, cname)
 		end
 		return hits;
 	end
-	if ability == DPSMate.BabbleSpell:GetTranslation("Relentless Strikes Effect") then
+	if ability == GetSpellInfo(14181) then
 		for cat, val in pairs(DPSMateAurasGained[1][DPSMateUser[cname or DetailsUser][1]]) do
 			if specialSnowflakes[ability][DPSMate:GetAbilityById(cat)] then
 				num = num + DPSMate:TableLength(val[2])
