@@ -405,7 +405,7 @@ DPSMate.L["karadun"] = "Karazhan"
 DPSMate.L["gruuldun"] = "Gruul's Lair"
 DPSMate.L["magdun"] = "Magtheridon's Lair"
 DPSMate.L["zuldun"] = "Zul'Aman"
-DPSMate.L["tempestdun"] = "The Eye"
+DPSMate.L["tempestdun"] = "Tempest Keep"
 DPSMate.L["hyjaldun"] = "Hyjal Summit"
 DPSMate.L["sunwell"] = "Sunwell Plateau"
 
