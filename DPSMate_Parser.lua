@@ -172,6 +172,13 @@ DPSMate.Parser.procs = {
 	[GetSpellInfo(28169)] = true, -- Mutating Injection
 	[GetSpellInfo(14100)] = true, -- Terrifying Roar
 	
+	-- New boss debuffs
+	[GetSpellInfo(8147)] = true, -- Thunderclap
+	[GetSpellInfo(33661)] = true, -- Crush Armor
+	[GetSpellInfo(32686)] = true, -- Earthquake
+	[GetSpellInfo(39837)] = true, -- Impaling Spine
+	[GetSpellInfo(38235)] = true, -- Water Tomb
+	
 	-- New to be added to special snowflaks
 	[GetSpellInfo(27521)] = true, -- Mana Restore
 	[GetSpellInfo(34460)] = true, -- Ferocious Inperation
