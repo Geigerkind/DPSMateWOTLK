@@ -714,7 +714,7 @@ function DPSMate.DB:BuildUser(Dname, Dclass)
 	if not Dname then return true end
 	if (not DPSMateUser[Dname] and Dname) then
 		DPSMateUser[Dname] = {
-			[1] = DPSMate:TableLength(DPSMateUser)+1,
+			[1] = DPSMate:TableLength(DPSMateUser)+101,
 			[2] = Dclass or "",
 			[3] = 0,
 			[4] = false,
@@ -733,7 +733,7 @@ function DPSMate.DB:BuildAbility(name, kind, school, sid, buffOrDebuff)
 	if not name then return true end
 	if not DPSMateAbility[name] then
 		DPSMateAbility[name] = {
-			[1] = DPSMate:TableLength(DPSMateAbility)+1,
+			[1] = DPSMate:TableLength(DPSMateAbility)+101,
 			[2] = kind or "",
 			[3] = school or "",
 			[4] = sid or 0,
