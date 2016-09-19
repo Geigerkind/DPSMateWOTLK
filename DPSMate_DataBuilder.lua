@@ -535,7 +535,7 @@ function DPSMate.DB:OnEvent(event)
 		-- Adding WF Attack
 		if not DPSMateAbility[DPSMate.L["wfattack"]] then
 			DPSMateAbility[DPSMate.L["wfattack"]] = {
-				[1] = 1,
+				[1] = 100,
 				[4] = 25504
 			}
 		end
@@ -1888,6 +1888,24 @@ local banedItems = {
 	[20725] = true,
 	[18562] = true,
 	[22450] = true,
+	[29434] = true,
+	[32229] = true, -- Lionseye yellow
+	[32231] = true, -- Pyrestone orange
+	[32230] = true, -- amethyst purple
+	[32249] = true, -- Emeral green
+	[32227] = true, -- Spinal red
+	[32228] = true, -- Sapphire blue
+	
+	-- TK Weapons
+	[30317] = true,
+	[30316] = true,
+	[30312] = true,
+	[30318] = true,
+	[30319] = true,
+	[30320] = true,
+	[30313] = true,
+	[30311] = true,
+	[30314] = true,
 }
 function DPSMate.DB:Loot(user, quality, itemid)
 	if quality>3 and not banedItems[itemid] then
