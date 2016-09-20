@@ -726,7 +726,7 @@ function DPSMate.Parser:SpellDamage(timestamp, eventtype, srcGUID, srcName, srcF
 	t = {}
 	srcName = srcName or dstName
 	if critical then t[1]=0;t[2]=1 end
-	if resisted then t[1]=0;t[3]=1 end
+	--if resisted then t[1]=0;t[3]=1 end -- Commented out because Im not tracking party resists
 	if blocked then t[1]=0;t[4]=1 end
 	if glancing then t[1]=0;t[5]=1 end
 	if crushing then t[1]=0;t[6]=1 end
