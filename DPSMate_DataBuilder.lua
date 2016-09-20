@@ -1896,6 +1896,8 @@ local banedItems = {
 	[32227] = true, -- Spinal red
 	[32228] = true, -- Sapphire blue
 	
+	[30183] = true, -- Nethervortex
+	
 	-- TK Weapons
 	[30317] = true,
 	[30316] = true,
