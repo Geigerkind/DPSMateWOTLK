@@ -684,7 +684,9 @@ function DPSMate.Parser:SwingDamage(timestamp, eventtype, srcGUID, srcName, srcF
 	if glancing then t[1]=0;t[5]=1; end
 	if crushing then t[1]=0;t[6]=1 end
 	srcGUID, srcName, spellName = DB:GetGuardianOwnerByGUID(srcGUID, srcName, spellName)
-	if DPSMate:IsNPC(srcGUID) then
+	local npcone, npctwo = DPSMate:IsNPC(srcGUID), DPSMate:IsNPC(dstGUID)
+	if npcone and npctwo then return end
+	if npcone then
 		DB:EnemyDamage(false, DPSMateEDD, dstName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, 0, amount, srcName, t[4] or 0, t[6] or 0)
 		DB:DamageTaken(dstName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, 0, amount, srcName, t[6] or 0)
 	else
@@ -713,7 +715,10 @@ function DPSMate.Parser:SwingMissed(timestamp, eventtype, srcGUID, srcName, srcF
 	if missType == DPSMate.L["pparry"] then t[4]=1 end
 	if missType == DPSMate.L["presist"] then t[5]=1 end -- TO CONFIRM
 	if missType == DPSMate.L["pblock"] then t[6]=1 end -- TO CONFIRM
-	if DPSMate:IsNPC(srcGUID) then
+	srcGUID, srcName, spellName = DB:GetGuardianOwnerByGUID(srcGUID, srcName, spellName)
+	local npcone, npctwo = DPSMate:IsNPC(srcGUID), DPSMate:IsNPC(dstGUID)
+	if npcone and npctwo then return end
+	if npcone then
 		DB:EnemyDamage(false, DPSMateEDD, dstName, DPSMate.L["AutoAttack"], 0, 0, t[2] or 0, t[4] or 0, t[3] or 0, t[5] or 0, 0, srcName, t[6] or 0, 0)
 		DB:DamageTaken(dstName, DPSMate.L["AutoAttack"], 0, 0, t[2] or 0, t[4] or 0, t[3] or 0, t[5] or 0, 0, srcName, 0)
 	else
@@ -724,7 +729,7 @@ end
 
 function DPSMate.Parser:SpellDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, amount, school, resisted, blocked, absorbed, critical, glancing, crushing)
 	t = {}
-	srcName = srcName or dstName
+	srcName = srcName or DPSMate.L["penvironment"]
 	if critical then t[1]=0;t[2]=1 end
 	--if resisted then t[1]=0;t[3]=1 end -- Commented out because Im not tracking party resists
 	if blocked then t[1]=0;t[4]=1 end
@@ -734,10 +739,12 @@ function DPSMate.Parser:SpellDamage(timestamp, eventtype, srcGUID, srcName, srcF
 		spellName = spellName..DPSMate.L["periodic"]
 	end
 	srcGUID, srcName, spellName = DB:GetGuardianOwnerByGUID(srcGUID, srcName, spellName)
+	local npcone, npctwo = DPSMate:IsNPC(srcGUID), DPSMate:IsNPC(dstGUID)
+	if npcone and npctwo then return end
 	if spellName == DPSMate.L["AutoAttack"] then
 		spellName = spellName..DPSMate.L["guardian"]
 	end
-	if DPSMate:IsNPC(srcGUID) then
+	if npcone or srcName == DPSMate.L["penvironment"] then
 		if DPSMate.Parser.FailDT[spellName] then DB:BuildFail(2, srcName, dstName, spellName, amount) end
 		DB:EnemyDamage(false, DPSMateEDD, dstName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, 0, amount, srcName, t[4] or 0, t[6] or 0)
 		DB:DamageTaken(dstName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, 0, amount, srcName, t[6] or 0)
@@ -770,7 +777,10 @@ function DPSMate.Parser:SpellMissed(timestamp, eventtype, srcGUID, srcName, srcF
 	if missType == DPSMate.L["pparry"] then t[4]=1 end
 	if missType == DPSMate.L["presist"] then t[5]=1 end -- TO CONFIRM
 	if missType == DPSMate.L["pblock"] then t[6]=1 end -- TO CONFIRM
-	if DPSMate:IsNPC(srcGUID) then
+	srcGUID, srcName, spellName = DB:GetGuardianOwnerByGUID(srcGUID, srcName, spellName)
+	local npcone, npctwo = DPSMate:IsNPC(srcGUID), DPSMate:IsNPC(dstGUID)
+	if npcone and npctwo then return end
+	if npcone then
 		DB:EnemyDamage(false, DPSMateEDD, dstName, spellName, 0, 0, t[2] or 0, t[4] or 0, t[3] or 0, t[5] or 0, 0, srcName, t[6] or 0, 0)
 		DB:DamageTaken(dstName, spellName, 0, 0, t[2] or 0, t[4] or 0, t[3] or 0, t[5] or 0, 0, srcName, 0)
 	else
