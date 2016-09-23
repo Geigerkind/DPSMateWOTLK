@@ -408,6 +408,7 @@ DPSMate.L["zuldun"] = "Zul'Aman"
 DPSMate.L["tempestdun"] = "Tempest Keep"
 DPSMate.L["hyjaldun"] = "Hyjal Summit"
 DPSMate.L["sunwell"] = "Sunwell Plateau"
+DPSMate.L["tkdun2"] = "The Eye"
 
 DPSMate.L["switchgraphsdesc"] = "Switch graphs"
 DPSMate.L["switchindividualsdesc"] = "Individual/Total"

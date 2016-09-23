@@ -74,6 +74,7 @@ DPSMate.DB.Zones = {
 	[DPSMate.L["tempestdun"]] = true,
 	[DPSMate.L["hyjaldun"]] = true,
 	[DPSMate.L["sunwell"]] = true,
+	[DPSMate.L["tkdun2"]] = true,
 }
 DPSMate.DB.KTMHOOK = {}
 DPSMate.DB.NextSwing = {}
@@ -1859,10 +1860,12 @@ function DPSMate.DB:Attempt(mode, check, tar)
 			if DPSMateAttempts[zone][1] and not DPSMateAttempts[zone][1][4] then
 				local _,_,a = DPSMate.Modules.EDT:GetSortedTable(DPSMateEDT[2])
 				local name = DPSMate:GetUserById(a[1])
-				if name == "" then
-					DPSMateAttempts[zone][1][1] = DPSMate.L["unknown"]
-				else
-					DPSMateAttempts[zone][1][1] = name or DPSMate.L["unknown"]
+				if DPSMateAttempts[zone][1][1]=="" or DPSMateAttempts[zone][1][1]==DPSMate.L["unknown"] then
+					if name == "" then
+						DPSMateAttempts[zone][1][1] = DPSMate.L["unknown"]
+					else
+						DPSMateAttempts[zone][1][1] = name or DPSMate.L["unknown"]
+					end
 				end
 				DPSMateAttempts[zone][1][4] = DPSMateCombatTime["total"]
 				DPSMateAttempts[zone][1][5] = check

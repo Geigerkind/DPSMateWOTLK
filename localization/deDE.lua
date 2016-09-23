@@ -409,6 +409,7 @@ if (GetLocale() == "deDE") then
 	DPSMate.L["tempestdun"] = "Festung der Stürme"
 	DPSMate.L["hyjaldun"] = "Hyjalgipfel"
 	DPSMate.L["sunwell"] = "Sonnenbrunnenplateau"
+	DPSMate.L["tkdun2"] = "Das Auge"
 	
 	DPSMate.L["switchgraphsdesc"] = "Graph wechseln"
 	DPSMate.L["switchindividualsdesc"] = "Einzeln/Gesamt"

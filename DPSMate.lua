@@ -1,6 +1,6 @@
 -- Global Variables
 DPSMate = {}
-DPSMate.VERSION = 16
+DPSMate.VERSION = 17
 DPSMate.LOCALE = GetLocale()
 DPSMate.SYNCVERSION = DPSMate.VERSION..DPSMate.LOCALE
 DPSMate.Parser = {}
@@ -510,7 +510,7 @@ end
 function DPSMate:GetMode(k)
 	k = k or 1
 	local Handler = DPSMate.RegistredModules[DPSMateSettings["windows"][k]["CurMode"]]
-	local result = {total={Handler.DB[1], DPSMateCombatTime["total"]}, currentfight={Handler.DB[2], DPSMateCombatTime["current"]}}
+	local result = {total={Handler.DB[1], DPSMateCombatTime["total"], DPSMateCombatTime["effective"][1]}, currentfight={Handler.DB[2], DPSMateCombatTime["current"], DPSMateCombatTime["effective"][2]}}
 	for cat, val in pairs(DPSMateSettings["windows"][k]["options"][2]) do
 		if val then
 			if strfind(cat, "segment") then
@@ -518,17 +518,17 @@ function DPSMate:GetMode(k)
 				if DPSMateHistory[Handler.Hist][num] then
 					return DPSMateHistory[Handler.Hist][num], DPSMateCombatTime["segments"][num][1], DPSMateCombatTime["segments"][num][2]
 				else
-					return result[cat][1], result[cat][2], DPSMateCombatTime["effective"][2]
+					return result[cat][1], result[cat][2], result[cat][3]
 				end
 			else
-				return result[cat][1], result[cat][2], DPSMateCombatTime["effective"][2]
+				return result[cat][1], result[cat][2], result[cat][3]
 			end
 		end
 	end
 end
 
 function DPSMate:GetModeByArr(arr, k, Hist)
-	local result = {total={arr[1], DPSMateCombatTime["total"]}, currentfight={arr[2], DPSMateCombatTime["current"]}}
+	local result = {total={arr[1], DPSMateCombatTime["total"], DPSMateCombatTime["effective"][1]}, currentfight={arr[2], DPSMateCombatTime["current"], DPSMateCombatTime["effective"][2]}}
 	for cat, val in pairs(DPSMateSettings["windows"][k]["options"][2]) do
 		if val then
 			if strfind(cat, "segment") then
@@ -536,10 +536,10 @@ function DPSMate:GetModeByArr(arr, k, Hist)
 				if DPSMateHistory[Hist or arr.Hist][num] then
 					return DPSMateHistory[Hist or arr.Hist][num], DPSMateCombatTime["segments"][num][1], DPSMateCombatTime["segments"][num][2]
 				else
-					return result[cat][1], result[cat][2], DPSMateCombatTime["effective"][2]
+					return result[cat][1], result[cat][2], result[cat][3]
 				end
 			else
-				return result[cat][1], result[cat][2], DPSMateCombatTime["effective"][2]
+				return result[cat][1], result[cat][2], result[cat][3]
 			end
 		end
 	end
