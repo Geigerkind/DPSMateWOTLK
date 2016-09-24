@@ -829,7 +829,7 @@ function DPSMate.DB:IsWindFuryAttack(arr, Dname, Duser, bool)
 	local time = GetTime()
 	for c,v in pairs(arr) do
 		if v then
-			if (time-c)<=0.05 then
+			if (time-c)<=0.005 then
 				if bool then
 					self:BuildBuffs(Duser, Duser, WFAttack, true)
 					self:DestroyBuffs(Duser, WFAttack)

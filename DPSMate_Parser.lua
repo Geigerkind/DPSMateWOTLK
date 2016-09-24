@@ -774,7 +774,7 @@ function DPSMate.Parser:SwingDamage(timestamp, eventtype, srcGUID, srcName, srcF
 	if glancing then t[1]=0;t[5]=1; end
 	if crushing then t[1]=0;t[6]=1 end
 	srcGUID, srcName, spellName = DB:GetGuardianOwnerByGUID(srcGUID, srcName, spellName)
-	local npcone, npctwo = DPSMate:IsNPC(srcGUID), DPSMate:IsNPC(dstGUID)
+	local npcone, npctwo = DPSMate:IsNPC(srcGUID, srcName), DPSMate:IsNPC(dstGUID, dstName)
 	if npcone and npctwo then return end
 	if npcone then
 		DB:EnemyDamage(false, DPSMateEDD, dstName, spellName, t[1] or 1, t[2] or 0, 0, 0, 0, 0, amount, srcName, t[4] or 0, t[6] or 0)
@@ -806,7 +806,7 @@ function DPSMate.Parser:SwingMissed(timestamp, eventtype, srcGUID, srcName, srcF
 	if missType == DPSMate.L["presist"] then t[5]=1 end -- TO CONFIRM
 	if missType == DPSMate.L["pblock"] then t[6]=1 end -- TO CONFIRM
 	srcGUID, srcName, spellName = DB:GetGuardianOwnerByGUID(srcGUID, srcName, spellName)
-	local npcone, npctwo = DPSMate:IsNPC(srcGUID), DPSMate:IsNPC(dstGUID)
+	local npcone, npctwo = DPSMate:IsNPC(srcGUID, srcName), DPSMate:IsNPC(dstGUID, dstName)
 	if npcone and npctwo then return end
 	if npcone then
 		DB:EnemyDamage(false, DPSMateEDD, dstName, DPSMate.L["AutoAttack"], 0, 0, t[2] or 0, t[4] or 0, t[3] or 0, t[5] or 0, 0, srcName, t[6] or 0, 0)
@@ -829,7 +829,7 @@ function DPSMate.Parser:SpellDamage(timestamp, eventtype, srcGUID, srcName, srcF
 		spellName = spellName..DPSMate.L["periodic"]
 	end
 	srcGUID, srcName, spellName = DB:GetGuardianOwnerByGUID(srcGUID, srcName, spellName)
-	local npcone, npctwo = DPSMate:IsNPC(srcGUID), DPSMate:IsNPC(dstGUID)
+	local npcone, npctwo = DPSMate:IsNPC(srcGUID, srcName), DPSMate:IsNPC(dstGUID, dstName)
 	if npcone and npctwo then return end
 	if spellName == DPSMate.L["AutoAttack"] then
 		spellName = spellName..DPSMate.L["guardian"]
@@ -868,7 +868,7 @@ function DPSMate.Parser:SpellMissed(timestamp, eventtype, srcGUID, srcName, srcF
 	if missType == DPSMate.L["presist"] then t[5]=1 end -- TO CONFIRM
 	if missType == DPSMate.L["pblock"] then t[6]=1 end -- TO CONFIRM
 	srcGUID, srcName, spellName = DB:GetGuardianOwnerByGUID(srcGUID, srcName, spellName)
-	local npcone, npctwo = DPSMate:IsNPC(srcGUID), DPSMate:IsNPC(dstGUID)
+	local npcone, npctwo = DPSMate:IsNPC(srcGUID, srcName), DPSMate:IsNPC(dstGUID, dstName)
 	if npcone and npctwo then return end
 	if npcone then
 		DB:EnemyDamage(false, DPSMateEDD, dstName, spellName, 0, 0, t[2] or 0, t[4] or 0, t[3] or 0, t[5] or 0, 0, srcName, t[6] or 0, 0)
@@ -900,7 +900,7 @@ function DPSMate.Parser:SpellHeal(timestamp, eventtype, srcGUID, srcName, srcFla
 		return
 	end
 	srcGUID, srcName, spellName = DB:GetGuardianOwnerByGUID(srcGUID, srcName, spellName)
-	if not DPSMate:IsNPC(srcGUID) then
+	if not DPSMate:IsNPC(srcGUID, srcName) then
 		if critical then t[1]=0;t[2]=critical end
 		if eventtype == "SPELL_PERIODIC_HEAL" then
 			spellName = spellName..DPSMate.L["periodic"]
@@ -942,7 +942,7 @@ local BuffTypes = {
 }
 function DPSMate.Parser:SpellAuraApplied(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, auraType)
 	srcName = srcName or GetSpellSource(spellName, dstName)
-	if not DPSMate:IsNPC(dstGUID) then
+	if not DPSMate:IsNPC(dstGUID, dstName) then
 		if DPSMate.Parser.RCD[spellName] then DPSMate:Broadcast(1, dstName, spellName) end
 		if DPSMate.Parser.FailDB[spellName] then DB:BuildFail(3, srcName, dstName, spellName, 0) end
 		if spellId == PrayerOfMendingAuraId then
@@ -963,7 +963,7 @@ end
 
 function DPSMate.Parser:SpellAuraRemoved(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, auraType)
 	srcName = srcName or DPSMate.L["unknown"]
-	if not DPSMate:IsNPC(dstGUID) then
+	if not DPSMate:IsNPC(dstGUID, dstName) then
 		DB:UnregisterPotentialKick(dstName, spellName, GetTime())
 		DPSMate.DB:DestroyBuffs(dstName, spellName)
 		if DPSMate.Parser.RCD[spellName] then DPSMate:Broadcast(6, dstName, spellName) end
@@ -1012,7 +1012,7 @@ end
 
 function DPSMate.Parser:SpellCastStart(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool)
 	srcName = srcName or DPSMate.L["unknown"]
-	if not DPSMate:IsNPC(srcGUID) then
+	if not DPSMate:IsNPC(srcGUID, srcName) then
 		if DPSMate.Parser.RCD[spellName] then DPSMate:Broadcast(2, srcName, dstName or DPSMate.L["unknown"], spellName) end
 	end
 	DB:RegisterPotentialKick(srcName, spellName, GetTime())

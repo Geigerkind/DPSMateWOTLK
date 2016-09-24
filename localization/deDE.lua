@@ -461,6 +461,7 @@ if (GetLocale() == "deDE") then
 	DPSMate.L["ccbreakersum"] = "Gesamt CCBreaker"
 	DPSMate.L["failssum"] = "Fails Übersicht"
 	DPSMate.L["AutoAttack"] = "Automatischer Angriff"
+	DPSMate.L["AutoShot"] = "Automatischer Schuss"
 	DPSMate.L["castssum"] = "Zauberübersicht"
 	DPSMate.L["procssum"] = "Procsübersicht"
 	DPSMate.L["aurassum"] = "Aura Übersicht"
