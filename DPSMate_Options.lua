@@ -388,7 +388,7 @@ function DPSMate.Options:SelectRealtime(obj, kind)
 		DPSMateSettings["windows"][key]["realtime"] = kind
 		if not _G(obj:GetName().."_RealTime") then
 			local f = CreateFrame("Frame", obj:GetName().."_RealTime", obj, "DPSMate_RealTime")
-			local g = DPSMate.Options.graph:CreateGraphRealtime(f:GetName().."_Graph",f,"BOTTOMRIGHT","BOTTOMRIGHT",-5,5,190,150)
+			local g = DPSMate.Options.graph:CreateGraphRealtime(f:GetName().."_Graph",f,"BOTTOMRIGHT","BOTTOMRIGHT",-5,5,f:GetWidth()-10,f:GetHeight()-10)
 			g:SetAutoScale(true)
 			g:SetGridSpacing(1.0,10.0)
 			g:SetYMax(120)

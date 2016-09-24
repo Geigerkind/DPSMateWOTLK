@@ -74,6 +74,7 @@ function lib:CreateGraphRealtime(name,parent,relative,relativeTo,offsetX,offsetY
 	graph:SetPoint(relative,parent,relativeTo,offsetX,offsetY)
 	graph:SetWidth(Width)
 	graph:SetHeight(Height)
+	graph:SetResizable(true)
 	graph:Show()
 
 	--Create the bars
@@ -119,7 +120,9 @@ function lib:CreateGraphRealtime(name,parent,relative,relativeTo,offsetX,offsetY
 	graph.SetBarColors=GraphFunctions.SetBarColors
 	graph.SetMode=GraphFunctions.SetMode
 	graph.SetAutoScale=GraphFunctions.SetAutoScale
-
+	
+	graph.OldSetHeight = graph.SetHeight
+	graph.OldSetWidth = graph.SetWidth
 	graph.SetWidth = GraphFunctions.RealtimeSetWidth
 	graph.SetHeight = GraphFunctions.RealtimeSetHeight
 	graph.SetBarColors = GraphFunctions.RealtimeSetColors
@@ -146,6 +149,8 @@ function lib:CreateGraphRealtime(name,parent,relative,relativeTo,offsetX,offsetY
 	graph.YMin=0
 	graph.XMax=-0.75
 	graph.XMin=-10
+	graph.YBorder = 0
+	graph.XBorder = 0
 	graph.TimeRadius=0.5
 	graph.XGridInterval=0.25
 	graph.YGridInterval=0.25
@@ -1127,8 +1132,8 @@ function GraphFunctions:RealtimeSetWidth(Width)
 			bar:SetOrientation("VERTICAL")
 			bar:SetMinMaxValues(0, 1)
 			bar:SetStatusBarTexture("Interface\\Buttons\\WHITE8X8")
-			bar:GetStatusBarTexture():SetHorizTile(false)
-			bar:GetStatusBarTexture():SetVertTile(false)
+			--bar:GetStatusBarTexture():SetHorizTile(false)
+			--bar:GetStatusBarTexture():SetVertTile(false)
 
 			local t = bar:GetStatusBarTexture()
 			t:SetGradientAlpha("VERTICAL", self.BarColorBot[1], self.BarColorBot[2], self.BarColorBot[3], self.BarColorBot[4], self.BarColorTop[1], self.BarColorTop[2], self.BarColorTop[3], self.BarColorTop[4])
@@ -1289,7 +1294,7 @@ function GraphFunctions:CreateGridlines()
 		local alpha = 0
 		for i=LowerYGridLine,UpperYGridLine do
 			if not self.YAxisDrawn or i~=0 then
-				if alpha>1000 then break end
+				if alpha>25000 then break end
 				local YPos,T,F
 				YPos=Height*(i*self.YGridInterval+self.YBorder)/(self.YMax)
 				if YPos<(Height-2) and YPos>24 then

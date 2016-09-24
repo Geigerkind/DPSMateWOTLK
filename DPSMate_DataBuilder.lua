@@ -793,12 +793,17 @@ local savedValue = {
 	["heal"] = 0,
 	["eheal"] = 0
 }
+
+function DPSMate.DB:SetSV(num)
+	savedValue["damage"] = savedValue["damage"] + num
+end
+
 function DPSMate.DB:GetAlpha(k)
 	if DPSMateSettings["windows"][k]["realtime"] then
 		local p = savedValue[DPSMateSettings["windows"][k]["realtime"]] or 0
 		savedValue[DPSMateSettings["windows"][k]["realtime"]] = 0
-		if p > 300000 then -- That may solve the freeze issue
-			p = 300000
+		if p > 600000 then -- That may solve the freeze issue
+			p = 600000
 		end
 		return p
 	end

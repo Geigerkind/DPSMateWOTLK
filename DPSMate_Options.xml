@@ -1345,12 +1345,16 @@
 		</Frames>
 	</Frame>
 	
-	<Frame name="DPSMate_RealTime" movable="true" hidden="true" virtual="true" frameStrata="HIGH">
+	<Frame name="DPSMate_RealTime" movable="true" hidden="true" virtual="true" frameStrata="HIGH" resizable="true">
 		<Size x="200" y="160" />
+		<ResizeBounds>
+			<minResize x="200" y="160"/>
+			<maxResize x="600" y="480"/>
+		</ResizeBounds>
 		<Anchors>
 			<Anchor point="CENTER" />
 		</Anchors>
-		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="" tile="true">
 			<BackgroundInsets>
 				<AbsInset left="4" right="4" top="4" bottom="4" />
 			</BackgroundInsets>
@@ -1379,6 +1383,12 @@
 			<OnMouseUp>
 				this:StopMovingOrSizing()
 			</OnMouseUp>
+			<OnSizeChanged>
+				if abs(this:GetWidth()-getglobal(this:GetName().."_Graph"):GetWidth())>2 then
+					getglobal(this:GetName().."_Graph"):SetWidth(this:GetWidth()-10)
+					getglobal(this:GetName().."_Graph"):SetHeight(this:GetHeight()-10)
+				end
+			</OnSizeChanged>
 		</Scripts>
 		<Frames>
 			<Button name="$parent_Close">
@@ -1402,6 +1412,23 @@
 				<NormalTexture file="Interface\Buttons\UI-Panel-MinimizeButton-Up"/>
 				<PushedTexture file="Interface\Buttons\UI-Panel-MinimizeButton-Down"/>
 				<HighlightTexture file="Interface\Buttons\UI-Panel-MinimizeButton-Highlight" alphaMode="ADD"/>
+			</Button>
+			<Button name="$parent_Resize" frameStrata="HIGH">
+				<Size x="14" y="14" />
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT" relativeTo="$parent" relativePoint="BOTTOMRIGHT" />
+				</Anchors>
+				<Scripts>
+					<OnMouseDown>
+						this:GetParent():StartSizing()
+					</OnMouseDown>
+					<OnMouseUp>
+						this:GetParent():StopMovingOrSizing()
+					</OnMouseUp>
+				</Scripts>
+				<NormalTexture file="Interface\AddOns\DPSMate\images\UI-ChatIM-SizeGrabber-Up"/>
+				<PushedTexture file="Interface\AddOns\DPSMate\images\UI-ChatIM-SizeGrabber-Down"/>
+				<HighlightTexture file="Interface\AddOns\DPSMate\images\UI-ChatIM-SizeGrabber-Highlight" alphaMode="ADD"/>
 			</Button>
 		</Frames>
 	</Frame>
