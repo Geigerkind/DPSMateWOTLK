@@ -254,6 +254,31 @@ DPSMate.Parser.procs = {
 	[GetSpellInfo(28093)] = true, -- Lightning Speed
 	[GetSpellInfo(37515)] = true, -- Blade Turning
 	[GetSpellInfo(29801)] = true, -- Rampage
+	
+	[GetSpellInfo(39626)] = true, -- "Earthen Elixir" => true, 
+	[GetSpellInfo(28515)] = true, -- "Ironshield Potion" => true,
+	[GetSpellInfo(20925)] = true, -- "Holy Shield" => true,
+	[GetSpellInfo(20127)] = true, -- "Redoubt" => true,
+	[GetSpellInfo(33206)] = true, -- "Pain Supression" => true,
+	[GetSpellInfo(35476)] = true, -- "Drums of Battle" => true,
+	[GetSpellInfo(35474)] = true, -- "Drums of Panic" => true,
+	[GetSpellInfo(35478)] = true, -- "Drums of Restoration" => true,
+	[GetSpellInfo(35477)] = true, -- "Drums of Speed" => true,
+	[GetSpellInfo(35475)] = true, -- "Drums of War" => true,
+	[GetSpellInfo(38954)] = true, -- "Fel Strength Elixir" => true,
+	[GetSpellInfo(39628)] = true, -- "Elixir of Ironskin" => true,
+	[GetSpellInfo(39627)] = true, -- "Elixir of Draenic Wisdom" => true,
+	[GetSpellInfo(33726)] = true, -- "Elixir of Mastery" => true,
+	[GetSpellInfo(33721)] = true, -- "Adept's Elixir" => true,
+	[GetSpellInfo(33720)] = true, -- "Onslaught Elixir" => true,
+	[GetSpellInfo(13533)] = true, -- "Haste" => true,
+	[GetSpellInfo(28506)] = true, -- "Potion of Heroes" => true,
+	[GetSpellInfo(28508)] = true, -- "Destruction" => true,
+	[GetSpellInfo(32601)] = true, -- "Surprise Attacks" => true,
+	[GetSpellInfo(45273)] = true, -- "Shadowstep" => true,
+	[GetSpellInfo(34471)] = true, -- "The Beast Within" => true,
+	[GetSpellInfo(31842)] = true, -- "Divine Illumination" => true,
+	[GetSpellInfo(30823)] = true, -- "Shamanistic Rage" => true,
 }
 
 DPSMate.Parser.BuffExceptions = {
@@ -669,10 +694,7 @@ end
 
 function DPSMate.Parser:OnLoad()
 	if (not DPSMateUser[self.player]) then
-		DPSMateUser[self.player] = {
-			[1] = DPSMate:TableLength(DPSMateUser)+1,
-			[2] = strlower(playerclass),
-		}
+		DB:BuildUser(self.player, strlower(playerclass))
 	end
 	DPSMateUser[self.player][8] = UL("player")
 	-- Prevent this addon from causing issues
