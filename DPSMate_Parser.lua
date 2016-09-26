@@ -1056,17 +1056,14 @@ local linkQuality = {
 }
 function DPSMate.Parser:Loot(msg)
 	for a,b,c,d,e in strgfind(msg, DPSMate.L["loot1"]) do
-		DPSMate:SendMessage(a)
 		DB:Loot(a, linkQuality[b], tnbr(c), e)
 		return
 	end
 	for a,b,c,d in strgfind(msg, DPSMate.L["loot2"]) do
-		DPSMate:SendMessage(a)
 		DB:Loot(player, linkQuality[a], tnbr(b), d)
 		return
 	end
 	for a,b,c,d,e in strgfind(msg, "(.-) erhält Beute: |cff(.-)|Hitem:(%d+)(.+)%[(.+)%]|h|r") do
-		DPSMate:SendMessage(a)
 		DB:Loot(a, linkQuality[b], tnbr(c), e)
 		return
 	end
