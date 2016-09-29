@@ -6,7 +6,7 @@ DPSMate.Options.Options[1]["args"]["healingtaken"] = {
 	type = 'toggle',
 	name = DPSMate.L["healingtaken"],
 	desc = DPSMate.L["show"].." "..DPSMate.L["healingtaken"]..".",
-	get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key]["options"][1]["healingtaken"] end,
+	get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key or 1]["options"][1]["healingtaken"] end,
 	set = function() DPSMate.Options:ToggleDrewDrop(1, "healingtaken", DPSMate.Options.Dewdrop:GetOpenedParent()) end,
 }
 

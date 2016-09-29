@@ -6,7 +6,7 @@ DPSMate.Options.Options[1]["args"]["OHPS"] = {
 	type = 'toggle',
 	name = DPSMate.L["OHPS"],
 	desc = DPSMate.L["show"].." "..DPSMate.L["OHPS"]..".",
-	get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key]["options"][1]["OHPS"] end,
+	get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key or 1]["options"][1]["OHPS"] end,
 	set = function() DPSMate.Options:ToggleDrewDrop(1, "OHPS", DPSMate.Options.Dewdrop:GetOpenedParent()) end,
 }
 

@@ -6,7 +6,7 @@ DPSMate.Options.Options[1]["args"]["overhealing"] = {
 	type = 'toggle',
 	name = DPSMate.L["overhealing"],
 	desc = DPSMate.L["show"].." "..DPSMate.L["overhealing"]..".",
-	get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key]["options"][1]["overhealing"] end,
+	get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key or 1]["options"][1]["overhealing"] end,
 	set = function() DPSMate.Options:ToggleDrewDrop(1, "overhealing", DPSMate.Options.Dewdrop:GetOpenedParent()) end,
 }
 

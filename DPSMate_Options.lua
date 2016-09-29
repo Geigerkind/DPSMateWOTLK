@@ -957,14 +957,14 @@ function DPSMate.Options:DropDownStyleReset()
 			_G("DropDownList1Button"..i.."NormalText"):SetFont(STANDARD_TEXT_FONT, UIDROPDOWNMENU_DEFAULT_TEXT_HEIGHT)
 			button:SetScript("OnEnter", function()
 				 if ( this.hasArrow ) then
-				  ToggleDropDownMenu(this:GetParent():GetID() + 1, this.value);
+				  ToggleDropDownMenu(this:GetParent():GetID() + 1, this.value, nil, nil, nil, nil, nil, this);
 				else
 				  CloseDropDownMenus(this:GetParent():GetID() + 1);
 				end
 				getglobal(this:GetName().."Highlight"):Show();
 				UIDropDownMenu_StopCounting(this:GetParent());
 				if ( this.tooltipTitle ) then
-				  GameTooltip_AddNewbieTip(this.tooltipTitle, 1.0, 1.0, 1.0, this.tooltipText, 1);
+				  GameTooltip_AddNewbieTip(this, this.tooltipTitle, 1.0, 1.0, 1.0, this.tooltipText, 1);
 				end
 			end)
 			_G("DropDownList1Backdrop"):SetBackdrop({ 

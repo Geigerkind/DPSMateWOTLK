@@ -6,7 +6,7 @@ DPSMate.Options.Options[1]["args"]["ccbreaker"] = {
 	type = 'toggle',
 	name = DPSMate.L["ccbreaker"],
 	desc = DPSMate.L["show"].." "..DPSMate.L["ccbreaker"]..".",
-	get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key]["options"][1]["ccbreaker"] end,
+	get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key or 1]["options"][1]["ccbreaker"] end,
 	set = function() DPSMate.Options:ToggleDrewDrop(1, "ccbreaker", DPSMate.Options.Dewdrop:GetOpenedParent()) end,
 }
 

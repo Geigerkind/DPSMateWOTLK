@@ -6,7 +6,7 @@ DPSMate.Options.Options[1]["args"]["procs"] = {
 	type = 'toggle',
 	name = DPSMate.L["procs"],
 	desc = DPSMate.L["show"].." "..DPSMate.L["procs"]..".",
-	get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key]["options"][1]["procs"] end,
+	get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key or 1]["options"][1]["procs"] end,
 	set = function() DPSMate.Options:ToggleDrewDrop(1, "procs", DPSMate.Options.Dewdrop:GetOpenedParent()) end,
 }
 
@@ -38,7 +38,7 @@ local nonProcProcs = {
 	[GetSpellInfo(12536)] = true, -- Clearcasting
 	[GetSpellInfo(16886)] = true, -- Nature's Grace
 	[GetSpellInfo(26975)] = true, -- Battlegear of Eternal Justice
-	[GetSpellInfo(20137)] = true, -- Redoubt
+	--[GetSpellInfo(20137)] = true, -- Redoubt
 	[GetSpellInfo(8602)] = true, -- Vengeance
 	[GetSpellInfo(26121)] = true, -- Stormcaller's Wrath
 	[GetSpellInfo(16240)] = true, -- Ancestral Healing

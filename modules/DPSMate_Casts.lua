@@ -6,7 +6,7 @@ DPSMate.Options.Options[1]["args"]["casts"] = {
 	type = 'toggle',
 	name = DPSMate.L["casts"],
 	desc = DPSMate.L["show"].." "..DPSMate.L["casts"]..".",
-	get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key]["options"][1]["casts"] end,
+	get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key or 1]["options"][1]["casts"] end,
 	set = function() DPSMate.Options:ToggleDrewDrop(1, "casts", DPSMate.Options.Dewdrop:GetOpenedParent()) end,
 }
 

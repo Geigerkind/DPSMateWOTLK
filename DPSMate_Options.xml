@@ -1223,7 +1223,7 @@
 						GameTooltip:Hide()
 					</OnLeave>
 					<OnLoad>
-						UIDropDownMenu_SetWidth(100)
+						UIDropDownMenu_SetWidth(this,100)
 						UIDropDownMenu_Initialize(this, DPSMate.Options.ChannelDropDown)
 						getglobal(this:GetName().."_Text"):SetText(DPSMate.L["channel"])
 					</OnLoad>
@@ -1695,7 +1695,7 @@
 								this.aide = DPSMate.L["availwindowsTooltip"]
 								this.func = DPSMate.Options.WindowDropDown
 								this.title = DPSMate.L["availwindows"]
-								UIDropDownMenu_SetWidth(148)
+								UIDropDownMenu_SetWidth(this,148)
 								getglobal(this:GetName().."_Text"):SetText(this.title)
 							</OnLoad>
 						</Scripts>
@@ -1728,7 +1728,7 @@
 								this.aide = DPSMate.L["configfromTooltip"]
 								this.func = DPSMate.Options.WindowDropDown
 								this.title = DPSMate.L["configfrom"]
-								UIDropDownMenu_SetWidth(148)
+								UIDropDownMenu_SetWidth(this,148)
 								getglobal(this:GetName().."_Text"):SetText(this.title)
 							</OnLoad>
 						</Scripts>
@@ -1744,7 +1744,7 @@
 								this.aide = DPSMate.L["configtoTooltip"]
 								this.func = DPSMate.Options.WindowDropDown
 								this.title = DPSMate.L["configto"]
-								UIDropDownMenu_SetWidth(148)
+								UIDropDownMenu_SetWidth(this,148)
 								getglobal(this:GetName().."_Text"):SetText(this.title)
 							</OnLoad>
 						</Scripts>
@@ -1824,7 +1824,7 @@
 								this.aide = DPSMate.L["barfontTooltip"]
 								this.func = DPSMate.Options.BarFontDropDown
 								this.title = DPSMate.L["barfont"]
-								UIDropDownMenu_SetWidth(120)
+								UIDropDownMenu_SetWidth(this,120)
 								getglobal(this:GetName().."_Text"):SetText(this.title)
 							</OnLoad>
 						</Scripts>
@@ -1867,7 +1867,7 @@
 								this.aide = DPSMate.L["barfontflagsTooltip"]
 								this.func = DPSMate.Options.BarFontFlagsDropDown
 								this.title = DPSMate.L["barfontflags"]
-								UIDropDownMenu_SetWidth(120)
+								UIDropDownMenu_SetWidth(this,120)
 								getglobal(this:GetName().."_Text"):SetText(this.title)
 							</OnLoad>
 						</Scripts>
@@ -1884,7 +1884,7 @@
 								this.aide = DPSMate.L["bartextureTooltip"]
 								this.func = DPSMate.Options.BarTextureDropDown
 								this.title = DPSMate.L["bartexture"]
-								UIDropDownMenu_SetWidth(120)
+								UIDropDownMenu_SetWidth(this,120)
 								getglobal(this:GetName().."_Text"):SetText(this.title)
 							</OnLoad>
 						</Scripts>
@@ -2156,7 +2156,7 @@
 								this.aide = DPSMate.L["barfontTooltip"]
 								this.func = DPSMate.Options.TitleBarFontDropDown
 								this.title = DPSMate.L["barfont"]
-								UIDropDownMenu_SetWidth(120)
+								UIDropDownMenu_SetWidth(this,120)
 								getglobal(this:GetName().."_Text"):SetText(this.title)
 							</OnLoad>
 						</Scripts>
@@ -2194,7 +2194,7 @@
 								this.aide = DPSMate.L["barfontflagsTooltip"]
 								this.func = DPSMate.Options.TitleBarFontFlagsDropDown
 								this.title = DPSMate.L["barfontflags"]
-								UIDropDownMenu_SetWidth(120)
+								UIDropDownMenu_SetWidth(this,120)
 								getglobal(this:GetName().."_Text"):SetText(this.title)
 							</OnLoad>
 						</Scripts>
@@ -2211,7 +2211,7 @@
 								this.aide = DPSMate.L["bartextureTooltip"]
 								this.func = DPSMate.Options.TitleBarTextureDropDown
 								this.title = DPSMate.L["bartexture"]
-								UIDropDownMenu_SetWidth(120)
+								UIDropDownMenu_SetWidth(this,120)
 								getglobal(this:GetName().."_Text"):SetText(this.title)
 							</OnLoad>
 						</Scripts>
@@ -2490,7 +2490,7 @@
 								this.aide = DPSMate.L["bgtexTooltip"]
 								this.func = DPSMate.Options.ContentBGTextureDropDown
 								this.title = DPSMate.L["bgtex"]
-								UIDropDownMenu_SetWidth(120)
+								UIDropDownMenu_SetWidth(this,120)
 								getglobal(this:GetName().."_Text"):SetText(this.title)
 							</OnLoad>
 						</Scripts>
@@ -2591,7 +2591,7 @@
 								this.aide = DPSMate.L["numberformatTooltip"]
 								this.func = DPSMate.Options.NumberFormatDropDown
 								this.title = DPSMate.L["numberformat"]
-								UIDropDownMenu_SetWidth(120)
+								UIDropDownMenu_SetWidth(this,120)
 								getglobal(this:GetName().."_Text"):SetText(this.title)
 							</OnLoad>
 						</Scripts>
@@ -2617,7 +2617,7 @@
 								this.aide = DPSMate.L["enterworldinstanceTooltip"]
 								this.func = DPSMate.Options.DataResetsDropDown
 								this.title = DPSMate.L["enterworldinstance"]
-								UIDropDownMenu_SetWidth(120)
+								UIDropDownMenu_SetWidth(this,120)
 								getglobal(this:GetName().."_Text"):SetText(this.title)
 							</OnLoad>
 						</Scripts>
@@ -2634,7 +2634,7 @@
 								this.aide = DPSMate.L["joinpartyTooltip"]
 								this.func = DPSMate.Options.DataResetsDropDown
 								this.title = DPSMate.L["joinparty"]
-								UIDropDownMenu_SetWidth(120)
+								UIDropDownMenu_SetWidth(this,120)
 								getglobal(this:GetName().."_Text"):SetText(this.title)
 							</OnLoad>
 						</Scripts>
@@ -2651,7 +2651,7 @@
 								this.aide = DPSMate.L["partymemberchangedTooltip"]
 								this.func = DPSMate.Options.DataResetsDropDown
 								this.title = DPSMate.L["partymemberchanged"]
-								UIDropDownMenu_SetWidth(120)
+								UIDropDownMenu_SetWidth(this,120)
 								getglobal(this:GetName().."_Text"):SetText(this.title)
 							</OnLoad>
 						</Scripts>
@@ -2668,7 +2668,7 @@
 								this.aide = DPSMate.L["leavingpartyTooltip"]
 								this.func = DPSMate.Options.DataResetsDropDown
 								this.title = DPSMate.L["leavingparty"]
-								UIDropDownMenu_SetWidth(120)
+								UIDropDownMenu_SetWidth(this,120)
 								getglobal(this:GetName().."_Text"):SetText(this.title)
 							</OnLoad>
 						</Scripts>
@@ -2685,7 +2685,7 @@
 								this.aide = DPSMate.L["syncrequesttooltip"]
 								this.func = DPSMate.Options.DataResetsDropDown
 								this.title = DPSMate.L["syncrequest"]
-								UIDropDownMenu_SetWidth(120)
+								UIDropDownMenu_SetWidth(this,120)
 								getglobal(this:GetName().."_Text"):SetText(this.title)
 							</OnLoad>
 						</Scripts>
@@ -2702,7 +2702,7 @@
 								this.aide = DPSMate.L["dataresetslogouttooltip"]
 								this.func = DPSMate.Options.DataResetsDropDown
 								this.title = DPSMate.L["dataresetslogout"]
-								UIDropDownMenu_SetWidth(120)
+								UIDropDownMenu_SetWidth(this,120)
 								getglobal(this:GetName().."_Text"):SetText(this.title)
 							</OnLoad>
 						</Scripts>
@@ -5664,7 +5664,7 @@
 								this.aide = DPSMate.L["TooltipPositionDropDownTooltip"]
 								this.func = DPSMate.Options.TooltipPositionDropDown
 								this.title = DPSMate.L["TooltipPositionDropDown"]
-								UIDropDownMenu_SetWidth(120)
+								UIDropDownMenu_SetWidth(this,120)
 								getglobal(this:GetName().."_Text"):SetText(this.title)
 							</OnLoad>
 						</Scripts>

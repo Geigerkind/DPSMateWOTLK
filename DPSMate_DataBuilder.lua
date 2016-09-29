@@ -1831,7 +1831,7 @@ function DPSMate.DB:CombatTime()
 					InitialLoad = false
 				end
 			end
-			DPSMate.Parser:UnitDiedHackFix(arg1)
+			--DPSMate.Parser:UnitDiedHackFix(arg1)
 			DPSMate.Sync:DismissVote(arg1)
 		end)
 	end

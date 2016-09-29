@@ -6,7 +6,7 @@ DPSMate.Options.Options[1]["args"]["aurasgained"] = {
 	type = 'toggle',
 	name = DPSMate.L["aurasgained"],
 	desc = DPSMate.L["show"].." "..DPSMate.L["aurasgained"]..".",
-	get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key]["options"][1]["aurasgained"] end,
+	get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key or 1]["options"][1]["aurasgained"] end,
 	set = function() DPSMate.Options:ToggleDrewDrop(1, "aurasgained", DPSMate.Options.Dewdrop:GetOpenedParent()) end,
 }
 

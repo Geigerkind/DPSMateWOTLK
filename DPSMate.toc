@@ -1,4 +1,4 @@
-## Interface: 20400
+## Interface: 30300
 ## Title: DPSMate |cFFFF8080-Shino-|r
 ## Notes: DPSMate is an advanced combat analyzation tool, providing helpful graphs and statistics to evaluate the fight.
 ## Notes-deDE: DPSMate ist ein Analysewerkzeug, das hilfreiche Graphen und Statistiken bereitstellt, um den Kampf zu evaluieren.

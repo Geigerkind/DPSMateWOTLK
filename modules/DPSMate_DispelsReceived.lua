@@ -6,7 +6,7 @@ DPSMate.Options.Options[1]["args"]["dispelsreceived"] = {
 	type = 'toggle',
 	name = DPSMate.L["dispelsreceived"],
 	desc = DPSMate.L["show"].." "..DPSMate.L["dispelsreceived"]..".",
-	get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key]["options"][1]["dispelsreceived"] end,
+	get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key or 1]["options"][1]["dispelsreceived"] end,
 	set = function() DPSMate.Options:ToggleDrewDrop(1, "dispelsreceived", DPSMate.Options.Dewdrop:GetOpenedParent()) end,
 }
 

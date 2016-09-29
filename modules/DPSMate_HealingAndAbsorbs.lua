@@ -6,7 +6,7 @@ DPSMate.Options.Options[1]["args"]["healingandabsorbs"] = {
 	type = 'toggle',
 	name = DPSMate.L["healingandabsorbs"],
 	desc = DPSMate.L["show"].." "..DPSMate.L["healingandabsorbs"]..".",
-	get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key]["options"][1]["healingandabsorbs"] end,
+	get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key or 1]["options"][1]["healingandabsorbs"] end,
 	set = function() DPSMate.Options:ToggleDrewDrop(1, "healingandabsorbs", DPSMate.Options.Dewdrop:GetOpenedParent()) end,
 }
 

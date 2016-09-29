@@ -109,11 +109,11 @@ DPSMate.Parser.procs = {
 	[GetSpellInfo(23733)] = true, -- Blinding Light
 	[GetSpellInfo(20216)] = true, -- Divine Favor
 	[GetSpellInfo(13874)] = true, -- Divine Shield
-	[GetSpellInfo(20137)] = true, -- Redoubt
+	--[GetSpellInfo(20137)] = true, -- Redoubt
 	[GetSpellInfo(9800)] = true, -- Holy Shield
 	[GetSpellInfo(8602)] = true, -- Vengeance
 	[GetSpellInfo(1044)] = true, -- Blessing of Freedom
-	[GetSpellInfo(20729)] = true, -- Blessing of Sacrifice
+	--[GetSpellInfo(20729)] = true, -- Blessing of Sacrifice
 	[GetSpellInfo(1022)] = true, -- Blessing of Protection
 	
 	-- Shaman
@@ -121,7 +121,7 @@ DPSMate.Parser.procs = {
 	[GetSpellInfo(23734)] = true, -- Nature Aligned
 	[GetSpellInfo(16166)] = true, -- Elemental Mastery
 	[GetSpellInfo(10486)] = true, -- Windfury Weapon
-	[GetSpellInfo(10613)] = true, -- Windfury Totem
+	--[GetSpellInfo(10613)] = true, -- Windfury Totem
 	[GetSpellInfo(17116)] = true, -- Nature's Swiftness
 	[GetSpellInfo(16240)] = true, -- Ancestral Healing
 	[GetSpellInfo(21169)] = true, -- Reincarnation
@@ -211,7 +211,7 @@ DPSMate.Parser.procs = {
 	[GetSpellInfo(36297)] = true, -- Reverberation
 	[GetSpellInfo(33525)] = true, -- Ground Slam
 	[GetSpellInfo(33652)] = true, -- Stoned
-	[GetSpellInfo(30576)] = true, -- Quake
+	--[GetSpellInfo(30576)] = true, -- Quake
 	[GetSpellInfo(44032)] = true, -- Mind Exhaustion
 	[GetSpellInfo(36887)] = true, -- Deafening Roar
 	[GetSpellInfo(44008)] = true, -- Static Disruption
@@ -301,7 +301,7 @@ DPSMate.Parser.DmgProcs = {
 	[GetSpellInfo(10373)] = true, -- Fatal Wound
 	[GetSpellInfo(25669)] = true, -- Decapitate
 	[GetSpellInfo(21151)] = true, -- Gutgore Ripper
-	[GetSpellInfo(11765)] = true, -- Firebolt
+	--[GetSpellInfo(11765)] = true, -- Firebolt
 	[GetSpellInfo(7140)] = true, -- Expose Weakness
 	[GetSpellInfo(12528)] = true, -- Silence
 	[GetSpellInfo(12486)] = true, -- Chilled
@@ -429,7 +429,7 @@ DPSMate.Parser.Dispels = {
 	[GetSpellInfo(552)] = true, -- Abolish Disease
 	[GetSpellInfo(20428)] = true, -- Devour Magic
 	[GetSpellInfo(528)] = true, -- Cure Disease
-	[GetSpellInfo(8166)] = true, -- Poison Cleansing Totem
+	--[GetSpellInfo(8166)] = true, -- Poison Cleansing Totem
 	[GetSpellInfo(8947)] = true, -- Cure Poison
 	[GetSpellInfo(8170)] = true, -- Disease Cleansing Totem
 	[GetSpellInfo(370)] = true, -- Purge
@@ -468,7 +468,7 @@ DPSMate.Parser.DeDisease = {
 DPSMate.Parser.DePoison = {
 	[GetSpellInfo(14253)] = true, -- Abolish Poison
 	[GetSpellInfo(1152)] = true, -- Purify
-	[GetSpellInfo(8166)] = true, -- Poison Cleansing Totem
+	--[GetSpellInfo(8166)] = true, -- Poison Cleansing Totem
 	[GetSpellInfo(8947)] = true, -- Cure Poison
 	[GetSpellInfo(23787)] = true, -- Powerful Anti-Venom
 	[GetSpellInfo(11359)] = true, -- Restoration
@@ -488,7 +488,7 @@ DPSMate.Parser.Kicks = {
 	[GetSpellInfo(408)] = true, -- Kidney Shot
 	[GetSpellInfo(14902)] = true, -- Cheap Shot
 	[GetSpellInfo(19503)] = true, -- Scatter Shot
-	[GetSpellInfo(19415)] = true, -- Improved Concussive Shot
+	--[GetSpellInfo(19415)] = true, -- Improved Concussive Shot
 	[GetSpellInfo(19386)] = true, -- Wyvern Sting
 	[GetSpellInfo(19577)] = true, -- Intimidation
 	[GetSpellInfo(7922)] = true, -- Charge Stun
@@ -498,13 +498,13 @@ DPSMate.Parser.Kicks = {
 	[GetSpellInfo(19675)] = true, -- Feral Charge Effect
 	[GetSpellInfo(5211)] = true, -- Bash
 	[GetSpellInfo(9005)] = true, -- Pounce
-	[GetSpellInfo(12360)] = true, -- Impact
+	--[GetSpellInfo(12360)] = true, -- Impact
 	[GetSpellInfo(20066)] = true, -- Repentance
 	[GetSpellInfo(853)] = true, -- Hammer of Justice
 	[GetSpellInfo(18096)] = true, -- Pyroclasm
 	[GetSpellInfo(6789)] = true, -- Death Coil
-	[GetSpellInfo(15326)] = true, -- Blackout
-	[GetSpellInfo(835)] = true, -- Tidal Charm
+	--[GetSpellInfo(15326)] = true, -- Blackout
+	--[GetSpellInfo(835)] = true, -- Tidal Charm
 	[GetSpellInfo(13327)] = true, -- Reckless Charge
 	
 	-- New
@@ -793,11 +793,12 @@ function DPSMate.Parser:SwingDamage(timestamp, eventtype, srcGUID, srcName, srcF
 	end
 end
 
-function DPSMate.Parser:SwingMissed(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, missType)
+-- IsOffHand doesnt exist yet
+function DPSMate.Parser:SwingMissed(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, missType, amountMissed)
 	t = {}
 	srcName = srcName or DPSMate.L["unknown"]
 	if missType == DPSMate.L["pabsorb"] then
-		DB:Absorb(DPSMate.L["AutoAttack"], dstName, srcName)
+		DB:Absorb(DPSMate.L["AutoAttack"], dstName, srcName, amountMissed)
 		return -- Cant rly return here, can I?
 	end
 	if missType == DPSMate.L["pmiss"] then t[2]=1 end
@@ -855,11 +856,11 @@ function DPSMate.Parser:SpellDamage(timestamp, eventtype, srcGUID, srcName, srcF
 	end
 end
 
-function DPSMate.Parser:SpellMissed(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, missType)
+function DPSMate.Parser:SpellMissed(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, missType, amountMissed)
 	t = {}
 	srcName = srcName or DPSMate.L["unknown"]
 	if missType == DPSMate.L["pabsorb"] then
-		DB:Absorb(spellName, dstName, srcName)
+		DB:Absorb(spellName, dstName, srcName, amountMissed)
 		return -- Cant rly return here, can I?
 	end
 	if missType == DPSMate.L["pmiss"] then t[2]=1 end
