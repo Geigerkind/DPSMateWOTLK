@@ -1036,7 +1036,7 @@ function DPSMate.DB:IsWindFuryAttack(arr, Dname, Duser, bool)
 	local time = GetTime()
 	for c,v in pairs(arr) do
 		if v then
-			if (time-c)<=0.005 then
+			if (time-c)<=0.0005 then
 				if bool then
 					self:BuildBuffs(Duser, Duser, WFAttack, true)
 					self:DestroyBuffs(Duser, WFAttack)
@@ -2150,6 +2150,14 @@ local banedItems = {
 	[30313] = true,
 	[30311] = true,
 	[30314] = true,
+	
+	-- All Badges 
+	[34057] = true,
+	[45624] = true,
+	[49426] = true,
+	[40752] = true,
+	[47241] = true,
+	[40753] = true,
 }
 function DPSMate.DB:Loot(user, quality, itemid)
 	if quality>3 and not banedItems[itemid] then
