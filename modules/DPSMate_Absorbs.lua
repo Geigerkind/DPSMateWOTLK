@@ -6,7 +6,7 @@ DPSMate.Options.Options[1]["args"]["absorbs"] = {
 	type = 'toggle',
 	name = DPSMate.L["absorbs"],
 	desc = DPSMate.L["show"].." "..DPSMate.L["absorbs"]..".",
-	get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key or 1]["options"][1]["absorbs"] end,
+	get = function() return DPSMateSettings["windows"][(DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key or 1]["options"][1]["absorbs"] end,
 	set = function() DPSMate.Options:ToggleDrewDrop(1, "absorbs", DPSMate.Options.Dewdrop:GetOpenedParent()) end,
 }
 
@@ -33,36 +33,8 @@ function DPSMate.Modules.Absorbs:GetSortedTable(arr,k)
 							local PerShieldAbsorb = 0
 							for cet, vel in pairs(ve) do
 								if cet~="i" then
-									local totalHits = 0
 									for qq,ss in pairs(vel) do
-										totalHits = totalHits + ss
-									end
-									for qq,ss in pairs(vel) do
-										local p = 5
-										if DPSMateDamageTaken[1][cat] then
-											if DPSMateDamageTaken[1][cat][cet] then
-												if DPSMateDamageTaken[1][cat][cet][qq] then
-													if DPSMateDamageTaken[1][cat][cet][qq][14]~=0 then
-														p=ceil(DPSMateDamageTaken[1][cat][cet][qq][14])
-													end
-												end
-											end
-										elseif DPSMateEDT[1][cat] then
-											if DPSMateEDT[1][cat][cet] then
-												if DPSMateEDT[1][cat][cet][qq] then
-													if DPSMateEDT[1][cat][cet][qq][4]~=0 then
-														p=ceil((DPSMateEDT[1][cat][cet][qq][4]+DPSMateEDT[1][cat][cet][qq][8])/2)
-													end
-												end
-											end
-										end
-										if p>DPSMate.DB.FixedShieldAmounts[shieldname] then
-											p = DPSMate.DB.FixedShieldAmounts[shieldname]
-										end
-										if p==5 or p==0 then
-											p = ceil((1/totalHits)*((DPSMateUser[ownername][8] or 70)/70)*DPSMate.DB.FixedShieldAmounts[shieldname]*0.33)
-										end
-										PerShieldAbsorb=PerShieldAbsorb+ss*p
+										PerShieldAbsorb = PerShieldAbsorb + ss[2];
 									end
 								end
 							end
@@ -116,45 +88,18 @@ function DPSMate.Modules.Absorbs:EvalTable(user, k)
 							local PerShieldAbsorb = 0
 							for cet, vel in pairs(ve) do
 								if cet~="i" then
-									local totalHits = 0
 									for qq,ss in pairs(vel) do
-										totalHits = totalHits + ss
-									end
-									for qq,ss in pairs(vel) do
-										local p = 5
-										if DPSMateDamageTaken[1][cat] then
-											if DPSMateDamageTaken[1][cat][cet] then
-												if DPSMateDamageTaken[1][cat][cet][qq] then
-													if DPSMateDamageTaken[1][cat][cet][qq][14]~=0 then
-														p=ceil(DPSMateDamageTaken[1][cat][cet][qq][14])
-													end
-												end
-											end
-										elseif DPSMateEDT[1][cat] then
-											if DPSMateEDT[1][cat][cet] then
-												if DPSMateEDT[1][cat][cet][qq] then
-													if DPSMateEDT[1][cat][cet][qq][4]~=0 then
-														p=ceil((DPSMateEDT[1][cat][cet][qq][4]+DPSMateEDT[1][cat][cet][qq][8])/2)
-													end
-												end
-											end
-										end
-										if p>DPSMate.DB.FixedShieldAmounts[shieldname] then
-											p = DPSMate.DB.FixedShieldAmounts[shieldname]
-										end
-										if p==5 or p==0 then
-											p = ceil((1/totalHits)*((DPSMateUser[ownername][8] or 70)/70)*DPSMate.DB.FixedShieldAmounts[shieldname]*0.33)
-										end
-										PerShieldAbsorb=PerShieldAbsorb+ss*p
+										PerShieldAbsorb = PerShieldAbsorb + ss[2]
 										if not temp[cet] then temp[cet] = {} end
-										if not temp[cet][qq] then temp[cet][qq] = ss*p else temp[cet][qq] =temp[cet][qq]+ss*p end
+										if not temp[cet][qq] then temp[cet][qq] = ss[2] else temp[cet][qq] =temp[cet][qq]+ss[2] end
+									end
+								else
+									if vel[1]==1 then
+										PerShieldAbsorb=PerShieldAbsorb+vel[2]
+										if not temp[vel[4]] then temp[ve["i"][4]] = {} end
+										if not temp[vel[4]][vel[3]] then temp[vel[4]][vel[3]] = vel[2] else temp[vel[4]][vel[3]] = temp[vel[4]][vel[3]] + vel[2] end
 									end
 								end
-							end
-							if ve["i"][1]==1 then
-								PerShieldAbsorb=PerShieldAbsorb+ve["i"][2]
-								if not temp[ve["i"][4]] then temp[ve["i"][4]] = {} end
-								if not temp[ve["i"][4]][ve["i"][3]] then temp[ve["i"][4]][ve["i"][3]] = ve["i"][2] else temp[ve["i"][4]][ve["i"][3]] = temp[ve["i"][4]][ve["i"][3]] + ve["i"][2] end
 							end
 							PerAbilityAbsorb = PerAbilityAbsorb+PerShieldAbsorb
 						end

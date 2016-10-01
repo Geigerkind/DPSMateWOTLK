@@ -1388,6 +1388,9 @@ function GraphFunctions:CreateGridlines()
 		local XPos;
 
 		XPos=Width*(-self.XMin)/(self.XMax-self.XMin)
+		if XPos<50 then
+			XPos = 50
+		end
 		self.xAxis = self:DrawLine(self,XPos,0,XPos,Height,24,self.AxisColor,"BACKGROUND")
 	end
 end
@@ -2028,7 +2031,7 @@ function lib:DrawBar(C, sx, sy, ex, ey, color, level, label)
 
 	if level then
 		if type(C.GraphLib_Frames[level]) == "nil" then
-			local newLevel = 100 - level*0.1
+			local newLevel = 100 - level
 			C.GraphLib_Frames[level] = CreateFrame("Frame", nil, C)
 			C.GraphLib_Frames[level]:SetFrameLevel(newLevel)
 			C.GraphLib_Frames[level]:SetAllPoints(C)
@@ -2161,7 +2164,7 @@ function lib:DrawBarNew(C, sx, sy, ex, ey, color, level, label)
 
 	if level then
 		if type(C.GraphLib_Frames[level]) == "nil" then
-			local newLevel = 100-level*0.1
+			local newLevel = 100-level
 			if newLevel<1 then
 				newLevel = 1
 			end
@@ -2309,6 +2312,7 @@ function GraphFunctions:RefreshStackedBarGraph()
 		self.YBorder = YBorder
 		self.YGridInterval = MaxY/7
 		self.XGridInterval = MaxX/7
+		MinX=0+XBorder
 		
 		if not self.LockOnXMin then
 			self.XMin=MinX-XBorder

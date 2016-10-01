@@ -4,7 +4,7 @@
 ## Notes-deDE: DPSMate ist ein Analysewerkzeug, das hilfreiche Graphen und Statistiken bereitstellt, um den Kampf zu evaluieren.
 ## Author: Shino <Synced> - Kronos
 ## SavedVariables: DPSMateSettings
-## SavedVariablesPerCharacter: DPSMateUser, DPSMateAbility, DPSMateDamageDone, DPSMateEDT, DPSMateEDD, DPSMateDamageTaken, DPSMateDispels, DPSMateInterrupts, DPSMateDeaths, DPSMateEHealing, DPSMateTHealing, DPSMateHealingTaken, DPSMateEHealingTaken, DPSMateOverhealing, DPSMateOverhealingTaken, DPSMateAbsorbs, DPSMateAurasGained, DPSMateCombatTime, DPSMateHistory, DPSMateAttempts, DPSMatePlayer, DPSMateLoot, DPSMateFails, DPSMateCCBreaker, DPSMateThreat
+## SavedVariablesPerCharacter: DPSMateUser, DPSMateAbility, DPSMateDamageDone, DPSMateEDT, DPSMateEDD, DPSMateDamageTaken, DPSMateDispels, DPSMateInterrupts, DPSMateDeaths, DPSMateEHealing, DPSMateTHealing, DPSMateHealingTaken, DPSMateEHealingTaken, DPSMateOverhealing, DPSMateOverhealingTaken, DPSMateAbsorbs, DPSMateAurasGained, DPSMateCombatTime, DPSMateHistory, DPSMateAttempts, DPSMatePlayer, DPSMateLoot, DPSMateFails, DPSMateCCBreaker, DPSMateThreat, DPSMateRezz
 
 libs\AceLibrary\AceLibrary.lua
 libs\Dewdrop-2.0\Dewdrop-2.0.lua
@@ -66,6 +66,8 @@ modules\DPSMate_CCBreaker.lua
 modules\DPSMate_OHealingTaken.lua
 modules\DPSMate_OHPS.lua
 modules\DPSMate_FriendlyFireTaken.lua
+modules\DPSMate_Resurrection.lua
+modules\DPSMate_Activity.lua
 
 modules\DPSMate_Details_Damage.lua
 modules\DPSMate_Details_Damage.xml
@@ -185,6 +187,10 @@ modules\DPSMate_Details_FriendlyFireTaken.lua
 modules\DPSMate_Details_FriendlyFireTaken.xml
 modules\DPSMate_Details_FriendlyFireTakenTotal.lua
 modules\DPSMate_Details_FriendlyFireTakenTotal.xml
+modules\DPSMate_Details_Resurrections.lua
+modules\DPSMate_Details_Resurrections.xml
+modules\DPSMate_Details_ResurrectionsTotal.lua
+modules\DPSMate_Details_ResurrectionsTotal.xml
 
 DPSMate_Frame.xml
 DPSMate_Options.xml

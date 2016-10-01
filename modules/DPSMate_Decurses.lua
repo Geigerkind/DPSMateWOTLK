@@ -6,7 +6,7 @@ DPSMate.Options.Options[1]["args"]["decurses"] = {
 	type = 'toggle',
 	name = DPSMate.L["decurses"],
 	desc = DPSMate.L["show"].." "..DPSMate.L["decurses"]..".",
-	get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key or 1]["options"][1]["decurses"] end,
+	get = function() return DPSMateSettings["windows"][(DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key or 1]["options"][1]["decurses"] end,
 	set = function() DPSMate.Options:ToggleDrewDrop(1, "decurses", DPSMate.Options.Dewdrop:GetOpenedParent()) end,
 }
 

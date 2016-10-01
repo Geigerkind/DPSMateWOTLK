@@ -152,7 +152,7 @@
 						<Scripts>
 							<OnVerticalScroll>
 								DPSMate_Details_Dispels.LastScroll = ""
-								FauxScrollFrame_OnVerticalScroll(24, DPSMate.Modules.DetailsDispels.ScrollFrame_Update) 
+								FauxScrollFrame_OnVerticalScroll(this, arg1, 24, DPSMate.Modules.DetailsDispels.ScrollFrame_Update) 
 							</OnVerticalScroll>
 					   </Scripts>
 					</ScrollFrame>
@@ -284,7 +284,7 @@
 						<Scripts>
 							<OnVerticalScroll>
 								DPSMate_Details_Dispels.LastScroll = ""
-								FauxScrollFrame_OnVerticalScroll(24, DPSMate.Modules.DetailsDispels.SelectCreatureButton) 
+								FauxScrollFrame_OnVerticalScroll(this, arg1, 24, DPSMate.Modules.DetailsDispels.SelectCreatureButton) 
 							</OnVerticalScroll>
 					   </Scripts>
 					</ScrollFrame>
@@ -416,7 +416,7 @@
 						<Scripts>
 							<OnVerticalScroll>
 								DPSMate_Details_Dispels.LastScroll = ""
-								FauxScrollFrame_OnVerticalScroll(24, DPSMate.Modules.DetailsDispels.SelectCreatureAbilityButton) 
+								FauxScrollFrame_OnVerticalScroll(this, arg1, 24, DPSMate.Modules.DetailsDispels.SelectCreatureAbilityButton) 
 							</OnVerticalScroll>
 					   </Scripts>
 					</ScrollFrame>
@@ -615,7 +615,7 @@
 						<Scripts>
 							<OnVerticalScroll>
 								DPSMate_Details_Dispels.LastScroll = "Compare"
-								FauxScrollFrame_OnVerticalScroll(24, DPSMate.Modules.DetailsDispels.ScrollFrame_Update) 
+								FauxScrollFrame_OnVerticalScroll(this, arg1, 24, DPSMate.Modules.DetailsDispels.ScrollFrame_Update) 
 							</OnVerticalScroll>
 					   </Scripts>
 					</ScrollFrame>
@@ -747,7 +747,7 @@
 						<Scripts>
 							<OnVerticalScroll>
 								DPSMate_Details_Dispels.LastScroll = "Compare"
-								FauxScrollFrame_OnVerticalScroll(24, DPSMate.Modules.DetailsDispels.SelectCreatureButton) 
+								FauxScrollFrame_OnVerticalScroll(this, arg1, 24, DPSMate.Modules.DetailsDispels.SelectCreatureButton) 
 							</OnVerticalScroll>
 					   </Scripts>
 					</ScrollFrame>
@@ -879,7 +879,7 @@
 						<Scripts>
 							<OnVerticalScroll>
 								DPSMate_Details_Dispels.LastScroll = "Compare"
-								FauxScrollFrame_OnVerticalScroll(24, DPSMate.Modules.DetailsDispels.SelectCreatureAbilityButton) 
+								FauxScrollFrame_OnVerticalScroll(this, arg1, 24, DPSMate.Modules.DetailsDispels.SelectCreatureAbilityButton) 
 							</OnVerticalScroll>
 					   </Scripts>
 					</ScrollFrame>

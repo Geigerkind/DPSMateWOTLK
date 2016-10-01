@@ -6,7 +6,7 @@ DPSMate.Options.Options[1]["args"]["healingandabsorbs"] = {
 	type = 'toggle',
 	name = DPSMate.L["healingandabsorbs"],
 	desc = DPSMate.L["show"].." "..DPSMate.L["healingandabsorbs"]..".",
-	get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key or 1]["options"][1]["healingandabsorbs"] end,
+	get = function() return DPSMateSettings["windows"][(DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key or 1]["options"][1]["healingandabsorbs"] end,
 	set = function() DPSMate.Options:ToggleDrewDrop(1, "healingandabsorbs", DPSMate.Options.Dewdrop:GetOpenedParent()) end,
 }
 
@@ -35,36 +35,8 @@ function DPSMate.Modules.HealingAndAbsorbs:GetSortedTable(arr, k)
 								local PerShieldAbsorb = 0
 								for cet, vel in pairs(ve) do
 									if cet~="i" then
-										local totalHits = 0
 										for qq,ss in pairs(vel) do
-											totalHits = totalHits + ss
-										end
-										for qq,ss in pairs(vel) do
-											local p = 5
-											if DPSMateDamageTaken[1][cat] then
-												if DPSMateDamageTaken[1][cat][cet] then
-													if DPSMateDamageTaken[1][cat][cet][qq] then
-														if DPSMateDamageTaken[1][cat][cet][qq][14]~=0 then
-															p=ceil(DPSMateDamageTaken[1][cat][cet][qq][14])
-														end
-													end
-												end
-											elseif DPSMateEDT[1][cat] then
-												if DPSMateEDT[1][cat][cet] then
-													if DPSMateEDT[1][cat][cet][qq] then
-														if DPSMateEDT[1][cat][cet][qq][4]~=0 then
-															p=ceil((DPSMateEDT[1][cat][cet][qq][4]+DPSMateEDT[1][cat][cet][qq][8])/2)
-														end
-													end
-												end
-											end
-											if p>DPSMate.DB.FixedShieldAmounts[shieldname] then
-												p = DPSMate.DB.FixedShieldAmounts[shieldname]
-											end
-											if p==5 or p==0 then
-												p = ceil((1/totalHits)*((DPSMateUser[ownername][8] or 60)/60)*DPSMate.DB.FixedShieldAmounts[shieldname]*0.33)
-											end
-											PerShieldAbsorb=PerShieldAbsorb+ss*p
+											PerShieldAbsorb = PerShieldAbsorb + ss[2]
 										end
 									end
 								end
@@ -134,7 +106,7 @@ end
 
 function DPSMate.Modules.HealingAndAbsorbs:EvalTable(user, k)
 	local b, total = {}, 0
-	local temp = {}
+	--local temp = {}
 	local arr = DPSMate:GetModeByArr(DPSMateAbsorbs, k)
 	local ownername = DPSMate:GetUserById(user[1])
 	for cat, val in pairs(arr) do -- 28 Target
@@ -147,38 +119,10 @@ function DPSMate.Modules.HealingAndAbsorbs:EvalTable(user, k)
 							local PerShieldAbsorb = 0
 							for cet, vel in pairs(ve) do
 								if cet~="i" then
-									local totalHits = 0
 									for qq,ss in pairs(vel) do
-										totalHits = totalHits + ss
-									end
-									for qq,ss in pairs(vel) do
-										local p = 5
-										if DPSMateDamageTaken[1][cat] then
-											if DPSMateDamageTaken[1][cat][cet] then
-												if DPSMateDamageTaken[1][cat][cet][qq] then
-													if DPSMateDamageTaken[1][cat][cet][qq][14]~=0 then
-														p=ceil(DPSMateDamageTaken[1][cat][cet][qq][14])
-													end
-												end
-											end
-										elseif DPSMateEDT[1][cat] then
-											if DPSMateEDT[1][cat][cet] then
-												if DPSMateEDT[1][cat][cet][qq] then
-													if DPSMateEDT[1][cat][cet][qq][4]~=0 then
-														p=ceil((DPSMateEDT[1][cat][cet][qq][4]+DPSMateEDT[1][cat][cet][qq][8])/2)
-													end
-												end
-											end
-										end
-										if p>DPSMate.DB.FixedShieldAmounts[shieldname] then
-											p = DPSMate.DB.FixedShieldAmounts[shieldname]
-										end
-										if p==5 or p==0 then
-											p = ceil((1/totalHits)*((DPSMateUser[ownername][8] or 60)/60)*DPSMate.DB.FixedShieldAmounts[shieldname]*0.33)
-										end
-										PerShieldAbsorb=PerShieldAbsorb+ss*p
-										if not temp[cet] then temp[cet] = {} end
-										if not temp[cet][qq] then temp[cet][qq] = ss*p else temp[cet][qq] =temp[cet][qq]+ss*p end
+										PerShieldAbsorb=PerShieldAbsorb+ss[2]
+										--if not temp[cet] then temp[cet] = {} end
+										--if not temp[cet][qq] then temp[cet][qq] = ss[2] else temp[cet][qq] =temp[cet][qq]+ss[2] end
 									end
 								end
 							end

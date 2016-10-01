@@ -174,6 +174,7 @@ end
 function DPSMate.Modules.DetailsHealingAndAbsorbs:EvalToggleTable(cname)
 	local a,b = {},{}
 	local d = 0
+	local hackTemp = {}
 	for cat, val in pairs(db2) do
 		if val[DPSMateUser[cname or DetailsUser][1]] then
 			local CV = 0
@@ -197,21 +198,8 @@ function DPSMate.Modules.DetailsHealingAndAbsorbs:EvalToggleTable(cname)
 				end
 			end
 			c[1] = CV
-			local i = 1
-			while true do
-				if (not a[i]) then
-					tinsert(b, i, c)
-					tinsert(a, i, cat)
-					break
-				else
-					if b[i][1] < CV then
-						tinsert(b, i, c)
-						tinsert(a, i, cat)
-						break
-					end
-				end
-				i=i+1
-			end
+			hackTemp[cat] = {}
+			tinsert(hackTemp[cat], c)
 			d = d + CV
 		end
 	end
@@ -227,50 +215,28 @@ function DPSMate.Modules.DetailsHealingAndAbsorbs:EvalToggleTable(cname)
 				local shieldname = DPSMate:GetAbilityById(ca)
 				if ca~="i" then
 					for ce, ve in pairs(va) do -- 1
-						local PerShieldAbsorb = 0
+						local PerShieldAbsorb, hittemp = 0, 0
 						for cet, vel in pairs(ve) do
 							if cet~="i" then
-								local totalHits = 0
 								for qq,ss in pairs(vel) do
-									totalHits = totalHits + ss
-								end
-								for qq,ss in pairs(vel) do
-									local p = 5
-									if DPSMateDamageTaken[1][cat] then
-										if DPSMateDamageTaken[1][cat][cet] then
-											if DPSMateDamageTaken[1][cat][cet][qq] then
-												if DPSMateDamageTaken[1][cat][cet][qq][14]~=0 then
-													p=ceil(DPSMateDamageTaken[1][cat][cet][qq][14])
-												end
-											end
-										end
-									elseif DPSMateEDT[1][cat] then
-										if DPSMateEDT[1][cat][cet] then
-											if DPSMateEDT[1][cat][cet][qq] then
-												if DPSMateEDT[1][cat][cet][qq][4]~=0 then
-													p=ceil((DPSMateEDT[1][cat][cet][qq][4]+DPSMateEDT[1][cat][cet][qq][8])/2)
-												end
-											end
-										end
+									hittemp = hittemp + ss[1]
+									PerShieldAbsorb = PerShieldAbsorb + ss[2]
+									if hitmax<ss[4] then
+										hitmax = ss[4]
 									end
-									if p>DPSMate.DB.FixedShieldAmounts[shieldname] then
-										p = DPSMate.DB.FixedShieldAmounts[shieldname]
+									if hitmin>ss[3] then
+										hitmin = ss[3]
 									end
-									if p==5 or p==0 then
-										p = ceil((1/totalHits)*((DPSMateUser[cname or DetailsUser][8] or 60)/60)*DPSMate.DB.FixedShieldAmounts[shieldname]*0.33)
-									end
-									PerShieldAbsorb=PerShieldAbsorb+ss*p
 								end
 							end
 						end
 						if ve["i"][1]==1 then
 							PerShieldAbsorb=PerShieldAbsorb+ve["i"][2]
+							hittemp = hittemp + 1
 						end
 						dmg = dmg+PerShieldAbsorb
-						if PerShieldAbsorb>hitmax then hitmax = PerShieldAbsorb end
-						if (PerShieldAbsorb<hitmin or hitmin == 0) and PerShieldAbsorb>0 then hitmin = PerShieldAbsorb end
-						hitav = DPSMate.DB:WeightedAverage(hitav, PerShieldAbsorb, hit, 1)
-						hit=hit+1
+						hitav = DPSMate.DB:WeightedAverage(hitav, PerShieldAbsorb, hit, hittemp)
+						hit=hit+hittemp
 					end
 				
 					local temp ={
@@ -303,25 +269,53 @@ function DPSMate.Modules.DetailsHealingAndAbsorbs:EvalToggleTable(cname)
 					CV = CV + dmg
 				end
 			end
-			if CV>0 then
+			if CV>0 then -- If user already exists
 				c[1] = CV
-				local i = 1
-				while true do
-					if (not a[i]) then
-						tinsert(b, i, c)
-						tinsert(a, i, cat)
-						break
-					else
-						if b[i][1] < CV then
-							tinsert(b, i, c)
-							tinsert(a, i, cat)
-							break
-						end
-					end
-					i=i+1
+				if not hackTemp[cat] then
+					hackTemp[cat] = {}
 				end
+				tinsert(hackTemp[cat], c)
 				d = d + CV
 			end
+		end
+	end
+	-- Summing same player together
+	for cat, val in pairs(hackTemp) do
+		local totVal = 0;
+		local newAbArr = {[1] = 0,[2] = {},[3] = {}}
+		for ca, va in pairs(val) do
+			for c, v in pairs(va[3]) do
+				local p=1;
+				while true do
+					if (not newAbArr[2][p]) then
+						tinsert(newAbArr[3], p, v)
+						tinsert(newAbArr[2], p, va[2][c])
+						break
+					elseif newAbArr[3][p][1]<v[1] then
+						tinsert(newAbArr[3], p, v)
+						tinsert(newAbArr[2], p, va[2][c])
+						break
+					end
+					p = p + 1
+				end
+			end
+			newAbArr[1] = newAbArr[1] + va[1]
+			totVal = totVal + va[1]
+		end
+		local i = 1
+		while true do
+			if (not a[i]) then
+				tinsert(b, i, newAbArr)
+				tinsert(a, i, cat)
+				break
+			else
+				if b[i][1] < totVal then
+					tinsert(b, i, newAbArr)
+					tinsert(a, i, cat)
+					break
+				end
+			end
+			i=i+1
 		end
 	end
 	return a,b,d
@@ -429,41 +423,12 @@ function DPSMate.Modules.DetailsHealingAndAbsorbs:SelectDetails_HealingAndAbsorb
 								local PerShieldAbsorb = 0
 								for cet, vel in pairs(ve) do
 									if cet~="i" then
-										local totalHits = 0
 										for qq,ss in pairs(vel) do
-											totalHits = totalHits + ss
-										end
-										for qq,ss in pairs(vel) do
-											local p = 5
-											if DPSMateDamageTaken[1][cat] then
-												if DPSMateDamageTaken[1][cat][cet] then
-													if DPSMateDamageTaken[1][cat][cet][qq] then
-														if DPSMateDamageTaken[1][cat][cet][qq][14]~=0 then
-															p=ceil(DPSMateDamageTaken[1][cat][cet][qq][14])
-														end
-													end
-												end
-											elseif DPSMateEDT[1][cat] then
-												if DPSMateEDT[1][cat][cet] then
-													if DPSMateEDT[1][cat][cet][qq] then
-														if DPSMateEDT[1][cat][cet][qq][4]~=0 then
-															p=ceil((DPSMateEDT[1][cat][cet][qq][4]+DPSMateEDT[1][cat][cet][qq][8])/2)
-														end
-													end
-												end
-											end
-											if p>DPSMate.DB.FixedShieldAmounts[abString] then
-												p = DPSMate.DB.FixedShieldAmounts[abString]
-											end
-											if p==5 or dmg==0 then
-												p = ceil((1/totalHits)*((DPSMateUser[cname or DetailsUser][8] or 60)/60)*DPSMate.DB.FixedShieldAmounts[abString]*0.33)
-											end
-											PerShieldAbsorb=PerShieldAbsorb+ss*p
-											
+											PerShieldAbsorb=PerShieldAbsorb+ss[2]
 											if PerShieldAbsorb>hitMax then hitMax = PerShieldAbsorb end
 											if (PerShieldAbsorb<hitMin or hitMin == 0) and PerShieldAbsorb>0 then hitMin = PerShieldAbsorb end
-											hitav = DPSMate.DB:WeightedAverage(hitav, PerShieldAbsorb, hit, ss)
-											hit=hit+ss
+											hitav = DPSMate.DB:WeightedAverage(hitav, PerShieldAbsorb, hit, ss[1])
+											hit=hit+ss[1]
 										end
 									end
 								end
@@ -760,43 +725,29 @@ function DPSMate.Modules.DetailsHealingAndAbsorbs:UpdateStackedGraph(gg, comp, c
 		if DPSMateAbsorbs[curKey][d1[d4]] then
 			if DPSMateAbsorbs[curKey][d1[d4]][DPSMateUser[cname or DetailsUser][1]] then
 				for ca, va in pairs(DPSMateAbsorbs[curKey][d1[d4]][DPSMateUser[cname or DetailsUser][1]]["i"]) do
-					local i, dmg = 1, 5
-					if DPSMateDamageTaken[1][d1[d4]] then
-						if DPSMateDamageTaken[1][d1[d4]][va[2]] then
-							if DPSMateDamageTaken[1][d1[d4]][va[2]][va[3]] then
-								dmg = DPSMateDamageTaken[1][d1[d4]][va[2]][va[3]][14]
-								if dmg>DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])] then
-									dmg = DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])]
+					for c,v in pairs(va) do
+						local i, dmg = 1, v
+						if dmg>0 then
+							if not temp[ca] then
+								temp[ca] = {}
+							end
+							while true do
+								if (not temp[ca][i]) then
+									tinsert(temp[ca], i, {c, dmg})
+									break
+								elseif c<=temp[ca][i][1] then
+									tinsert(temp[ca], i, {c, dmg})
+									break
 								end
+								i=i+1
 							end
-						end
-					end
-					if dmg==5 or dmg==0 then
-						dmg = ceil((1/15)*((DPSMateUser[cname or DetailsUser][8] or 60)/60)*DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])]*0.33)
-					end
-					if va[4] then
-						dmg = dmg + va[4]
-					end
-					if dmg>0 then
-						if not temp[va[5]] then
-							temp[va[5]] = {}
-						end
-						while true do
-							if (not temp[va[5]][i]) then
-								tinsert(temp[va[5]], i, {va[1], dmg})
-								break
-							elseif va[1]<=temp[va[5]][i][1] then
-								tinsert(temp[va[5]], i, {va[1], dmg})
-								break
-							end
-							i=i+1
 						end
 					end
 				end
 			end
 		end
 		for cat, val in pairs(temp) do
-			tinsert(label, 1, DPSMate:GetAbilityById(cat))
+			tinsert(label, 1, "Absorbed: "..DPSMate:GetAbilityById(cat))
 			tinsert(Data1, 1, val)
 		end
 		
@@ -862,43 +813,29 @@ function DPSMate.Modules.DetailsHealingAndAbsorbs:UpdateStackedGraph(gg, comp, c
 		for cat, val in pairs(DPSMateAbsorbs[curKey]) do
 			if val[DPSMateUser[cname or DetailsUser][1]] then
 				for ca, va in pairs(val[DPSMateUser[cname or DetailsUser][1]]["i"]) do
-					local i, dmg = 1, 5
-					if DPSMateDamageTaken[1][cat] then
-						if DPSMateDamageTaken[1][cat][va[2]] then
-							if DPSMateDamageTaken[1][cat][va[2]][va[3]] then
-								dmg = DPSMateDamageTaken[1][cat][va[2]][va[3]][14]
-								if dmg>DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])] then
-									dmg = DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])]
+					for c,v in pairs(va) do
+						local i, dmg = 1, v
+						if dmg>0 then
+							if not temp[ca] then
+								temp[ca] = {}
+							end
+							while true do
+								if (not temp[ca][i]) then
+									tinsert(temp[ca], i, {c, dmg})
+									break
+								elseif c<=temp[ca][i][1] then
+									tinsert(temp[ca], i, {c, dmg})
+									break
 								end
+								i=i+1
 							end
-						end
-					end
-					if dmg==5 or dmg==0 then
-						dmg = ceil((1/15)*((DPSMateUser[cname or DetailsUser][8] or 60)/60)*DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])]*0.33)
-					end
-					if va[4] then
-						dmg = dmg + va[4]
-					end
-					if dmg>0 then
-						if not temp[va[5]] then
-							temp[va[5]] = {}
-						end
-						while true do
-							if (not temp[va[5]][i]) then
-								tinsert(temp[va[5]], i, {va[1], dmg})
-								break
-							elseif va[1]<=temp[va[5]][i][1] then
-								tinsert(temp[va[5]], i, {va[1], dmg})
-								break
-							end
-							i=i+1
 						end
 					end
 				end
 			end
 		end
 		for cat, val in pairs(temp) do
-			tinsert(label, 1, DPSMate:GetAbilityById(cat))
+			tinsert(label, 1, "Absorbed: "..DPSMate:GetAbilityById(cat))
 			tinsert(Data1, 1, val)
 		end
 		
@@ -1021,35 +958,21 @@ function DPSMate.Modules.DetailsHealingAndAbsorbs:SortLineTable(arr, b, cname)
 		if DPSMateAbsorbs[curKey][b] then
 			if DPSMateAbsorbs[curKey][b][DPSMateUser[cname or DetailsUser][1]] then
 				for ca, va in pairs(DPSMateAbsorbs[curKey][b][DPSMateUser[cname or DetailsUser][1]]["i"]) do
-					local i, dmg = 1, 5
-					if DPSMateDamageTaken[1][b] then
-						if DPSMateDamageTaken[1][b][va[2]] then
-							if DPSMateDamageTaken[1][b][va[2]][va[3]] then
-								dmg = DPSMateDamageTaken[1][b][va[2]][va[3]][14]
-								if dmg>DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])] then
-									dmg = DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])]
-								end
-							end
-						end
-					end
-					if dmg==5 or dmg==0 then
-						dmg = ceil((1/15)*((DPSMateUser[cname or DetailsUser][8] or 60)/60)*DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])]*0.33)
-					end
-					if va[4] then
-						dmg = dmg + va[4]
-					end
-					if dmg>0 then
-						while true do
-							if (not newArr[i]) then
-								tinsert(newArr, i, {va[1], dmg})
-								break
-							else
-								if newArr[i][1] > va[1] then
-									tinsert(newArr, i, {va[1], dmg})
+					for c,v in pairs(va) do
+						local i, dmg = 1, v
+						if dmg>0 then
+							while true do
+								if (not newArr[i]) then
+									tinsert(newArr, i, {c, dmg})
 									break
+								else
+									if newArr[i][1] > c then
+										tinsert(newArr, i, {c, dmg})
+										break
+									end
 								end
+								i=i+1
 							end
-							i=i+1
 						end
 					end
 				end
@@ -1081,35 +1004,21 @@ function DPSMate.Modules.DetailsHealingAndAbsorbs:SortLineTable(arr, b, cname)
 		for cat, val in pairs(DPSMateAbsorbs[curKey]) do
 			if val[DPSMateUser[cname or DetailsUser][1]] then
 				for ca, va in pairs(val[DPSMateUser[cname or DetailsUser][1]]["i"]) do
-					local i, dmg = 1, 5
-					if DPSMateDamageTaken[1][cat] then
-						if DPSMateDamageTaken[1][cat][va[2]] then
-							if DPSMateDamageTaken[1][cat][va[2]][va[3]] then
-								dmg = DPSMateDamageTaken[1][cat][va[2]][va[3]][14]
-								if dmg>DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])] then
-									dmg = DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])]
-								end
-							end
-						end
-					end
-					if dmg==5 or dmg==0 then
-						dmg = ceil((1/15)*((DPSMateUser[cname or DetailsUser][8] or 60)/60)*DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])]*0.33)
-					end
-					if va[4] then
-						dmg = dmg + va[4]
-					end
-					if dmg>0 then
-						while true do
-							if (not newArr[i]) then
-								tinsert(newArr, i, {va[1], dmg})
-								break
-							else
-								if newArr[i][1] > va[1] then
-									tinsert(newArr, i, {va[1], dmg})
+					for c,v in pairs(va) do
+						local i, dmg = 1, v
+						if dmg>0 then
+							while true do
+								if (not newArr[i]) then
+									tinsert(newArr, i, {c, dmg})
 									break
+								else
+									if newArr[i][1] > c then
+										tinsert(newArr, i, {c, dmg})
+										break
+									end
 								end
+								i=i+1
 							end
-							i=i+1
 						end
 					end
 				end

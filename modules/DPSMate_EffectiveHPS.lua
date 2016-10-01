@@ -6,7 +6,7 @@ DPSMate.Options.Options[1]["args"]["effectivehps"] = {
 	type = 'toggle',
 	name = DPSMate.L["effectivehps"],
 	desc = DPSMate.L["show"].." "..DPSMate.L["effectivehps"]..".",
-	get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key or 1]["options"][1]["effectivehps"] end,
+	get = function() return DPSMateSettings["windows"][(DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key or 1]["options"][1]["effectivehps"] end,
 	set = function() DPSMate.Options:ToggleDrewDrop(1, "effectivehps", DPSMate.Options.Dewdrop:GetOpenedParent()) end,
 }
 

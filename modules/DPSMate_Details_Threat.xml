@@ -316,7 +316,7 @@
 									this.oset = 0
 								end
 								this.oset = this.oset - arg1
-								FauxScrollFrame_OnVerticalScroll(24, DPSMate.Modules.DetailsThreat.ScrollFrame_Update) 
+								FauxScrollFrame_OnVerticalScroll(this, arg1, 24, DPSMate.Modules.DetailsThreat.ScrollFrame_Update) 
 							</OnMouseWheel>
 					   </Scripts>
 					</ScrollFrame>
@@ -415,7 +415,7 @@
 									this.oset = 0
 								end
 								this.oset = this.oset - arg1
-								FauxScrollFrame_OnVerticalScroll(24, DPSMate.Modules.DetailsThreat.SelectCreatureButton) 
+								FauxScrollFrame_OnVerticalScroll(this, arg1, 24, DPSMate.Modules.DetailsThreat.SelectCreatureButton) 
 							</OnMouseWheel>
 					   </Scripts>
 					</ScrollFrame>
@@ -773,7 +773,7 @@
 									this.oset = 0
 								end
 								this.oset = this.oset - arg1
-								FauxScrollFrame_OnVerticalScroll(24, DPSMate.Modules.DetailsThreat.ScrollFrame_Update) 
+								FauxScrollFrame_OnVerticalScroll(this, arg1, 24, DPSMate.Modules.DetailsThreat.ScrollFrame_Update) 
 							</OnMouseWheel>
 					   </Scripts>
 					</ScrollFrame>
@@ -872,7 +872,7 @@
 									this.oset = 0
 								end
 								this.oset = this.oset - arg1
-								FauxScrollFrame_OnVerticalScroll(24, DPSMate.Modules.DetailsThreat.SelectCreatureButton) 
+								FauxScrollFrame_OnVerticalScroll(this, arg1, 24, DPSMate.Modules.DetailsThreat.SelectCreatureButton) 
 							</OnMouseWheel>
 					   </Scripts>
 					</ScrollFrame>

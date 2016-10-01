@@ -119,34 +119,20 @@ function DPSMate.Modules.DetailsAbsorbsTotal:UpdateStackedGraph()
 			local ownername = DPSMate:GetUserById(qq)
 			if DPSMate:ApplyFilter(curKey, ownername) then
 				for ca, va in pairs(uu["i"]) do
-					local i, dmg = 1, 5
-					if DPSMateDamageTaken[1][cat] then
-						if DPSMateDamageTaken[1][cat][va[2]] then
-							if DPSMateDamageTaken[1][cat][va[2]][va[3]] then
-								dmg = DPSMateDamageTaken[1][cat][va[2]][va[3]][14]
-								if dmg>DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])] then
-									dmg = DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])]
+					for c, v in pairs(va) do
+						local i, dmg = 1, v
+						if dmg>0 then
+							local i = 1
+							while true do
+								if not temp[i] then
+									tinsert(temp, i, {c, dmg})
+									break
+								elseif c<=temp[i][1] then
+									tinsert(temp, i, {c, dmg})
+									break
 								end
+								i=i+1
 							end
-						end
-					end
-					if dmg==5 or dmg==0 then
-						dmg = ceil((1/15)*((DPSMateUser[ownername][8] or 70)/70)*DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])]*0.33)
-					end
-					if va[4] then
-						dmg = dmg + va[4]
-					end
-					if dmg>0 then
-						local i = 1
-						while true do
-							if not temp[i] then
-								tinsert(temp, i, {va[1], dmg})
-								break
-							elseif va[1]<=temp[i][1] then
-								tinsert(temp, i, {va[1], dmg})
-								break
-							end
-							i=i+1
 						end
 					end
 				end
@@ -226,28 +212,14 @@ function DPSMate.Modules.DetailsAbsorbsTotal:AddTotalDataSeries()
 			if DPSMate:ApplyFilter(curKey, ownername) then
 				temp[ownername] = true
 				for ca, va in pairs(uu["i"]) do
-					local i, dmg = 1, 5
-					if DPSMateDamageTaken[1][cat] then
-						if DPSMateDamageTaken[1][cat][va[2]] then
-							if DPSMateDamageTaken[1][cat][va[2]][va[3]] then
-								dmg = DPSMateDamageTaken[1][cat][va[2]][va[3]][14]
-								if dmg>DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])] then
-									dmg = DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])]
-								end
+					for c, v in pairs(va) do
+						local i, dmg = 1, v
+						if dmg>0 then
+							if sumTable[c] then
+								sumTable[c] = sumTable[va[1]] + dmg
+							else
+								sumTable[c] = dmg
 							end
-						end
-					end
-					if dmg==5 or dmg==0 then
-						dmg = ceil((1/15)*((DPSMateUser[ownername][8] or 70)/70)*DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])]*0.33)
-					end
-					if va[4] then
-						dmg = dmg + va[4]
-					end
-					if dmg>0 then
-						if sumTable[va[1]] then
-							sumTable[va[1]] = sumTable[va[1]] + dmg
-						else
-							sumTable[va[1]] = dmg
 						end
 					end
 				end
@@ -304,38 +276,10 @@ function DPSMate.Modules.DetailsAbsorbsTotal:GetTableValues()
 							local PerShieldAbsorb = 0
 							for cet, vel in pairs(ve) do
 								if cet~="i" then
-									local totalHits = 0
 									for qq,ss in pairs(vel) do
-										totalHits = totalHits + ss
+										totHits = totHits + ss[1]
+										PerShieldAbsorb = PerShieldAbsorb + ss[2]
 									end
-									for qq,ss in pairs(vel) do
-										local p = 5
-										if DPSMateDamageTaken[1][cat] then
-											if DPSMateDamageTaken[1][cat][cet] then
-												if DPSMateDamageTaken[1][cat][cet][qq] then
-													if DPSMateDamageTaken[1][cat][cet][qq][14]~=0 then
-														p=ceil(DPSMateDamageTaken[1][cat][cet][qq][14])
-													end
-												end
-											end
-										elseif DPSMateEDT[1][cat] then
-											if DPSMateEDT[1][cat][cet] then
-												if DPSMateEDT[1][cat][cet][qq] then
-													if DPSMateEDT[1][cat][cet][qq][4]~=0 then
-														p=ceil((DPSMateEDT[1][cat][cet][qq][4]+DPSMateEDT[1][cat][cet][qq][8])/2)
-													end
-												end
-											end
-										end
-										if p>DPSMate.DB.FixedShieldAmounts[shieldname] then
-											p = DPSMate.DB.FixedShieldAmounts[shieldname]
-										end
-										if p==5 or p==0 then
-											p = ceil((1/totalHits)*((DPSMateUser[ownername][8] or 70)/70)*DPSMate.DB.FixedShieldAmounts[shieldname]*0.33)
-										end
-										PerShieldAbsorb=PerShieldAbsorb+ss*p
-									end
-									totHits = totHits + totalHits
 								end
 							end
 							if ve["i"][1]==1 then
@@ -424,35 +368,21 @@ function DPSMate.Modules.DetailsAbsorbsTotal:SortLineTable(uid)
 	for cat, val in pairs(db) do
 		if val[uid] then
 			for ca, va in pairs(val[uid]["i"]) do
-				local i, dmg = 1, 5
-				if DPSMateDamageTaken[1][cat] then
-					if DPSMateDamageTaken[1][cat][va[2]] then
-						if DPSMateDamageTaken[1][cat][va[2]][va[3]] then
-							dmg = DPSMateDamageTaken[1][cat][va[2]][va[3]][14]
-							if dmg>DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])] then
-								dmg = DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])]
-							end
-						end
-					end
-				end
-				if dmg==5 or dmg==0 then
-					dmg = ceil((1/15)*((DPSMateUser[ownername][8] or 70)/70)*DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])]*0.33)
-				end
-				if va[4] then
-					dmg = dmg + va[4]
-				end
-				if dmg>0 then
-					while true do
-						if (not newArr[i]) then
-							tinsert(newArr, i, {va[1], dmg})
-							break
-						else
-							if newArr[i][1] > va[1] then
-								tinsert(newArr, i, {va[1], dmg})
+				for c, v in pairs(va) do
+					local i, dmg = 1, v
+					if dmg>0 then
+						while true do
+							if (not newArr[i]) then
+								tinsert(newArr, i, {c, dmg})
 								break
+							else
+								if newArr[i][1] > c then
+									tinsert(newArr, i, {c, dmg})
+									break
+								end
 							end
+							i=i+1
 						end
-						i=i+1
 					end
 				end
 			end

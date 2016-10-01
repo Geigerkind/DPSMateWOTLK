@@ -6,7 +6,7 @@ DPSMate.Options.Options[1]["args"]["aurasuptime"] = {
 	type = 'toggle',
 	name = DPSMate.L["aurauptime"],
 	desc = DPSMate.L["show"].." "..DPSMate.L["aurauptime"]..".",
-	get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key or 1]["options"][1]["aurasuptime"] end,
+	get = function() return DPSMateSettings["windows"][(DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key or 1]["options"][1]["aurasuptime"] end,
 	set = function() DPSMate.Options:ToggleDrewDrop(1, "aurasuptime", DPSMate.Options.Dewdrop:GetOpenedParent()) end,
 }
 

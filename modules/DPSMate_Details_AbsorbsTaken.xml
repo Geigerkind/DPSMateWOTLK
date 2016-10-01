@@ -224,7 +224,7 @@
 						<Scripts>
 							<OnVerticalScroll>
 								DPSMate_Details_AbsorbsTaken.LastScroll=""
-								FauxScrollFrame_OnVerticalScroll(24, DPSMate.Modules.DetailsAbsorbsTaken.ScrollFrame_Update) 
+								FauxScrollFrame_OnVerticalScroll(this, arg1, 24, DPSMate.Modules.DetailsAbsorbsTaken.ScrollFrame_Update) 
 							</OnVerticalScroll>
 					   </Scripts>
 					</ScrollFrame>
@@ -328,7 +328,7 @@
 						<Scripts>
 							<OnVerticalScroll>
 								DPSMate_Details_AbsorbsTaken.LastScroll=""
-								FauxScrollFrame_OnVerticalScroll(24, DPSMate.Modules.DetailsAbsorbsTaken.SelectCreatureButton) 
+								FauxScrollFrame_OnVerticalScroll(this, arg1, 24, DPSMate.Modules.DetailsAbsorbsTaken.SelectCreatureButton) 
 							</OnVerticalScroll>
 					   </Scripts>
 					</ScrollFrame>
@@ -432,7 +432,7 @@
 						<Scripts>
 							<OnVerticalScroll>
 								DPSMate_Details_AbsorbsTaken.LastScroll=""
-								FauxScrollFrame_OnVerticalScroll(24, DPSMate.Modules.DetailsAbsorbsTaken.SelectCauseButton) 
+								FauxScrollFrame_OnVerticalScroll(this, arg1, 24, DPSMate.Modules.DetailsAbsorbsTaken.SelectCauseButton) 
 							</OnVerticalScroll>
 					   </Scripts>
 					</ScrollFrame>
@@ -536,7 +536,7 @@
 						<Scripts>
 							<OnVerticalScroll>
 								DPSMate_Details_AbsorbsTaken.LastScroll=""
-								FauxScrollFrame_OnVerticalScroll(24, DPSMate.Modules.DetailsAbsorbsTaken.SelectCauseABButton) 
+								FauxScrollFrame_OnVerticalScroll(this, arg1, 24, DPSMate.Modules.DetailsAbsorbsTaken.SelectCauseABButton) 
 							</OnVerticalScroll>
 					   </Scripts>
 					</ScrollFrame>
@@ -742,7 +742,7 @@
 						<Scripts>
 							<OnVerticalScroll>
 								DPSMate_Details_AbsorbsTaken.LastScroll="Compare"
-								FauxScrollFrame_OnVerticalScroll(24, DPSMate.Modules.DetailsAbsorbsTaken.ScrollFrame_Update) 
+								FauxScrollFrame_OnVerticalScroll(this, arg1, 24, DPSMate.Modules.DetailsAbsorbsTaken.ScrollFrame_Update) 
 							</OnVerticalScroll>
 					   </Scripts>
 					</ScrollFrame>
@@ -846,7 +846,7 @@
 						<Scripts>
 							<OnVerticalScroll>
 								DPSMate_Details_AbsorbsTaken.LastScroll="Compare"
-								FauxScrollFrame_OnVerticalScroll(24, DPSMate.Modules.DetailsAbsorbsTaken.SelectCreatureButton) 
+								FauxScrollFrame_OnVerticalScroll(this, arg1, 24, DPSMate.Modules.DetailsAbsorbsTaken.SelectCreatureButton) 
 							</OnVerticalScroll>
 					   </Scripts>
 					</ScrollFrame>
@@ -950,7 +950,7 @@
 						<Scripts>
 							<OnVerticalScroll>
 								DPSMate_Details_AbsorbsTaken.LastScroll="Compare"
-								FauxScrollFrame_OnVerticalScroll(24, DPSMate.Modules.DetailsAbsorbsTaken.SelectCauseButton) 
+								FauxScrollFrame_OnVerticalScroll(this, arg1, 24, DPSMate.Modules.DetailsAbsorbsTaken.SelectCauseButton) 
 							</OnVerticalScroll>
 					   </Scripts>
 					</ScrollFrame>
@@ -1054,7 +1054,7 @@
 						<Scripts>
 							<OnVerticalScroll>
 								DPSMate_Details_AbsorbsTaken.LastScroll="Compare"
-								FauxScrollFrame_OnVerticalScroll(24, DPSMate.Modules.DetailsAbsorbsTaken.SelectCauseABButton) 
+								FauxScrollFrame_OnVerticalScroll(this, arg1, 24, DPSMate.Modules.DetailsAbsorbsTaken.SelectCauseABButton) 
 							</OnVerticalScroll>
 					   </Scripts>
 					</ScrollFrame>

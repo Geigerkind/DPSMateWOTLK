@@ -437,36 +437,22 @@ function DPSMate.Modules.DetailsAbsorbs:UpdateStackedGraph(gg, comp, cname)
 		if db[uArr[dSel]] then
 			if db[uArr[dSel]][DPSMateUser[cname or DetailsUser][1]] then
 				for ca, va in pairs(db[uArr[dSel]][DPSMateUser[cname or DetailsUser][1]]["i"]) do
-					local i, dmg = 1, 5
-					if DPSMateDamageTaken[1][uArr[dSel]] then
-						if DPSMateDamageTaken[1][uArr[dSel]][va[2]] then
-							if DPSMateDamageTaken[1][uArr[dSel]][va[2]][va[3]] then
-								dmg = DPSMateDamageTaken[1][uArr[dSel]][va[2]][va[3]][14]
-								if dmg>DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])] then
-									dmg = DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])]
+					for c, v in pairs(va) do
+						local i, dmg = 1, v
+						if dmg>0 then
+							if not temp[ca] then
+								temp[ca] = {}
+							end
+							while true do
+								if (not temp[ca][i]) then
+									tinsert(temp[ca], i, {c, dmg})
+									break
+								elseif c<=temp[ca][i][1] then
+									tinsert(temp[ca], i, {c, dmg})
+									break
 								end
+								i=i+1
 							end
-						end
-					end
-					if dmg==5 or dmg==0 then
-						dmg = ceil((1/15)*((DPSMateUser[cname or DetailsUser][8] or 70)/70)*DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])]*0.33)
-					end
-					if va[4] then
-						dmg = dmg + va[4]
-					end
-					if dmg>0 then
-						if not temp[va[3]] then
-							temp[va[3]] = {}
-						end
-						while true do
-							if (not temp[va[3]][i]) then
-								tinsert(temp[va[3]], i, {va[1], dmg})
-								break
-							elseif va[1]<=temp[va[3]][i][1] then
-								tinsert(temp[va[3]], i, {va[1], dmg})
-								break
-							end
-							i=i+1
 						end
 					end
 				end
@@ -495,36 +481,22 @@ function DPSMate.Modules.DetailsAbsorbs:UpdateStackedGraph(gg, comp, cname)
 		for cat, val in pairs(DPSMateAbsorbs[curKey]) do
 			if val[DPSMateUser[cname or DetailsUser][1]] then
 				for ca, va in pairs(val[DPSMateUser[cname or DetailsUser][1]]["i"]) do
-					local i, dmg = 1, 5
-					if DPSMateDamageTaken[1][cat] then
-						if DPSMateDamageTaken[1][cat][va[2]] then
-							if DPSMateDamageTaken[1][cat][va[2]][va[3]] then
-								dmg = DPSMateDamageTaken[1][cat][va[2]][va[3]][14]
-								if dmg>DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])] then
-									dmg = DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])]
+					for c, v in pairs(va) do
+						local i, dmg = 1, v
+						if dmg>0 then
+							if not temp[ca] then
+								temp[ca] = {}
+							end
+							while true do
+								if (not temp[ca][i]) then
+									tinsert(temp[ca], i, {c, dmg})
+									break
+								elseif c<=temp[ca][i][1] then
+									tinsert(temp[ca], i, {c, dmg})
+									break
 								end
+								i=i+1
 							end
-						end
-					end
-					if dmg==5 or dmg==0 then
-						dmg = ceil((1/15)*((DPSMateUser[cname or DetailsUser][8] or 70)/70)*DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])]*0.33)
-					end
-					if va[4] then
-						dmg = dmg + va[4]
-					end
-					if dmg>0 then
-						if not temp[va[3]] then
-							temp[va[3]] = {}
-						end
-						while true do
-							if (not temp[va[3]][i]) then
-								tinsert(temp[va[3]], i, {va[1], dmg})
-								break
-							elseif va[1]<=temp[va[3]][i][1] then
-								tinsert(temp[va[3]], i, {va[1], dmg})
-								break
-							end
-							i=i+1
 						end
 					end
 				end
@@ -550,35 +522,21 @@ function DPSMate.Modules.DetailsAbsorbs:SortLineTable(arr, b, cname)
 		if DPSMateAbsorbs[curKey][b] then
 			if DPSMateAbsorbs[curKey][b][DPSMateUser[cname or DetailsUser][1]] then
 				for ca, va in pairs(DPSMateAbsorbs[curKey][b][DPSMateUser[cname or DetailsUser][1]]["i"]) do
-					local i, dmg = 1, 5
-					if DPSMateDamageTaken[1][b] then
-						if DPSMateDamageTaken[1][b][va[2]] then
-							if DPSMateDamageTaken[1][b][va[2]][va[3]] then
-								dmg = DPSMateDamageTaken[1][b][va[2]][va[3]][14]
-								if dmg>DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])] then
-									dmg = DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])]
-								end
-							end
-						end
-					end
-					if dmg==5 or dmg==0 then
-						dmg = ceil((1/15)*((DPSMateUser[cname or DetailsUser][8] or 70)/70)*DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])]*0.33)
-					end
-					if va[4] then
-						dmg = dmg + va[4]
-					end
-					if dmg>0 then
-						while true do
-							if (not newArr[i]) then
-								tinsert(newArr, i, {va[1], dmg})
-								break
-							else
-								if newArr[i][1] > va[1] then
-									tinsert(newArr, i, {va[1], dmg})
+					for c, v in pairs(va) do
+						local i, dmg = 1, v
+						if dmg>0 then
+							while true do
+								if (not newArr[i]) then
+									tinsert(newArr, i, {c, dmg})
 									break
+								else
+									if newArr[i][1] > c then
+										tinsert(newArr, i, {c, dmg})
+										break
+									end
 								end
+								i=i+1
 							end
-							i=i+1
 						end
 					end
 				end
@@ -588,35 +546,21 @@ function DPSMate.Modules.DetailsAbsorbs:SortLineTable(arr, b, cname)
 		for cat, val in pairs(arr) do
 			if val[DPSMateUser[cname or DetailsUser][1]] then
 				for ca, va in pairs(val[DPSMateUser[cname or DetailsUser][1]]["i"]) do
-					local i, dmg = 1, 5
-					if DPSMateDamageTaken[1][cat] then
-						if DPSMateDamageTaken[1][cat][va[2]] then
-							if DPSMateDamageTaken[1][cat][va[2]][va[3]] then
-								dmg = DPSMateDamageTaken[1][cat][va[2]][va[3]][14]
-								if dmg>DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])] then
-									dmg = DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])]
-								end
-							end
-						end
-					end
-					if dmg==5 or dmg==0 then
-						dmg = ceil((1/15)*((DPSMateUser[cname or DetailsUser][8] or 70)/70)*DPSMate.DB.FixedShieldAmounts[DPSMate:GetAbilityById(va[5])]*0.33)
-					end
-					if va[4] then
-						dmg = dmg + va[4]
-					end
-					if dmg>0 then
-						while true do
-							if (not newArr[i]) then
-								tinsert(newArr, i, {va[1], dmg})
-								break
-							else
-								if newArr[i][1] > va[1] then
-									tinsert(newArr, i, {va[1], dmg})
+					for c, v in pairs(va) do
+						local i, dmg = 1, v
+						if dmg>0 then
+							while true do
+								if (not newArr[i]) then
+									tinsert(newArr, i, {c, dmg})
 									break
+								else
+									if newArr[i][1] > c then
+										tinsert(newArr, i, {c, dmg})
+										break
+									end
 								end
+								i=i+1
 							end
-							i=i+1
 						end
 					end
 				end

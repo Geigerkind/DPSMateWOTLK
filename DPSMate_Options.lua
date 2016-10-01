@@ -69,7 +69,7 @@ DPSMate.Options.Options = {
 				type = 'toggle',
 				name = DPSMate.L["total"],
 				desc = DPSMate.L["totalmode"],
-				get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key]["options"][2]["total"] end,
+				get = function() return DPSMateSettings["windows"][(DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key]["options"][2]["total"] end,
 				set = function() DPSMate.Options:ToggleDrewDrop(2, "total", DPSMate.Options.Dewdrop:GetOpenedParent()) end,
 			},
 			currentFight = {
@@ -77,7 +77,7 @@ DPSMate.Options.Options = {
 				type = 'toggle',
 				name = DPSMate.L["mcurrent"],
 				desc = DPSMate.L["currentmode"],
-				get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key]["options"][2]["currentfight"] end,
+				get = function() return DPSMateSettings["windows"][(DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key]["options"][2]["currentfight"] end,
 				set = function() DPSMate.Options:ToggleDrewDrop(2, "currentfight", DPSMate.Options.Dewdrop:GetOpenedParent()) end,
 			},
 		},
@@ -119,28 +119,28 @@ DPSMate.Options.Options = {
 						type = 'execute',
 						name = DPSMate.L["damagedone"],
 						desc = DPSMate.L["realtimedmgdone"],
-						func = function() DPSMate.Options:SelectRealtime(DPSMate.Options.Dewdrop:GetOpenedParent(), "damage") end
+						func = function() DPSMate.Options:SelectRealtime((DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate), "damage") end
 					},
 					dmgt = {
 						order = 2,
 						type = 'execute',
 						name = DPSMate.L["damagetaken"],
 						desc = DPSMate.L["realtimedmgtaken"],
-						func = function() DPSMate.Options:SelectRealtime(DPSMate.Options.Dewdrop:GetOpenedParent(), "dmgt") end
+						func = function() DPSMate.Options:SelectRealtime((DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate), "dmgt") end
 					},
 					heal = {
 						order = 3,
 						type = 'execute',
 						name = DPSMate.L["healing"],
 						desc = DPSMate.L["realtimehealing"],
-						func = function() DPSMate.Options:SelectRealtime(DPSMate.Options.Dewdrop:GetOpenedParent(), "heal") end
+						func = function() DPSMate.Options:SelectRealtime((DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate), "heal") end
 					},
 					eheal = {
 						order = 4,
 						type = 'execute',
 						name = DPSMate.L["effectivehealing"],
 						desc = DPSMate.L["realtimeehealing"],
-						func = function() DPSMate.Options:SelectRealtime(DPSMate.Options.Dewdrop:GetOpenedParent(), "eheal") end
+						func = function() DPSMate.Options:SelectRealtime((DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate), "eheal") end
 					}
 				}
 			},
@@ -246,7 +246,7 @@ DPSMate.Options.Options = {
 						name = DPSMate.L["whisper"],
 						desc = DPSMate.L["whisperdesc"],
 						get = function() return "" end,
-						set = function(name) DPSMate.Options:ReportUserDetails(DPSMate.Options.Dewdrop:GetOpenedParent(), DPSMate.L["whisper"], name); DPSMate.Options.Dewdrop:Close() end,
+						set = function(name) DPSMate.Options:ReportUserDetails((DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate), DPSMate.L["whisper"], name); DPSMate.Options.Dewdrop:Close() end,
 						usage = "<name>",
 					},
 				},
@@ -277,72 +277,80 @@ DPSMate.Options.Options = {
 						type = 'toggle',
 						name = DPSMate.L["warrior"],
 						desc = DPSMate.L["warriordesc"],
-						get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key]["filterclasses"]["warrior"] end,
-						set = function() DPSMate.Options:ToggleFilterClass(DPSMate.Options.Dewdrop:GetOpenedParent().Key, "warrior") end,
+						get = function() return DPSMateSettings["windows"][(DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key]["filterclasses"]["warrior"] end,
+						set = function() DPSMate.Options:ToggleFilterClass((DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key, "warrior") end,
 					},
 					rogue = {
 						order = 20,
 						type = 'toggle',
 						name = DPSMate.L["rogue"],
 						desc = DPSMate.L["roguedesc"],
-						get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key]["filterclasses"]["rogue"] end,
-						set = function() DPSMate.Options:ToggleFilterClass(DPSMate.Options.Dewdrop:GetOpenedParent().Key, "rogue") end,
+						get = function() return DPSMateSettings["windows"][(DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key]["filterclasses"]["rogue"] end,
+						set = function() DPSMate.Options:ToggleFilterClass((DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key, "rogue") end,
 					},
 					priest = {
 						order = 30,
 						type = 'toggle',
 						name = DPSMate.L["priest"],
 						desc = DPSMate.L["priestdesc"],
-						get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key]["filterclasses"]["priest"] end,
-						set = function() DPSMate.Options:ToggleFilterClass(DPSMate.Options.Dewdrop:GetOpenedParent().Key, "priest") end,
+						get = function() return DPSMateSettings["windows"][(DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key]["filterclasses"]["priest"] end,
+						set = function() DPSMate.Options:ToggleFilterClass((DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key, "priest") end,
 					},
 					hunter = {
 						order = 40,
 						type = 'toggle',
 						name = DPSMate.L["hunter"],
 						desc = DPSMate.L["hunterdesc"],
-						get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key]["filterclasses"]["hunter"] end,
-						set = function() DPSMate.Options:ToggleFilterClass(DPSMate.Options.Dewdrop:GetOpenedParent().Key, "hunter") end,
+						get = function() return DPSMateSettings["windows"][(DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key]["filterclasses"]["hunter"] end,
+						set = function() DPSMate.Options:ToggleFilterClass((DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key, "hunter") end,
 					},
 					druid = {
 						order = 50,
 						type = 'toggle',
 						name = DPSMate.L["druid"],
 						desc = DPSMate.L["druiddesc"],
-						get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key]["filterclasses"]["druid"] end,
-						set = function() DPSMate.Options:ToggleFilterClass(DPSMate.Options.Dewdrop:GetOpenedParent().Key, "druid") end,
+						get = function() return DPSMateSettings["windows"][(DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key]["filterclasses"]["druid"] end,
+						set = function() DPSMate.Options:ToggleFilterClass((DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key, "druid") end,
 					},
 					mage = {
 						order = 60,
 						type = 'toggle',
 						name = DPSMate.L["mage"],
 						desc = DPSMate.L["magedesc"],
-						get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key]["filterclasses"]["mage"] end,
-						set = function() DPSMate.Options:ToggleFilterClass(DPSMate.Options.Dewdrop:GetOpenedParent().Key, "mage") end,
+						get = function() return DPSMateSettings["windows"][(DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key]["filterclasses"]["mage"] end,
+						set = function() DPSMate.Options:ToggleFilterClass((DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key, "mage") end,
 					},
 					warlock = {
 						order = 70,
 						type = 'toggle',
 						name = DPSMate.L["warlock"],
 						desc = DPSMate.L["warlockdesc"],
-						get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key]["filterclasses"]["warlock"] end,
-						set = function() DPSMate.Options:ToggleFilterClass(DPSMate.Options.Dewdrop:GetOpenedParent().Key, "warlock") end,
+						get = function() return DPSMateSettings["windows"][(DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key]["filterclasses"]["warlock"] end,
+						set = function() DPSMate.Options:ToggleFilterClass((DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key, "warlock") end,
 					},
 					paladin = {
 						order = 80,
 						type = 'toggle',
 						name = DPSMate.L["paladin"],
 						desc = DPSMate.L["paladindesc"],
-						get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key]["filterclasses"]["paladin"] end,
-						set = function() DPSMate.Options:ToggleFilterClass(DPSMate.Options.Dewdrop:GetOpenedParent().Key, "paladin") end,
+						get = function() return DPSMateSettings["windows"][(DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key]["filterclasses"]["paladin"] end,
+						set = function() DPSMate.Options:ToggleFilterClass((DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key, "paladin") end,
 					},
 					shamen = {
 						order = 90,
 						type = 'toggle',
 						name = DPSMate.L["shaman"],
 						desc = DPSMate.L["shamandesc"],
-						get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key]["filterclasses"]["shaman"] end,
-						set = function() DPSMate.Options:ToggleFilterClass(DPSMate.Options.Dewdrop:GetOpenedParent().Key, "shaman") end,
+						get = function() return DPSMateSettings["windows"][(DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key]["filterclasses"]["shaman"] end,
+						set = function() DPSMate.Options:ToggleFilterClass((DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key, "shaman") end,
+					},
+					shamen = {
+						order = 100,
+						type = 'toggle',
+						name = DPSMate.L["deathknight"],
+						desc = DPSMate.L["deathknightdesc"],
+						get = function() return DPSMateSettings["windows"][(DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key]["filterclasses"]["deathknight"] end,
+						set = function() DPSMate.Options:ToggleFilterClass((DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key, "deathknight") end,
 					},
 				},
 			},
@@ -351,8 +359,8 @@ DPSMate.Options.Options = {
 				type = 'text',
 				name = DPSMate.L["certainnames"],
 				desc = DPSMate.L["certainnamesdesc"],
-				get = function() if DPSMate.Options.Dewdrop:GetOpenedParent() then return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key]["filterpeople"] else return "" end end,
-				set = function(names) DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key]["filterpeople"] = names;DPSMate:SetStatusBarValue();DPSMate.Options.Dewdrop:Close() end,
+				get = function() if (DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate) then return DPSMateSettings["windows"][(DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key]["filterpeople"] else return "" end end,
+				set = function(names) DPSMateSettings["windows"][(DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key]["filterpeople"] = names;DPSMate:SetStatusBarValue();DPSMate.Options.Dewdrop:Close() end,
 				usage = "<names>",
 			},
 			group = {
@@ -360,8 +368,8 @@ DPSMate.Options.Options = {
 				type = "toggle",
 				name = DPSMate.L["grouponly"],
 				desc = DPSMate.L["grouponlydesc"],
-				get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key or 1]["grouponly"] end,
-				set = function() DPSMate.DB:OnGroupUpdate();DPSMate.Options:SimpleToggle(DPSMate.Options.Dewdrop:GetOpenedParent().Key, "grouponly");DPSMate.Options.Dewdrop:Close() end,
+				get = function() return DPSMateSettings["windows"][(DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key or 1]["grouponly"] end,
+				set = function() DPSMate.DB:OnGroupUpdate();DPSMate.Options:SimpleToggle((DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key, "grouponly");DPSMate.Options.Dewdrop:Close() end,
 			}
 		},
 		handler = DPSMate.Options,
@@ -517,6 +525,7 @@ function DPSMate.Options:InitializeConfigMenu()
 		_G("DPSMate_ConfigMenu_Tab_Columns_Child_Casts_Check"..i):SetChecked(DPSMateSettings["columnscasts"][i])
 		_G("DPSMate_ConfigMenu_Tab_Columns_Child_Fails_Check"..i):SetChecked(DPSMateSettings["columnsfails"][i])
 		_G("DPSMate_ConfigMenu_Tab_Columns_Child_CCBreaker_Check"..i):SetChecked(DPSMateSettings["columnsccbreaker"][i])
+		_G("DPSMate_ConfigMenu_Tab_Columns_Child_Rezz_Check"..i):SetChecked(DPSMateSettings["columnsrezz"][i])
 	end
 	
 	-- Tab Tooltips
@@ -771,6 +780,7 @@ function DPSMate.Options:PopUpAccept(bool, bypass)
 			--DPSMateThreat = {[1]={},[2]={}}
 			DPSMateFails = {[1]={},[2]={}}
 			DPSMateCCBreaker = {[1]={},[2]={}}
+			DPSMateRezz = {[1]={},[2]={}}
 			DPSMateHistory = {
 				names = {},
 				DMGDone = {},
@@ -790,7 +800,8 @@ function DPSMate.Options:PopUpAccept(bool, bypass)
 				Auras = {},
 				--Threat = {},
 				Fails = {},
-				CCBreaker = {}
+				CCBreaker = {},
+				Rezz = {}
 			}
 			DPSMateCombatTime = {
 				total = 1,
@@ -846,6 +857,7 @@ function DPSMate.Options:PopUpAccept(bool, bypass)
 			--DPSMateThreat[2] = {}
 			DPSMateFails[2] = {}
 			DPSMateCCBreaker[2] = {}
+			DPSMateRezz[2] = {}
 			DPSMateCombatTime["current"] = 1
 		end
 		DPSMate.Modules.DPS.DB = DPSMateDamageDone
@@ -889,6 +901,8 @@ function DPSMate.Options:PopUpAccept(bool, bypass)
 		DPSMate.Modules.CCBreaker.DB = DPSMateCCBreaker
 		DPSMate.Modules.OHPS.DB = DPSMateOverhealing
 		DPSMate.Modules.OHealingTaken.DB = DPSMateOverhealingTaken
+		DPSMate.Modules.Rezz.DB = DPSMateRezz
+		DPSMate.Modules.Activity.DB = DPSMateCombatTime
 		for _, val in pairs(DPSMateSettings["windows"]) do
 			if not val["options"][2]["total"] and not val["options"][2]["currentfight"] then
 				val["options"][2]["total"] = true
@@ -1438,6 +1452,7 @@ local hexClassColor = {
 	hunter = "ABD473",
 	paladin = "F58CBA",
 	shaman = "0070DE",
+	deathknight = "C41F3B",
 }
 hexClassColor[""] = "C79C6E"
 
@@ -1478,7 +1493,7 @@ function DPSMate.Options:InializePlayerDewDrop(obj)
 			type = "execute",
 			name = val,
 			desc = DPSMate.L["reportdetails"],
-			func = loadstring('DPSMate.Options:ReportUserDetails(DPSMate.Options.Dewdrop:GetOpenedParent(), "'..val..'"); DPSMate.Options.Dewdrop:Close()'),
+			func = loadstring('DPSMate.Options:ReportUserDetails((DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate), "'..val..'"); DPSMate.Options.Dewdrop:Close()'),
 		}
 	end
 	
@@ -1536,7 +1551,6 @@ function DPSMate.Options:NewSegment(segname)
 		if not segname then
 			name = DPSMate:GetUserById(a[1]) or DPSMate.L["unknown"]
 		end
-		DPSMate.DB:Attempt(false)
 		if DPSMateSettings["onlybossfights"] then
 			if DPSMate.BabbleBoss:Contains(name) then
 				DPSMate.Options:CreateSegment(name)
@@ -1563,10 +1577,12 @@ function DPSMate.Options:NewSegment(segname)
 		--DPSMateThreat[2] = {}
 		DPSMateFails[2] = {}
 		DPSMateCCBreaker[2] = {}
+		DPSMateRezz[2] = {}
 		DPSMateCombatTime["current"] = 1
 		DPSMateCombatTime["effective"][2] = {}
 		DPSMate:SetStatusBarValue()
 	end
+	DPSMate.DB:Attempt(false)
 end
 
 function DPSMate.Options:CreateSegment(name)
@@ -1600,7 +1616,7 @@ function DPSMate.Options:InitializeSegments()
 			type = 'toggle',
 			name = DPSMate.L["total"],
 			desc = DPSMate.L["totalmode"],
-			get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key]["options"][2]["total"] end,
+			get = function() return DPSMateSettings["windows"][(DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key]["options"][2]["total"] end,
 			set = function() DPSMate.Options:ToggleDrewDrop(2, "total", DPSMate.Options.Dewdrop:GetOpenedParent()) end,
 		},
 		currentFight = {
@@ -1608,7 +1624,7 @@ function DPSMate.Options:InitializeSegments()
 			type = 'toggle',
 			name = DPSMate.L["mcurrent"],
 			desc = DPSMate.L["currentmode"],
-			get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key]["options"][2]["currentfight"] end,
+			get = function() return DPSMateSettings["windows"][(DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key]["options"][2]["currentfight"] end,
 			set = function() DPSMate.Options:ToggleDrewDrop(2, "currentfight", DPSMate.Options.Dewdrop:GetOpenedParent()) end,
 		},
 	}
@@ -1620,7 +1636,7 @@ function DPSMate.Options:InitializeSegments()
 			type = 'toggle',
 			name = i..". "..DPSMateHistory["names"][i],
 			desc = DPSMate.L["fdetailsfor"]..DPSMateHistory["names"][i],
-			get = loadstring('return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key]["options"][2]["segment'..i..'"];'),
+			get = loadstring('return DPSMateSettings["windows"][(DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key]["options"][2]["segment'..i..'"];'),
 			set = loadstring('DPSMate.Options:ToggleDrewDrop(2, "segment'..i..'", DPSMate.Options.Dewdrop:GetOpenedParent());'),
 		}
 		DPSMate.Options.Options[3]["args"]["deletesegment"]["args"]["segment"..i] = {
@@ -1706,6 +1722,7 @@ function DPSMate.Options:CreateWindow()
 				paladin = true,
 				shaman = true,
 				druid = true,
+				deathknight = true,
 			},
 			filterpeople = "",
 			grouponly = false,

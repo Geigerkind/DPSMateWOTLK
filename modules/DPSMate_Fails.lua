@@ -6,7 +6,7 @@ DPSMate.Options.Options[1]["args"]["fails"] = {
 	type = 'toggle',
 	name = DPSMate.L["fails"],
 	desc = DPSMate.L["show"].." "..DPSMate.L["fails"]..".",
-	get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key or 1]["options"][1]["fails"] end,
+	get = function() return DPSMateSettings["windows"][(DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key or 1]["options"][1]["fails"] end,
 	set = function() DPSMate.Options:ToggleDrewDrop(1, "fails", DPSMate.Options.Dewdrop:GetOpenedParent()) end,
 }
 

@@ -353,7 +353,7 @@
 						<Scripts>
 							<OnVerticalScroll>
 								DPSMate_Details.LastScroll = ""
-								FauxScrollFrame_OnVerticalScroll(24, DPSMate.Modules.DetailsDamage.ScrollFrame_Update) 
+								FauxScrollFrame_OnVerticalScroll(this, arg1, 24, DPSMate.Modules.DetailsDamage.ScrollFrame_Update) 
 							</OnVerticalScroll>
 					   </Scripts>
 					</ScrollFrame>
@@ -809,7 +809,7 @@
 									this.oset = 0
 								end
 								this.oset = this.oset - arg1
-								FauxScrollFrame_OnVerticalScroll(24, DPSMate.Modules.DetailsDamage.Player_Update) 
+								FauxScrollFrame_OnVerticalScroll(this, arg1, 24, DPSMate.Modules.DetailsDamage.Player_Update) 
 							</OnMouseWheel>
 					   </Scripts>
 					</ScrollFrame>
@@ -903,7 +903,7 @@
 									this.oset = 0
 								end
 								this.oset = this.oset - arg1
-								FauxScrollFrame_OnVerticalScroll(24, DPSMate.Modules.DetailsDamage.PlayerSpells_Update) 
+								FauxScrollFrame_OnVerticalScroll(this, arg1, 24, DPSMate.Modules.DetailsDamage.PlayerSpells_Update) 
 							</OnMouseWheel>
 					   </Scripts>
 					</ScrollFrame>
@@ -1180,7 +1180,7 @@
 									this.oset = 0
 								end
 								this.oset = this.oset - arg1
-								FauxScrollFrame_OnVerticalScroll(24, DPSMate.Modules.DetailsDamage.ScrollFrame_Update) 
+								FauxScrollFrame_OnVerticalScroll(this, arg1, 24, DPSMate.Modules.DetailsDamage.ScrollFrame_Update) 
 							</OnMouseWheel>
 					   </Scripts>
 					</ScrollFrame>
@@ -1636,7 +1636,7 @@
 									this.oset = 0
 								end
 								this.oset = this.oset - arg1
-								FauxScrollFrame_OnVerticalScroll(24, DPSMate.Modules.DetailsDamage.Player_Update) 
+								FauxScrollFrame_OnVerticalScroll(this, arg1, 24, DPSMate.Modules.DetailsDamage.Player_Update) 
 							</OnMouseWheel>
 					   </Scripts>
 					</ScrollFrame>
@@ -1730,7 +1730,7 @@
 									this.oset = 0
 								end
 								this.oset = this.oset - arg1
-								FauxScrollFrame_OnVerticalScroll(24, DPSMate.Modules.DetailsDamage.PlayerSpells_Update) 
+								FauxScrollFrame_OnVerticalScroll(this, arg1, 24, DPSMate.Modules.DetailsDamage.PlayerSpells_Update) 
 							</OnMouseWheel>
 					   </Scripts>
 					</ScrollFrame>

@@ -5581,6 +5581,52 @@
 									</CheckButton>
 								</Frames>
 							</Frame>
+							<Frame name="$parent_Rezz" inherits="DPSMate_Template_BoxColumns">
+								<Anchors>
+									<Anchor point="TOP" relativeTo="$parent_FriendlyFireTaken" relativePoint="BOTTOM">
+										<Offset x="0" y="-20" />
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										getglobal(this:GetName().."_Title"):SetText(DPSMate.L["rezz"])
+									</OnLoad>
+								</Scripts>
+								<Frames>
+									<CheckButton name="$parent_Check1" inherits="DPSMate_Template_CheckButton">
+										<Anchors>
+											<Anchor point="TOPLEFT">
+												<Offset x="10" y="-8" />
+											</Anchor>
+										</Anchors>
+										<Scripts>
+											<OnLoad>
+												this.aide = DPSMate.L["columnstooltip"]
+												getglobal(this:GetName().."_Title"):SetText(DPSMate.L["amount"])
+											</OnLoad>
+											<OnClick>
+												DPSMate.Options:CheckButton("columnsrezz", 1)
+											</OnClick>
+										</Scripts>
+									</CheckButton>
+									<CheckButton name="$parent_Check2" inherits="DPSMate_Template_CheckButton">
+										<Anchors>
+											<Anchor point="LEFT" relativeTo="$parent_Check1" relativePoint="RIGHT">
+												<Offset x="50" y="0" />
+											</Anchor>
+										</Anchors>
+										<Scripts>
+											<OnLoad>
+												this.aide = DPSMate.L["columnstooltip"]
+												getglobal(this:GetName().."_Title"):SetText(DPSMate.L["percent"])
+											</OnLoad>
+											<OnClick>
+												DPSMate.Options:CheckButton("columnsrezz", 2)
+											</OnClick>
+										</Scripts>
+									</CheckButton>
+								</Frames>
+							</Frame>
 						</Frames>
 					</Frame>
 				</ScrollChild>

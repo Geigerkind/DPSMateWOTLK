@@ -726,16 +726,17 @@ function DPSMate.Sync:AbsorbsStatIn(arg2, arg4)
 	strgsub(arg2, "(.-),", func)
 
 	DB:BuildUser(t[1], nil)
-	local userid, userid2 = DPSMateUser[arg4][1], DPSMateUser[t[1]][1]
+	DB:BuildUser(arg4, nil)
+	DB:BuildAbility(t[2], nil)
+	local userid, userid2, abid = DPSMateUser[arg4][1], DPSMateUser[t[1]][1], DPSMateAbility[t[2]][1]
 	if not DPSMateAbsorbs[1][DPSMateUser[arg4][1]] then return end
 	if not DPSMateAbsorbs[1][DPSMateUser[arg4][1]][DPSMateUser[t[1]][1]] then return end
-	t[2] = tnbr(t[2])
-	if t[4] then
-		tinsert(Arrays[10][userid][userid2]["i"], {t[2], tnbr(t[3]), tnbr(t[4]), tnbr(t[5])})
-	else
-		tinsert(Arrays[10][userid][userid2]["i"], {t[2], tnbr(t[3]), tnbr(t[4])})
+	if not Arrays[10][userid][userid2]["i"][abid] then
+		Arrays[10][userid][userid2]["i"][abid] = {}
 	end
-	if t[1]>DPSMateCombatTime["total"] then DPSMateCombatTime["total"]=t[1] end
+	t[3] = tnbr(t[3])
+	Arrays[10][userid][userid2]["i"][abid][t[3]] = tnbr(t[4])
+	if t[3]>DPSMateCombatTime["total"] then DPSMateCombatTime["total"]=t[3] end
 end
 
 function DPSMate.Sync:AbsorbsIn(arg2, arg4) 
@@ -753,7 +754,12 @@ function DPSMate.Sync:AbsorbsIn(arg2, arg4)
 	if not Arrays[10][userid][userid2][userid3] then Arrays[10][userid][userid2][userid3] = {} end
 	if not Arrays[10][userid][userid2][userid3][tnbr(t[3])] then Arrays[10][userid][userid2][userid3][tnbr(t[3])] = {} end
 	if not Arrays[10][userid][userid2][userid3][tnbr(t[3])][DPSMateUser[t[4]][1]] then Arrays[10][userid][userid2][userid3][tnbr(t[3])][DPSMateUser[t[4]][1]] = {} end
-	Arrays[10][userid][userid2][userid3][tnbr(t[3])][DPSMateUser[t[4]][1]][tnbr(t[5])] = tnbr(t[6])
+	Arrays[10][userid][userid2][userid3][tnbr(t[3])][DPSMateUser[t[4]][1]][tnbr(t[5])] = {
+		[1] = tnbr(t[6]),
+		[2] = tnbr(t[7]),
+		[3] = tnbr(t[8]),
+		[4] = tnbr(t[9]),
+	}
 	DB.NeedUpdate = true
 end
 
@@ -1228,7 +1234,7 @@ function DPSMate.Sync:AbsorbsOut()
 							--SDM("DPSMate_iAbsorbs", DPSMate:GetUserById(cat)..","..DPSMate:GetAbilityById(ca)..","..c..","..ve[1]..","..ve[2]..","..ve[3]..","..ve[4]..",", "RAID")
 						else
 							for cet, vel in pairs(ve) do
-								Buffer[cou] = {"DPSMate_Absorbs", DPSMate:GetUserById(cat)..","..DPSMate:GetAbilityById(ca)..","..c..","..DPSMate:GetUserById(ce)..","..cet..","..vel..","}
+								Buffer[cou] = {"DPSMate_Absorbs", DPSMate:GetUserById(cat)..","..DPSMate:GetAbilityById(ca)..","..c..","..DPSMate:GetUserById(ce)..","..cet..","..vel[1]..","..vel[2]..","..vel[3]..","..vel[4]..","}
 								cou = cou + 1
 							end
 							--SDM("DPSMate_Absorbs", DPSMate:GetUserById(cat)..","..DPSMate:GetAbilityById(ca)..","..c..","..DPSMate:GetUserById(ce)..","..ve[1]..","..ve[2]..",", "RAID")
@@ -1244,14 +1250,9 @@ function DPSMate.Sync:AbsorbsStatOut()
 	if not DPSMateAbsorbs[1][pid] then return end
 	for cat, val in pairs(DPSMateAbsorbs[1][pid]) do -- owner
 		for ca, va in pairs(val["i"]) do
-			if va[4] then
-				Buffer[cou] = {"DPSMate_AbsorbsStat", DPSMate:GetUserById(cat)..","..va[1]..","..va[2]..","..va[3]..","..va[4]..","}
+			for c, v in pairs(va) do
+				Buffer[cou] = {"DPSMate_AbsorbsStat", DPSMate:GetUserById(cat)..","..DPSMate:GetAbilityById(ca)..","..c..","..v..","}
 				cou = cou + 1
-				--SDM("DPSMate_AbsorbsStat", DPSMate:GetUserById(cat)..","..va[1]..","..va[2]..","..va[3]..","..va[4]..",", "RAID")
-			else
-				Buffer[cou] = {"DPSMate_AbsorbsStat", DPSMate:GetUserById(cat)..","..va[1]..","..va[2]..","..va[3]..","}
-				cou = cou + 1
-				--SDM("DPSMate_AbsorbsStat", DPSMate:GetUserById(cat)..","..va[1]..","..va[2]..","..va[3]..",", "RAID")
 			end
 		end
 	end

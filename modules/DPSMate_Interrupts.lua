@@ -6,7 +6,7 @@ DPSMate.Options.Options[1]["args"]["interrupts"] = {
 	type = 'toggle',
 	name = DPSMate.L["interrupts"],
 	desc = DPSMate.L["show"].." "..DPSMate.L["interrupts"]..".",
-	get = function() return DPSMateSettings["windows"][DPSMate.Options.Dewdrop:GetOpenedParent().Key or 1]["options"][1]["interrupts"] end,
+	get = function() return DPSMateSettings["windows"][(DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key or 1]["options"][1]["interrupts"] end,
 	set = function() DPSMate.Options:ToggleDrewDrop(1, "interrupts", DPSMate.Options.Dewdrop:GetOpenedParent()) end,
 }
 

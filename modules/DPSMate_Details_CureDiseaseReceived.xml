@@ -152,7 +152,7 @@
 						<Scripts>
 							<OnVerticalScroll>
 								DPSMate_Details_CureDiseaseReceived.LastScroll = ""
-								FauxScrollFrame_OnVerticalScroll(24, DPSMate.Modules.DetailsCureDiseaseReceived.ScrollFrame_Update) 
+								FauxScrollFrame_OnVerticalScroll(this, arg1, 24, DPSMate.Modules.DetailsCureDiseaseReceived.ScrollFrame_Update) 
 							</OnVerticalScroll>
 					   </Scripts>
 					</ScrollFrame>
@@ -284,7 +284,7 @@
 						<Scripts>
 							<OnVerticalScroll>
 								DPSMate_Details_CureDiseaseReceived.LastScroll = ""
-								FauxScrollFrame_OnVerticalScroll(24, DPSMate.Modules.DetailsCureDiseaseReceived.SelectCreatureButton) 
+								FauxScrollFrame_OnVerticalScroll(this, arg1, 24, DPSMate.Modules.DetailsCureDiseaseReceived.SelectCreatureButton) 
 							</OnVerticalScroll>
 					   </Scripts>
 					</ScrollFrame>
@@ -416,7 +416,7 @@
 						<Scripts>
 							<OnVerticalScroll>
 								DPSMate_Details_CureDiseaseReceived.LastScroll = ""
-								FauxScrollFrame_OnVerticalScroll(24, DPSMate.Modules.DetailsCureDiseaseReceived.SelectCreatureAbilityButton) 
+								FauxScrollFrame_OnVerticalScroll(this, arg1, 24, DPSMate.Modules.DetailsCureDiseaseReceived.SelectCreatureAbilityButton) 
 							</OnVerticalScroll>
 					   </Scripts>
 					</ScrollFrame>
@@ -615,7 +615,7 @@
 						<Scripts>
 							<OnVerticalScroll>
 								DPSMate_Details_CureDiseaseReceived.LastScroll = "Compare"
-								FauxScrollFrame_OnVerticalScroll(24, DPSMate.Modules.DetailsCureDiseaseReceived.ScrollFrame_Update) 
+								FauxScrollFrame_OnVerticalScroll(this, arg1, 24, DPSMate.Modules.DetailsCureDiseaseReceived.ScrollFrame_Update) 
 							</OnVerticalScroll>
 					   </Scripts>
 					</ScrollFrame>
@@ -747,7 +747,7 @@
 						<Scripts>
 							<OnVerticalScroll>
 								DPSMate_Details_CureDiseaseReceived.LastScroll = "Compare"
-								FauxScrollFrame_OnVerticalScroll(24, DPSMate.Modules.DetailsCureDiseaseReceived.SelectCreatureButton) 
+								FauxScrollFrame_OnVerticalScroll(this, arg1, 24, DPSMate.Modules.DetailsCureDiseaseReceived.SelectCreatureButton) 
 							</OnVerticalScroll>
 					   </Scripts>
 					</ScrollFrame>
@@ -879,7 +879,7 @@
 						<Scripts>
 							<OnVerticalScroll>
 								DPSMate_Details_CureDiseaseReceived.LastScroll = "Compare"
-								FauxScrollFrame_OnVerticalScroll(24, DPSMate.Modules.DetailsCureDiseaseReceived.SelectCreatureAbilityButton) 
+								FauxScrollFrame_OnVerticalScroll(this, arg1, 24, DPSMate.Modules.DetailsCureDiseaseReceived.SelectCreatureAbilityButton) 
 							</OnVerticalScroll>
 					   </Scripts>
 					</ScrollFrame>

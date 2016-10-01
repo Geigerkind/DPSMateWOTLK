@@ -1,46 +1,225 @@
 -- Global Variables
 DPSMate.DB.loaded = false
 DPSMate.DB.ShieldFlags = {
-	[GetSpellInfo(37515)] = 0, -- Blade Turning
+	-- Blade Turning
+	[37515] = 0,
+	[37514] = 0,
 	
-	[GetSpellInfo(11974)] = 0, -- Power Word: Shield
-	[GetSpellInfo(11426)] = 0, -- Ice Barrier
-	[GetSpellInfo(29506)] = 0, -- The Burrower's Shell
-	[GetSpellInfo(23506)] = 0, -- Aura of Protection
-	[GetSpellInfo(25750)] = 0, -- Damage Absorb
-	[GetSpellInfo(21956)] = 1, -- Physical Protection
-	[GetSpellInfo(13234)] = 0, -- Harm Prevention Belt
-	[GetSpellInfo(1463)] = 1, -- Mana Shield
-	[GetSpellInfo(16895)] = 2, -- Frost Protection
-	[GetSpellInfo(10477)] = 2, -- Frost Resistance
-	[GetSpellInfo(6143)] = 2, -- Frost Ward
-	[GetSpellInfo(12561)] = 3, -- Fire Protection
-	[GetSpellInfo(543)] = 3, -- Fire Ward
-	[GetSpellInfo(16893)] = 4, -- Nature Protection
-	[GetSpellInfo(976)] = 5, -- Shadow Protection
-	[GetSpellInfo(21893)] = 6, -- Arcane Protection
-	[GetSpellInfo(16892)] = 7, -- Holy Protection
-}
-DPSMate.DB.FixedShieldAmounts = {
-	[GetSpellInfo(37515)] = 200, -- Blade Turning -- ADD THIS AS PROC TO THIS AND LL!
+	-- Sacred Shield
+	[58597] = 0,
 	
-	[GetSpellInfo(11974)] = 1300, -- All  -- Power Word: Shield
-	[GetSpellInfo(11426)] = 1075, -- All -- Ice Barrier
-	[GetSpellInfo(29506)] = 900, -- All -- The Burrower's Shell
-	[GetSpellInfo(23506)] = 1000, -- All -- Aura of Protection
-	[GetSpellInfo(25750)] = 550, -- All -- Damage Absorb
-	[GetSpellInfo(21956)] = 500, -- Meele -- Physical Protection
-	[GetSpellInfo(13234)] = 500, -- All -- Harm Prevention Belt
-	[GetSpellInfo(1463)] = 780, -- Meele -- Mana Shield
-	[GetSpellInfo(16895)] = 3500, -- Frost -- Frost Protection
-	[GetSpellInfo(10477)] = 600, -- Frost -- Frost Resistance
-	[GetSpellInfo(6143)] = 1125, -- Frost -- Frost Ward
-	[GetSpellInfo(12561)] = 3500, -- Fire -- Fire Protection
-	[GetSpellInfo(543)] = 1125, -- Fire -- Fire Ward
-	[GetSpellInfo(16893)] = 3500, -- Nature -- Nature Protection
-	[GetSpellInfo(976)] = 3500, -- Shadow -- Shadow Protection
-	[GetSpellInfo(21893)] = 3500, -- Arcane -- Arcane Protection
-	[GetSpellInfo(16892)] = 3500, -- Holy -- Holy Protection
+	-- Power Word: Shield
+	[17] = 0,
+	[592] = 0,
+	[600] = 0,
+	[3747] = 0,
+	[6065] = 0,
+	[10898] = 0,
+	[10899] = 0,
+	[10900] = 0,
+	[10901] = 0,
+	[11835] = 0,
+	[25217] = 0,
+	[25218] = 0,
+	[27607] = 0,
+	[29408] = 0,
+	[44175] = 0,
+	[44291] = 0,
+	[46193] = 0,
+	[48065] = 0,
+	[48066] = 0,
+	[66099] = 0,
+	[68032] = 0,
+	[71548] = 0,
+	[71780] = 0,
+	[20706] = 0,
+	[11974] = 0,
+	
+	-- Ice Barrier
+	[13031] = 0,
+	[13032] = 0,
+	[13033] = 0,
+	[27134] = 0,
+	[33405] = 0,
+	[43038] = 0,
+	[43039] = 0,
+	[69787] = 0,
+	[11426] = 0,
+	
+	-- The Burrower's Shell
+	[29506] = 0,
+	
+	-- Aura of Protection
+	[23506] = 0,
+	
+	-- Damage Absorb
+	[23991] = 0,
+	[25746] = 0,
+	[25747] = 0,
+	[25750] = 0,
+	
+	-- Physical Protection
+	[21956] = 1,
+	[34206] = 1,
+	
+	-- Harm Prevention Belt
+	[13234] = 0,
+	
+	-- Mana Shield
+	[1463] = 1,
+	[1481] = 1,
+	[8494] = 1,
+	[8495] = 1,
+	[8496] = 1,
+	[8497] = 1,
+	[10191] = 1,
+	[10192] = 1,
+	[10193] = 1,
+	[10194] = 1,
+	[10195] = 1,
+	[10196] = 1,
+	[17740] = 1,
+	[27131] = 1,
+	[27398] = 1,
+	[30973] = 1,
+	[31635] = 1,
+	[35064] = 1,
+	[43019] = 1,
+	[43020] = 1,
+	[46151] = 1,
+	[58348] = 1,
+	[8373] = 1,
+	
+	-- Frost Protection
+	[7236] = 2,
+	[7237] = 2,
+	[7238] = 2,
+	[7239] = 2,
+	[7240] = 2,
+	[16895] = 2,
+	[17544] = 2,
+	[28512] = 2,
+	[53913] = 2,
+	
+	-- Frost Resistance
+	[27534] = 2,
+	[28766] = 2,
+	
+	-- Frost Ward
+	[6143] = 2,
+	[6144] = 2,
+	[8461] = 2,
+	[8462] = 2,
+	[8463] = 2,
+	[8464] = 2,
+	[10177] = 2,
+	[10178] = 2,
+	[25641] = 2,
+	[27396] = 2,
+	[28609] = 2,
+	[32796] = 2,
+	[32797] = 2,
+	[43012] = 2,
+	
+	-- Fire Protection
+	[7230] = 3,
+	[7231] = 3,
+	[7232] = 3,
+	[7233] = 3,
+	[7234] = 3,
+	[12561] = 3,
+	[16894] = 3,
+	[17543] = 3,
+	[18942] = 3,
+	[28511] = 3,
+	[29432] = 3,
+	[53911] = 3,
+	
+	-- Fire Ward
+	[543] = 3,
+	[1035] = 3,
+	[8457] = 3,
+	[8458] = 3,
+	[8459] = 3,
+	[8460] = 3,
+	[10223] = 3,
+	[10224] = 3,
+	[10225] = 3,
+	[10226] = 3,
+	[27128] = 3,
+	[27395] = 3,
+	[43010] = 3,
+	
+	-- Nature Protection
+	[7250] = 4,
+	[7251] = 4,
+	[7252] = 4,
+	[7253] = 4,
+	[7254] = 4,
+	[16893] = 4,
+	[17546] = 4,
+	[28513] = 4,
+	[53914] = 4,
+	
+	-- Shadow Protection
+	[7235] = 5,
+	[7241] = 5,
+	[7242] = 5,
+	[7243] = 5,
+	[7244] = 5,
+	[16891] = 5,
+	[17548] = 5,
+	[28537] = 5,
+	[53915] = 5,
+	
+	-- Arcane Protection
+	[17549] = 6,
+	[28536] = 6,
+	[53910] = 6,
+	
+	-- Holy Protection
+	[7245] = 7,
+	[7246] = 7,
+	[7247] = 7,
+	[7248] = 7,
+	[7249] = 7,
+	[16892] = 7,
+	[17545] = 7,
+	[28538] = 7,
+	[27536] = 7,
+	
+	-- Val'anyr
+	[64411] = 0,
+	
+	-- Anti-Magic-Shell
+	[52918] = 0,
+	[48707] = 0,
+	[49088] = 0,
+	
+	-- Anti-Magic-Zone
+	[50642] = 0,
+	[53636] = 0,
+	[53637] = 0,
+	[72628] = 0,
+	
+	-- Bone Shield
+	[27688] = 0,
+	
+	-- Divine Guardian
+	[70940] = 0,
+	
+	-- Divine Protection
+	[498] = 0,
+	[13007] = 0,
+	[27778] = 0,
+	[27779] = 0,
+	
+	-- Divine Aegis
+	[47753] = 0,
+	[54704] = 0,
+	
+	-- Cheat Death
+	[31231] = 0,
 }
 local AbilityFlags = {
 	["fire"] = 3,
@@ -63,18 +242,15 @@ DPSMate.DB.NeedUpdate = false
 DPSMate.DB.UserData = {}
 DPSMate.DB.MainUpdate = 0
 DPSMate.DB.Zones = {
-	[DPSMate.L["kazzak"]] = true,
-	[DPSMate.L["doomw"]] = true,
-	[DPSMate.L["blackt"]] = true,
-	[DPSMate.L["sscdun"]] = true,
-	[DPSMate.L["karadun"]] = true,
-	[DPSMate.L["gruuldun"]] = true,
-	[DPSMate.L["magdun"]] = true,
-	[DPSMate.L["zuldun"]] = true,
-	[DPSMate.L["tempestdun"]] = true,
-	[DPSMate.L["hyjaldun"]] = true,
-	[DPSMate.L["sunwell"]] = true,
-	[DPSMate.L["tkdun2"]] = true,
+	[DPSMate.L["dun1"]] = true,
+	[DPSMate.L["dun2"]] = true,
+	[DPSMate.L["dun3"]] = true,
+	[DPSMate.L["dun4"]] = true,
+	[DPSMate.L["dun5"]] = true,
+	[DPSMate.L["dun6"]] = true,
+	[DPSMate.L["dun7"]] = true,
+	[DPSMate.L["dun8"]] = true,
+	[DPSMate.L["dun9"]] = true,
 }
 DPSMate.DB.KTMHOOK = {}
 DPSMate.DB.NextSwing = {}
@@ -161,6 +337,7 @@ function DPSMate.DB:OnEvent(event)
 							paladin = true,
 							shaman = true,
 							druid = true,
+							deathknight = true,
 						},
 						filterpeople = "",
 						grouponly = false,
@@ -394,6 +571,10 @@ function DPSMate.DB:OnEvent(event)
 					[3] = true,
 					[4] = false
 				},
+				columnsrezz = {
+					[1] = true,
+					[2] = true,
+				},
 				showtooltips = true,
 				informativetooltips = true,
 				subviewrows = 4,
@@ -429,7 +610,8 @@ function DPSMate.DB:OnEvent(event)
 				Auras = {},
 				--Threat = {},
 				Fail = {},
-				CCBreaker = {}
+				CCBreaker = {},
+				Rezz = {}
 			}
 		end
 		if DPSMateUser == nil then DPSMateUser = {} end
@@ -452,6 +634,7 @@ function DPSMate.DB:OnEvent(event)
 		--if DPSMateThreat == nil then DPSMateThreat = {[1]={},[2]={}} end
 		if DPSMateFails == nil then DPSMateFails = {[1]={},[2]={}} end
 		if DPSMateCCBreaker == nil then DPSMateCCBreaker = {[1]={},[2]={}} end
+		if DPSMateRezz == nil then DPSMateRezz = {[1]={},[2]={}} end
 		-- Legacy Logs support
 		if DPSMateAttempts == nil then DPSMateAttempts = {} end
 		if DPSMatePlayer == nil then DPSMatePlayer = {} end
@@ -499,6 +682,8 @@ function DPSMate.DB:OnEvent(event)
 		DPSMate.Modules.CCBreaker.DB = DPSMateCCBreaker
 		DPSMate.Modules.OHPS.DB = DPSMateOverhealing
 		DPSMate.Modules.OHealingTaken.DB = DPSMateOverhealingTaken
+		DPSMate.Modules.Rezz.DB = DPSMateRezz
+		DPSMate.Modules.Activity.DB = DPSMateCombatTime
 		
 		if DPSMateCombatTime == nil then
 			DPSMateCombatTime = {
@@ -512,6 +697,12 @@ function DPSMate.DB:OnEvent(event)
 			}
 		end
 		
+		if not DPSMateSettings["columnsrezz"] then
+			DPSMateSettings["columnsrezz"] = {
+				[1] = true,
+				[2] = true,
+			}
+		end
 		
 		DPSMate:OnLoad()
 		DPSMate.Sync:OnLoad()
@@ -722,7 +913,8 @@ function DPSMate.DB:BuildUser(Dname, Dclass)
 			[5] = 0,
 			[6] = 0,
 			[7] = "",
-			[8] = 70,
+			[8] = 80,
+			[9] = 0, -- NPCID
 		}
 		DPSMate.UserId = nil
 	end
@@ -811,6 +1003,14 @@ end
 
 function DPSMate.DB:WeightedAverage(a, b, c, d)
 	return a*(c/(c+d))+b*(d/(c+d))
+end
+
+function DPSMate.DB:SetNpcID(name, guid)
+	if name then
+		if DPSMateUser[name] then
+			DPSMateUser[name][9] = DPSMate:GetNPCID(guid)
+		end
+	end
 end
 
 function DPSMate.DB:AddSpellSchool(ab, sc, sid, bod)
@@ -1349,7 +1549,16 @@ function DPSMate.DB:UnregisterAbsorb(ability, abilityTarget)
 				path[2] = broken[2]
 				path[3] = broken[3]
 				path[4] = broken[4]
-				if (broken[2] or 0)>0 then tinsert(DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"], {DPSMateCombatTime[val], broken[4], broken[3], broken[2], AbsorbingAbility[2]}) end
+				if (broken[2] or 0)>0 then 
+					if not DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][broken[3]] then
+						DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][broken[3]] = {}
+					end
+					if DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][broken[3]][DPSMateCombatTime[val]] then
+						DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][broken[3]][DPSMateCombatTime[val]] = DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][broken[3]][DPSMateCombatTime[val]] + broken[2];
+					else
+						DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][broken[3]][DPSMateCombatTime[val]] = broken[2]
+					end
+				end
 			end
 		end
 	end
@@ -1358,11 +1567,11 @@ function DPSMate.DB:UnregisterAbsorb(ability, abilityTarget)
 	self.NeedUpdate = true
 end
 
-function DPSMate.DB:GetActiveAbsorbAbilityByPlayer(ability, abilityTarget, cat)
+function DPSMate.DB:GetActiveAbsorbAbilityByPlayer(ability, abilityTarget, cate)
 	if self:BuildAbility(ability, nil) or self:BuildUser(abilityTarget, nil) then return end
 	local ActiveShield = {}
-	if DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]] then
-		for cat, val in pairs(DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]]) do
+	if DPSMateAbsorbs[cate][DPSMateUser[abilityTarget][1]] then
+		for cat, val in pairs(DPSMateAbsorbs[cate][DPSMateUser[abilityTarget][1]]) do
 			for ca, va in pairs(val) do
 				if ca~="i" then
 					for c, v in pairs(va) do
@@ -1380,12 +1589,12 @@ function DPSMate.DB:GetActiveAbsorbAbilityByPlayer(ability, abilityTarget, cat)
 	return ActiveShield
 end
 
-function DPSMate.DB:GetAbsorbingShield(ability, abilityTarget, cat)
+function DPSMate.DB:GetAbsorbingShield(ability, abilityTarget, cate)
 	-- Checking for active Shields
 	local AbsorbingAbility = {}	
 	local activeShields = {}
-	if DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]] then
-		for cat, val in pairs(DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]]) do
+	if DPSMateAbsorbs[cate][DPSMateUser[abilityTarget][1]] then
+		for cat, val in pairs(DPSMateAbsorbs[cate][DPSMateUser[abilityTarget][1]]) do
 			for ca, va in pairs(val) do
 				if ca~="i" then
 					for c, v in pairs(va) do
@@ -1405,10 +1614,10 @@ function DPSMate.DB:GetAbsorbingShield(ability, abilityTarget, cat)
 		local AAS, ASS = {}, {}
 		for cat, val in pairs(activeShields) do
 			--DPSMate:SendMessage("Test 2 / "..DPSMate:GetAbilityById(val[1]).."//"..AbilityFlags[DPSMateAbility[ability][2]].."//"..DPSMateAbility[ability][2].."//"..self.ShieldFlags[DPSMate:GetAbilityById(val[1])].."//"..ability)
-			if self.ShieldFlags[DPSMate:GetAbilityById(val[1])]==0 then
+			if self.ShieldFlags[DPSMateAbility[DPSMate:GetAbilityById(val[1])][4]]==0 then
 				AAS[cat] = {val[1],val[2]}
 				--DPSMate:SendMessage("Fired! 3")
-			elseif self.ShieldFlags[DPSMate:GetAbilityById(val[1])]==AbilityFlags[DPSMateAbility[ability][3]] then
+			elseif self.ShieldFlags[DPSMateAbility[DPSMate:GetAbilityById(val[1])][4]]==AbilityFlags[DPSMateAbility[ability][3]] then
 				ASS[cat] = {val[1],val[2]}
 				--DPSMate:SendMessage("Fired! 2")
 			elseif not DPSMateAbility[ability][3] or not AbilityFlags[DPSMateAbility[ability][3]] then
@@ -1455,7 +1664,7 @@ function DPSMate.DB:GetAbsorbingShield(ability, abilityTarget, cat)
 	return AbsorbingAbility
 end
 
-function DPSMate.DB:Absorb(ability, abilityTarget, incTarget)
+function DPSMate.DB:Absorb(ability, abilityTarget, incTarget, amount)
 	if self:BuildUser(incTarget, nil) or self:BuildUser(abilityTarget, nil) or self:BuildAbility(ability, nil) then return end
 	--DPSMate:SendMessage("Absorb: "..ability.."/"..abilityTarget.."/"..incTarget)
 	for cat, val in pairs({[1]="total", [2]="current"}) do 
@@ -1468,13 +1677,28 @@ function DPSMate.DB:Absorb(ability, abilityTarget, incTarget)
 			end
 			local path = DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]][AbsorbingAbility[2][1]][AbsorbingAbility[2][2]][DPSMateUser[incTarget][1]]
 			if path[DPSMateAbility[ability][1]] then
-				path[DPSMateAbility[ability][1]] = path[DPSMateAbility[ability][1]] + 1
+				path[DPSMateAbility[ability][1]][1] = path[DPSMateAbility[ability][1]][1] + 1
+				path[DPSMateAbility[ability][1]][2] = path[DPSMateAbility[ability][1]][2] + amount
+				if amount > path[DPSMateAbility[ability][1]][4] then
+					path[DPSMateAbility[ability][1]][4] = amount 
+				end
+				if amount<path[DPSMateAbility[ability][1]][3] then
+					path[DPSMateAbility[ability][1]][2] = amount
+				end
 			else
-				path[DPSMateAbility[ability][1]] = 1
+				path[DPSMateAbility[ability][1]] = {[1]=1,[2]=amount,[3]=amount,[4]=amount}
 			end
-			tinsert(DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"], {DPSMateCombatTime[val], DPSMateUser[incTarget][1], DPSMateAbility[ability][1], 0, AbsorbingAbility[2][1]})
+			if not DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][DPSMateAbility[ability][1]] then
+				DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][DPSMateAbility[ability][1]] = {}
+			end
+			if DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][DPSMateAbility[ability][1]][DPSMateCombatTime[val]] then
+				DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][DPSMateAbility[ability][1]][DPSMateCombatTime[val]] = DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][DPSMateAbility[ability][1]][DPSMateCombatTime[val]] + amount;
+			else
+				DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][DPSMateAbility[ability][1]][DPSMateCombatTime[val]] = amount
+			end
 		end
 	end
+	self.NeedUpdate = true
 end
 
 function DPSMate.DB:Dispels(cause, Dname, target, ability)
@@ -1863,8 +2087,10 @@ RepopMe = NewRepopMe
 -- No idea how this error occours.
 function DPSMate.DB:Attempt(mode, check, tar)
 	local zone = GetRealZoneText()
-	if not DPSMateAttempts[zone] then DPSMateAttempts[zone] = {} end
+	local difficulty = GetInstanceDifficulty()
 	if self.Zones[zone] then -- Need to find a solution for world bosses.
+		zone = zone.."x"..difficulty
+		if not DPSMateAttempts[zone] then DPSMateAttempts[zone] = {} end
 		if mode then
 			if DPSMateAttempts[zone][1] and not DPSMateAttempts[zone][1][4] then
 				local _,_,a = DPSMate.Modules.EDT:GetSortedTable(DPSMateEDT[2])
@@ -1878,6 +2104,7 @@ function DPSMate.DB:Attempt(mode, check, tar)
 				end
 				DPSMateAttempts[zone][1][4] = DPSMateCombatTime["total"]
 				DPSMateAttempts[zone][1][5] = check
+				DPSMateAttempts[zone][1]["difficulty"] = difficulty
 			end
 		else
 			if check then
@@ -1889,7 +2116,8 @@ function DPSMate.DB:Attempt(mode, check, tar)
 					[1] = DPSMate.L["unknown"],
 					[2] = DPSMateCombatTime["total"],
 					[3] = GetRealTime(),
-					[6] = {}
+					[6] = {},
+					["difficulty"] = difficulty
 				})
 			end
 		end
@@ -2207,4 +2435,24 @@ function DPSMate.DB:LifeBloomOwner(srcName)
 		return LifeBloomByPlayer[srcName]
 	end
 	return srcName
+end
+
+
+-- New Resurrection
+
+function DPSMate.DB:Resurrection(srcName, dstName, spellName)
+	if not srcName or not dstName or not dstName then return end
+	self:BuildAbility(spellName)
+	self:BuildUser(dstName)
+	self:BuildUser(srcName)
+	for cat, val in pairs({[1]="total", [2]="current"}) do
+		if not DPSMateRezz[cat][DPSMateUser[srcName][1]] then
+			DPSMateRezz[cat][DPSMateUser[srcName][1]] = {}
+		end
+		if not DPSMateRezz[cat][DPSMateUser[srcName][1]][DPSMateUser[dstName][1]] then
+			DPSMateRezz[cat][DPSMateUser[srcName][1]][DPSMateUser[dstName][1]] = {}
+		end
+		tinsert(DPSMateRezz[cat][DPSMateUser[srcName][1]][DPSMateUser[dstName][1]], {DPSMateCombatTime[val], DPSMateAbility[spellName][1]})
+	end
+	self.NeedUpdate = true
 end

@@ -19,6 +19,7 @@ DPSMate.ModuleNames = {}
 DPSMate.BabbleBoss = AceLibrary("DPSBabble-Boss-2.3")
 DPSMate.UserId = nil
 DPSMate.AbilityId = nil
+DPSMate.Key = 1
 
 -- Local Variables
 local _G = getglobal
@@ -32,6 +33,7 @@ local classcolor = {
 	hunter = {r=0.67,g=0.83,b=0.45},
 	paladin = {r=0.96,g=0.55,b=0.73},
 	shaman = {r=0,g=0.44,b=0.87},
+	deathknight = {r=0.77,g=0.12,b=0.23},
 }
 local t = {}
 local tinsert = table.insert
@@ -378,8 +380,11 @@ function DPSMate:ScaleDown(arr, start)
 	return t
 end
 
+local savedNPCIds = {}
 function DPSMate:GetNPCID(guid)
-	return tonumber(guid:sub(-10, -7), 16)
+	if savedNPCIds[guid] then return savedNPCIds[guid] end
+	savedNPCIds[guid] = tonumber(guid:sub(-10, -7), 16)
+	return savedNPCIds[guid]
 end
 
 local savedNPCS = {}
@@ -405,6 +410,7 @@ function DPSMate:SetStatusBarValue()
 			_G("DPSMate_"..c["name"].."_ScrollFrame_Child_Total_Value"):SetText(strt[1]..strt[2])
 		end
 		if (user[1]) then
+			_G("DPSMate_"..c["name"].."_ScrollFrame_Child_Total"):Show()
 			for i=1, 40 do
 				--DPSMate:SendMessage("Test 1")
 				if (not user[i]) then break end -- To prevent visual issues
@@ -423,6 +429,8 @@ function DPSMate:SetStatusBarValue()
 				statusbar.user = user[i]
 				statusbar:Show()
 			end
+		else
+			_G("DPSMate_"..c["name"].."_ScrollFrame_Child_Total"):Hide()
 		end
 	end
 end
@@ -518,7 +526,7 @@ function DPSMate:GetMode(k)
 				if DPSMateHistory[Handler.Hist][num] then
 					return DPSMateHistory[Handler.Hist][num], DPSMateCombatTime["segments"][num][1], DPSMateCombatTime["segments"][num][2]
 				else
-					return result[cat][1], result[cat][2], result[cat][3]
+					return {}, 0, 0
 				end
 			else
 				return result[cat][1], result[cat][2], result[cat][3]
@@ -536,7 +544,7 @@ function DPSMate:GetModeByArr(arr, k, Hist)
 				if DPSMateHistory[Hist or arr.Hist][num] then
 					return DPSMateHistory[Hist or arr.Hist][num], DPSMateCombatTime["segments"][num][1], DPSMateCombatTime["segments"][num][2]
 				else
-					return result[cat][1], result[cat][2], result[cat][3]
+					return {}, 0, 0
 				end
 			else
 				return result[cat][1], result[cat][2], result[cat][3]
@@ -552,9 +560,9 @@ function DPSMate:GetModeName(k)
 		if val then 
 			if strfind(cat, "segment") then
 				local num = tonumber(strsub(cat, 8))
-				return DPSMateHistory["names"][num]
+				return DPSMateHistory["names"][num], num
 			else
-				return result[cat]
+				return result[cat], 0
 			end
 		end
 	end

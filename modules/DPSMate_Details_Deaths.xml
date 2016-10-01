@@ -213,7 +213,7 @@
 						<Scripts>
 							<OnVerticalScroll>
 								DPSMate_Details_Deaths.LastScroll = ""
-								FauxScrollFrame_OnVerticalScroll(24, DPSMate.Modules.DetailsDeaths.ScrollFrame_Update) 
+								FauxScrollFrame_OnVerticalScroll(this, arg1, 24, DPSMate.Modules.DetailsDeaths.ScrollFrame_Update) 
 							</OnVerticalScroll>
 					   </Scripts>
 					</ScrollFrame>
@@ -610,7 +610,7 @@
 						<Scripts>
 							<OnVerticalScroll>
 								DPSMate_Details_Deaths.LastScroll = "Compare"
-								FauxScrollFrame_OnVerticalScroll(24, DPSMate.Modules.DetailsDeaths.ScrollFrame_Update) 
+								FauxScrollFrame_OnVerticalScroll(this, arg1, 24, DPSMate.Modules.DetailsDeaths.ScrollFrame_Update) 
 							</OnVerticalScroll>
 					   </Scripts>
 					</ScrollFrame>
