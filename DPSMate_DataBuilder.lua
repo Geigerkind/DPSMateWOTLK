@@ -790,39 +790,41 @@ function DPSMate.DB:OnGroupUpdate()
 	end
 	for i=1, num do
 		local name = UnitName(type..i)
-		local pet = UnitName(type.."pet"..i)
-		local _,classEng = UnitClass(type..i)
-		local fac = UnitFactionGroup(type..i)
-		local gname, _, _ = GetGuildInfo(type..i)
-		local level = UL(type..i)
-		self:BuildUser(name, strlower(classEng or ""))
-		self:BuildUser(pet)
-		if classEng then
-			DPSMateUser[name][2] = strlower(classEng)
-		end
-		DPSMateUser[name][4] = false
-		if pet and pet ~= DPSMate.L["unknown"] then
-			DPSMateUser[pet][4] = true
-			DPSMateUser[name][5] = pet
-			DPSMateUser[pet][6] = DPSMateUser[name][1]
-		end
-		if fac == DPSMate.L["alliance"] then
-			DPSMateUser[name][3] = 1
-		elseif fac == DPSMate.L["horde"] then
-			DPSMateUser[name][3] = -1
-		end
-		DPSMate.Parser.TargetParty[name] = type..i
-		if (gname and gname ~= "") then
-			DPSMateUser[name][7] = gname
-		end
-		if level and level>0 then
-			DPSMateUser[name][8] = level
-		end
-		if type=="party" then
-			DPSMate.Parser.SubGroups[name] = 9
-		else
-			local _,_,sg = GetRaidRosterInfo(i)
-			DPSMate.Parser.SubGroups[name] = sg
+		if name then
+			local pet = UnitName(type.."pet"..i)
+			local _,classEng = UnitClass(type..i)
+			local fac = UnitFactionGroup(type..i)
+			local gname, _, _ = GetGuildInfo(type..i)
+			local level = UL(type..i)
+			self:BuildUser(name, strlower(classEng or ""))
+			self:BuildUser(pet)
+			if classEng then
+				DPSMateUser[name][2] = strlower(classEng)
+			end
+			DPSMateUser[name][4] = false
+			if pet and pet ~= DPSMate.L["unknown"] then
+				DPSMateUser[pet][4] = true
+				DPSMateUser[name][5] = pet
+				DPSMateUser[pet][6] = DPSMateUser[name][1]
+			end
+			if fac == DPSMate.L["alliance"] then
+				DPSMateUser[name][3] = 1
+			elseif fac == DPSMate.L["horde"] then
+				DPSMateUser[name][3] = -1
+			end
+			DPSMate.Parser.TargetParty[name] = type..i
+			if (gname and gname ~= "") then
+				DPSMateUser[name][7] = gname
+			end
+			if level and level>0 then
+				DPSMateUser[name][8] = level
+			end
+			if type=="party" then
+				DPSMate.Parser.SubGroups[name] = 9
+			else
+				local _,_,sg = GetRaidRosterInfo(i)
+				DPSMate.Parser.SubGroups[name] = sg
+			end
 		end
 	end
 	local pet = UnitName("pet")
