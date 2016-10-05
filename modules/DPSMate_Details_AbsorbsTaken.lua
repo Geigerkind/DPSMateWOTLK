@@ -436,23 +436,24 @@ function DPSMate.Modules.DetailsAbsorbsTaken:UpdateStackedGraph(gg, comp, cname)
 		local temp = {}
 		if db[DPSMateUser[cname or DetailsUser][1]] then
 			if db[DPSMateUser[cname or DetailsUser][1]][uArr[dSel]] then
-				local ownername = DPSMate:GetUserById(uArr[dSel])
 				for ca, va in pairs(db[DPSMateUser[cname or DetailsUser][1]][uArr[dSel]]["i"]) do
-					for c, v in pairs(va) do
-						local i, dmg = 1, v
-						if dmg>0 then
-							if not temp[ca] then
-								temp[ca] = {}
-							end
-							while true do
-								if (not temp[ca][i]) then
-									tinsert(temp[ca], i, {c, dmg})
-									break
-								elseif c<=temp[ca][i][1] then
-									tinsert(temp[ca], i, {c, dmg})
-									break
+					for ce, ve in pairs(va) do
+						for c, v in pairs(ve) do
+							local i, dmg = 1, v
+							if dmg>0 then
+								if not temp[ce] then
+									temp[ce] = {}
 								end
-								i=i+1
+								while true do
+									if (not temp[ce][i]) then
+										tinsert(temp[ce], i, {c, dmg})
+										break
+									elseif c<=temp[ce][i][1] then
+										tinsert(temp[ce], i, {c, dmg})
+										break
+									end
+									i=i+1
+								end
 							end
 						end
 					end
@@ -482,21 +483,23 @@ function DPSMate.Modules.DetailsAbsorbsTaken:UpdateStackedGraph(gg, comp, cname)
 		for cat, val in pairs(db[DPSMateUser[cname or DetailsUser][1]]) do
 			local ownername = DPSMate:GetUserById(cat)
 			for ca, va in pairs(val["i"]) do
-				for c, v in pairs(va) do
-					local i, dmg = 1, v
-					if dmg>0 then
-						if not temp[ca] then
-							temp[ca] = {}
-						end
-						while true do
-							if (not temp[ca][i]) then
-								tinsert(temp[ca], i, {c, dmg})
-								break
-							elseif c<=temp[ca][i][1] then
-								tinsert(temp[ca], i, {c, dmg})
-								break
+				for ce, ve in pairs(va) do
+					for c, v in pairs(ve) do
+						local i, dmg = 1, v
+						if dmg>0 then
+							if not temp[ce] then
+								temp[ce] = {}
 							end
-							i=i+1
+							while true do
+								if (not temp[ce][i]) then
+									tinsert(temp[ce], i, {c, dmg})
+									break
+								elseif c<=temp[ce][i][1] then
+									tinsert(temp[ce], i, {c, dmg})
+									break
+								end
+								i=i+1
+							end
 						end
 					end
 				end
@@ -520,29 +523,8 @@ function DPSMate.Modules.DetailsAbsorbsTaken:SortLineTable(arr, b, cname)
 	if b then
 		local ownername = DPSMate:GetUserById(b)
 		for ca, va in pairs(arr[DPSMateUser[cname or DetailsUser][1]][b]["i"]) do
-			for c, v in pairs(va) do
-				local i, dmg = 1, v
-				if dmg>0 then
-					while true do
-						if (not newArr[i]) then
-							tinsert(newArr, i, {c, dmg})
-							break
-						else
-							if newArr[i][1] > c then
-								tinsert(newArr, i, {c, dmg})
-								break
-							end
-						end
-						i=i+1
-					end
-				end
-			end
-		end	
-	else
-		for cat, val in pairs(arr[DPSMateUser[cname or DetailsUser][1]]) do
-			local ownername = DPSMate:GetUserById(cat)
-			for ca, va in pairs(val["i"]) do
-				for c, v in pairs(va) do
+			for ce, ve in pairs(va) do
+				for c, v in pairs(ve) do
 					local i, dmg = 1, v
 					if dmg>0 then
 						while true do
@@ -556,6 +538,31 @@ function DPSMate.Modules.DetailsAbsorbsTaken:SortLineTable(arr, b, cname)
 								end
 							end
 							i=i+1
+						end
+					end
+				end
+			end
+		end	
+	else
+		for cat, val in pairs(arr[DPSMateUser[cname or DetailsUser][1]]) do
+			local ownername = DPSMate:GetUserById(cat)
+			for ca, va in pairs(val["i"]) do
+				for ce, ve in pairs(va) do
+					for c, v in pairs(ve) do
+						local i, dmg = 1, v
+						if dmg>0 then
+							while true do
+								if (not newArr[i]) then
+									tinsert(newArr, i, {c, dmg})
+									break
+								else
+									if newArr[i][1] > c then
+										tinsert(newArr, i, {c, dmg})
+										break
+									end
+								end
+								i=i+1
+							end
 						end
 					end
 				end

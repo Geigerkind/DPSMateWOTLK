@@ -120,19 +120,21 @@ function DPSMate.Modules.DetailsAbsorbsTakenTotal:UpdateStackedGraph()
 			for qq, uu in pairs(val) do
 				local ownername = DPSMate:GetUserById(qq)
 				for ca, va in pairs(uu["i"]) do
-					for c,v in pairs(va) do
-						local i, dmg = 1, v
-						if dmg>0 then
-							local i = 1
-							while true do
-								if not temp[i] then
-									tinsert(temp, i, {c, dmg})
-									break
-								elseif c<=temp[i][1] then
-									tinsert(temp, i, {c, dmg})
-									break
+					for ce, ve in pairs(va) do
+						for c,v in pairs(ve) do
+							local i, dmg = 1, v
+							if dmg>0 then
+								local i = 1
+								while true do
+									if not temp[i] then
+										tinsert(temp, i, {c, dmg})
+										break
+									elseif c<=temp[i][1] then
+										tinsert(temp, i, {c, dmg})
+										break
+									end
+									i=i+1
 								end
-								i=i+1
 							end
 						end
 					end
@@ -212,15 +214,16 @@ function DPSMate.Modules.DetailsAbsorbsTakenTotal:AddTotalDataSeries()
 		if DPSMate:ApplyFilter(curKey, user) then
 			tempDat[user] = true
 			for qq, uu in pairs(val) do
-				local ownername = DPSMate:GetUserById(qq)
 				for ca, va in pairs(uu["i"]) do
-					for c,v in pairs(va) do
-						local i, dmg = 1, v
-						if dmg>0 then
-							if sumTable[c] then
-								sumTable[c] = sumTable[c] + dmg
-							else
-								sumTable[c] = dmg
+					for ce, ve in pairs(va) do
+						for c,v in pairs(ve) do
+							local i, dmg = 1, v
+							if dmg>0 then
+								if sumTable[c] then
+									sumTable[c] = sumTable[c] + dmg
+								else
+									sumTable[c] = dmg
+								end
 							end
 						end
 					end
@@ -373,20 +376,22 @@ function DPSMate.Modules.DetailsAbsorbsTakenTotal:SortLineTable(uid)
 		for cat, val in pairs(db[uid]) do
 			local ownername = DPSMate:GetUserById(cat)
 			for ca, va in pairs(val["i"]) do
-				for c,v in pairs(va) do
-					local i, dmg = 1, v
-					if dmg>0 then
-						while true do
-							if (not newArr[i]) then
-								tinsert(newArr, i, {c, dmg})
-								break
-							else
-								if newArr[i][1] > c then
+				for ce, ve in pairs(va) do
+					for c,v in pairs(ve) do
+						local i, dmg = 1, v
+						if dmg>0 then
+							while true do
+								if (not newArr[i]) then
 									tinsert(newArr, i, {c, dmg})
 									break
+								else
+									if newArr[i][1] > c then
+										tinsert(newArr, i, {c, dmg})
+										break
+									end
 								end
+								i=i+1
 							end
-							i=i+1
 						end
 					end
 				end

@@ -601,6 +601,7 @@ local UL = UnitLevel
 local t = {}
 local UnitName = UnitName
 local spellSchoolToString = {
+	[0] = "None",
 	[1] = "physical",
 	[2] = "holy",
 	[3] = "holy",

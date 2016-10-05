@@ -929,8 +929,8 @@ function DPSMate.DB:BuildAbility(name, kind, school, sid, buffOrDebuff)
 	if not DPSMateAbility[name] then
 		DPSMateAbility[name] = {
 			[1] = DPSMate:TableLength(DPSMateAbility)+101,
-			[2] = kind or "",
-			[3] = school or "",
+			[2] = kind or "None",
+			[3] = school or "None",
 			[4] = sid or 0,
 			[5] = buffOrDebuff or false,
 		}
@@ -1021,7 +1021,7 @@ function DPSMate.DB:AddSpellSchool(ab, sc, sid, bod)
 		DPSMateAbility[ab][4] = sid or DPSMateAbility[ab][4]
 		DPSMateAbility[ab][5] = bod or DPSMateAbility[ab][5]
 	else
-		self:BuildAbility(ab,nil,sc,sid)
+		self:BuildAbility(ab,"None",sc,sid)
 	end
 end
 
@@ -1065,10 +1065,10 @@ function DPSMate.DB:DamageDone(Duser, Dname, Dhit, Dcrit, Dmiss, Dparry, Ddodge,
 			Dname = self.NextSwing[Duser][2]
 			self.NextSwing[Duser][1] = self.NextSwing[Duser][1] - 1
 		else
-			Dname = self:IsWindFuryAttack(Windfury, Dname, Duser, true)
+			--Dname = self:IsWindFuryAttack(Windfury, Dname, Duser, true)
 		end
 	else
-		Dname = self:IsWindFuryAttack(Windfury, Dname, Duser, true)
+		--Dname = self:IsWindFuryAttack(Windfury, Dname, Duser, true)
 	end
 	
 	for cat, val in pairs({[1]="total", [2]="current"}) do 
@@ -1265,10 +1265,10 @@ function DPSMate.DB:EnemyDamage(mode, arr, Duser, Dname, Dhit, Dcrit, Dmiss, Dpa
 				Dname = self.NextSwingEDD[Duser][2]
 				self.NextSwingEDD[Duser][1] = self.NextSwingEDD[Duser][1] - 1
 			else
-				Dname = self:IsWindFuryAttack(WindfuryEDT, Dname, Duser)
+				--Dname = self:IsWindFuryAttack(WindfuryEDT, Dname, Duser)
 			end
 		else
-			Dname = self:IsWindFuryAttack(WindfuryEDT, Dname, Duser)
+			--Dname = self:IsWindFuryAttack(WindfuryEDT, Dname, Duser)
 		end
 	end
 	
@@ -1552,13 +1552,16 @@ function DPSMate.DB:UnregisterAbsorb(ability, abilityTarget)
 				path[3] = broken[3]
 				path[4] = broken[4]
 				if (broken[2] or 0)>0 then 
-					if not DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][broken[3]] then
-						DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][broken[3]] = {}
+					if not DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][AbsorbingAbility[2]] then
+						DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][AbsorbingAbility[2]] = {}
 					end
-					if DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][broken[3]][DPSMateCombatTime[val]] then
-						DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][broken[3]][DPSMateCombatTime[val]] = DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][broken[3]][DPSMateCombatTime[val]] + broken[2];
+					if not DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][AbsorbingAbility[2]][broken[3]] then
+						DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][AbsorbingAbility[2]][broken[3]] = {}
+					end
+					if DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][AbsorbingAbility[2]][broken[3]][DPSMateCombatTime[val]] then
+						DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][AbsorbingAbility[2]][broken[3]][DPSMateCombatTime[val]] = DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][AbsorbingAbility[2]][broken[3]][DPSMateCombatTime[val]] + broken[2];
 					else
-						DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][broken[3]][DPSMateCombatTime[val]] = broken[2]
+						DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][AbsorbingAbility[2]][broken[3]][DPSMateCombatTime[val]] = broken[2]
 					end
 				end
 			end
@@ -1690,13 +1693,16 @@ function DPSMate.DB:Absorb(ability, abilityTarget, incTarget, amount)
 			else
 				path[DPSMateAbility[ability][1]] = {[1]=1,[2]=amount,[3]=amount,[4]=amount}
 			end
-			if not DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][DPSMateAbility[ability][1]] then
-				DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][DPSMateAbility[ability][1]] = {}
+			if not DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][AbsorbingAbility[2][1]] then
+				DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][AbsorbingAbility[2][1]] = {}
 			end
-			if DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][DPSMateAbility[ability][1]][DPSMateCombatTime[val]] then
-				DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][DPSMateAbility[ability][1]][DPSMateCombatTime[val]] = DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][DPSMateAbility[ability][1]][DPSMateCombatTime[val]] + amount;
+			if not DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][AbsorbingAbility[2][1]][DPSMateAbility[ability][1]] then
+				DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][AbsorbingAbility[2][1]][DPSMateAbility[ability][1]] = {}
+			end
+			if DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][AbsorbingAbility[2][1]][DPSMateAbility[ability][1]][DPSMateCombatTime[val]] then
+				DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][AbsorbingAbility[2][1]][DPSMateAbility[ability][1]][DPSMateCombatTime[val]] = DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][AbsorbingAbility[2][1]][DPSMateAbility[ability][1]][DPSMateCombatTime[val]] + amount;
 			else
-				DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][DPSMateAbility[ability][1]][DPSMateCombatTime[val]] = amount
+				DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]][AbsorbingAbility[1]]["i"][AbsorbingAbility[2][1]][DPSMateAbility[ability][1]][DPSMateCombatTime[val]] = amount
 			end
 		end
 	end
@@ -2365,9 +2371,17 @@ function DPSMate.DB:AssignGuardianToOwner(guardianGUID, guardianName)
 	end
 end
 
+local guardList = {
+	["Minion"] = true,
+	["Guardian"] = true,
+	["Wächter"] = true,
+	["Diener"] = true,
+	["Begleiter"] = true,
+	["Pet"] = true,
+}
 function DPSMate.DB:GetMinionOwner(name, spellName)
-	local nName = name:match(DPSMate.L["minionregex"]) -- Gotta test that on the german client
-	if nName then
+	local nName, guard = name:match(DPSMate.L["minionregex"]) -- Gotta test that on the german client
+	if nName and guardList[guard] then
 		return nName, spellName..DPSMate.L["minion"]
 	end
 	return name, spellName
