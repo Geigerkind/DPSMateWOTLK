@@ -828,8 +828,8 @@ function DPSMate.Parser:UnitAuraDispels(unit)
 	for i=1, 8 do
 		local name, _, _, _, dispelType, _, expTime = UnitDebuff(unit, i)
 		if not name then break end
-		DB:BuildAbility(name, dispelType)
-		DPSMateAbility[name][2] = dispelType
+		DB:BuildAbility(name, dispelType or "None")
+		DPSMateAbility[name][2] = dispelType or "None"
 		
 		-- Dispel Totem Part
 		if dispelType == "Poison" then
