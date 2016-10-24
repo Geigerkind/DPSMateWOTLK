@@ -731,6 +731,8 @@ local getActiveTotemDispel = function(spellName, dstName)
 		end
 	end
 end
+-- [target] = Guid, name
+local lastheal = {}
 
 -- Begin Functions
 
@@ -1001,6 +1003,7 @@ function DPSMate.Parser:SpellHeal(timestamp, eventtype, srcGUID, srcName, srcFla
 		if spellId == LifebloomHealId then
 			srcName = DB:LifeBloomOwner(srcName)
 		end
+		lastheal[dstName] = srcName
 		DB:UnregisterPotentialKick(srcName, spellName, GetTime())
 		DB:HealingTaken(DPSMateHealingTaken, dstName, spellName, t[1] or 1, t[2] or 0, amount, srcName)
 		DB:HealingTaken(DPSMateEHealingTaken, dstName, spellName, t[1] or 1, t[2] or 0, amount-overheal, srcName)
@@ -1047,6 +1050,9 @@ function DPSMate.Parser:SpellAuraApplied(timestamp, eventtype, srcGUID, srcName,
 	end
 	if DPSMate.Parser.CC[spellName] then DB:BuildActiveCC(dstName, spellName) end
 	if DPSMate.Parser.Kicks[spellName] and srcName~=DPSMate.L["unknown"] then DB:AssignPotentialKick(srcName, spellName, dstName, GetTime()); end
+	if spellId == 64411 and lastheal[srcName] then -- Protection of ancient kings
+		dstName = lastheal[srcName]
+	end
 	if DB.ShieldFlags[spellId] then DB:RegisterAbsorb(srcName, spellName, dstName) end
 	DB:AddSpellSchool(spellName,spellSchoolToString[spellSchool],spellId,BuffTypes[auraType])
 	DB:SetNpcID(srcName, srcGUID)
