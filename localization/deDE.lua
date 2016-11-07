@@ -507,4 +507,5 @@ if (GetLocale() == "deDE") then
 	DPSMate.L["rezzof"] = "Wiederbelebungen von "
 	DPSMate.L["rezzsum"] = "Wiederbelebungs Übersicht"
 	DPSMate.L["activity"] = "Aktivität"
+	DPSMate.L["cbtdisplay"] = "Deaktiviere CBT-Anzeige"
 end

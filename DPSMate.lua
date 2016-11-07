@@ -1,6 +1,6 @@
 -- Global Variables
 DPSMate = {}
-DPSMate.VERSION = 5
+DPSMate.VERSION = 6
 DPSMate.LOCALE = GetLocale()
 DPSMate.SYNCVERSION = DPSMate.VERSION..DPSMate.LOCALE
 DPSMate.Parser = {}
@@ -410,7 +410,9 @@ function DPSMate:SetStatusBarValue()
 			_G("DPSMate_"..c["name"].."_ScrollFrame_Child_Total_Value"):SetText(strt[1]..strt[2])
 		end
 		-- Updating CBT
-		_G("DPSMate_"..c["name"].."_Head_Font"):SetText(DPSMate.Options.Options[1]["args"][c["CurMode"]].name.." ["..DPSMate.Options:FormatTime(cbt).."]")
+		if not c["cbtdisplay"] then
+			_G("DPSMate_"..c["name"].."_Head_Font"):SetText(DPSMate.Options.Options[1]["args"][c["CurMode"]].name.." ["..DPSMate.Options:FormatTime(cbt).."]")
+		end
 		if (user[1]) then
 			_G("DPSMate_"..c["name"].."_ScrollFrame_Child_Total"):Show()
 			for i=1, 40 do

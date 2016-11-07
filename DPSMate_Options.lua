@@ -1558,18 +1558,19 @@ end
 function DPSMate.Options:NewSegment(segname)
 	-- Get name of this session
 	local _,_,a = DPSMate.Modules.EDT:GetSortedTable(DPSMateEDT[2])
+	local extra = ""
 	if a[1] or segname~=nil then
 		local name = segname
 		if not segname then
 			name = DPSMate:GetUserById(a[1]) or DPSMate.L["unknown"]
-			name = name.." - CBT: "..self:FormatTime(DPSMateCombatTime["current"])
+			extra = " - CBT: "..self:FormatTime(DPSMateCombatTime["current"])
 		end
 		if DPSMateSettings["onlybossfights"] then
 			if DPSMate.BabbleBoss:Contains(name) then
-				DPSMate.Options:CreateSegment(name)
+				DPSMate.Options:CreateSegment(name..extra)
 			end
 		else
-			DPSMate.Options:CreateSegment(name)
+			DPSMate.Options:CreateSegment(name..extra)
 		end
 		
 		DPSMateDamageDone[2] = {}
@@ -1742,6 +1743,7 @@ function DPSMate.Options:CreateWindow()
 			realtime = false,
 			barbg = false,
 			totopacity = 1,
+			cbtdisplay = false,
 		})
 		local TL = DPSMate:TableLength(DPSMateSettings["windows"])
 		if not _G("DPSMate_"..na) then
