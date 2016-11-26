@@ -2784,6 +2784,7 @@
 										getglobal("DPSMate_"..val["name"].."_ScrollFrame_Child_StatusBar1"):SetPoint("TOPLEFT", getglobal("DPSMate_"..val["name"].."_ScrollFrame_Child_Total"), "BOTTOMLEFT", 0, -1*val["barspacing"])
 									end
 								end
+								DPSMate:SetStatusBarValue()
 							</OnClick>
 						</Scripts>
 					</CheckButton>
@@ -2838,6 +2839,24 @@
 								end
 								DPSMate.Options:HideInPvP()
 								DPSMate.Options:HideWhenSolo()
+							</OnClick>
+						</Scripts>
+					</CheckButton>
+					<CheckButton name="$parent_Login" inherits="DPSMate_Template_CheckButton">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent_Combat" relativePoint="BOTTOMLEFT" />
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								this.aide = DPSMate.L["loginhidetooltip"]
+								getglobal(this:GetName().."_Title"):SetText(DPSMate.L["loginhide"])
+							</OnLoad>
+							<OnClick>
+								if DPSMateSettings["hideonlogin"] then
+									DPSMateSettings["hideonlogin"] = false
+								else
+									DPSMateSettings["hideonlogin"] = true
+								end
 							</OnClick>
 						</Scripts>
 					</CheckButton>
@@ -2924,7 +2943,7 @@
 					</CheckButton>
 					<Slider name="$parent_Segments" inherits="DPSMate_Template_Slider">
 						<Anchors>
-							<Anchor point="TOPLEFT" relativeTo="$parent_Combat" relativePoint="BOTTOMLEFT">
+							<Anchor point="TOPLEFT" relativeTo="$parent_Login" relativePoint="BOTTOMLEFT">
 								<Offset x="3" y="-15" />
 							</Anchor>
 						</Anchors>

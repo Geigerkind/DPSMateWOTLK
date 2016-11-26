@@ -508,4 +508,6 @@ if (GetLocale() == "deDE") then
 	DPSMate.L["rezzsum"] = "Wiederbelebungs Übersicht"
 	DPSMate.L["activity"] = "Aktivität"
 	DPSMate.L["cbtdisplay"] = "Deaktiviere CBT-Anzeige"
+	DPSMate.L["semicondensed"] = "Semi-Verdichtet"
+	DPSMate.L["loginhide"] = "Verstecke beim einloggen"
 end

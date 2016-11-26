@@ -1,6 +1,6 @@
 -- Global Variables
 DPSMate = {}
-DPSMate.VERSION = 7
+DPSMate.VERSION = 8
 DPSMate.LOCALE = GetLocale()
 DPSMate.SYNCVERSION = DPSMate.VERSION..DPSMate.LOCALE
 DPSMate.Parser = {}
@@ -450,18 +450,29 @@ function DPSMate:Commas(n,k)
 end
 
 function DPSMate:FormatNumbers(dmg,total,sort,k)
+	local dmgr, totalr, sortr = dmg, total, sort
 	if DPSMateSettings["windows"][k]["numberformat"] == 2 then
-		if dmg>0 then
+		if dmg>10000 then
 			dmg = strformat("%.0f", (dmg/1000))
 		end
-		if total>0 then
+		if total>10000 then
 			total = strformat("%.0f", (total/1000))
 		end
-		if sort>0 then
+		if sort>10000 then
 			sort = strformat("%.0f", (sort/1000))
 		end
+	elseif DPSMateSettings["windows"][k]["numberformat"] == 4 then
+		if dmg>10000 then
+			dmg = strformat("%.1f", (dmg/1000))
+		end
+		if total>10000 then
+			total = strformat("%.1f", (total/1000))
+		end
+		if sort>10000 then
+			sort = strformat("%.1f", (sort/1000))
+		end
 	end
-	return dmg, total, sort
+	return dmg, total, sort, dmgr, totalr, sortr
 end
 
 function DPSMate:ApplyFilter(key, name)
