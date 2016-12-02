@@ -117,6 +117,16 @@ function DPSMate:InitializeFrames()
 			f.Key=k
 		end
 		local frame = _G("DPSMate_"..val["name"])
+		frame.fborder = _G("DPSMate_"..val["name"].."_Border")
+		
+		frame.fborder:SetAlpha(val["borderopacity"] or 0)
+		frame.fborder:SetFrameStrata(DPSMate.Options.stratas[val["borderstrata"] or 1])
+		frame.fborder:SetBackdrop({ 
+								  bgFile = "", 
+								  edgeFile = DPSMate.Options.bordertextures[val["bordertexture"] or "UI-Tooltip-Border"], tile = true, tileSize = 12, edgeSize = 10, 
+								  insets = { left = 5, right = 5, top = 3, bottom = 1 }
+								})
+		frame.fborder:SetBackdropBorderColor(val["contentbordercolor"][1], val["contentbordercolor"][2], val["contentbordercolor"][3])
 		
 		frame:SetToplevel(true)
 			

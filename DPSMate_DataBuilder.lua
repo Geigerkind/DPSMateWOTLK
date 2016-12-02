@@ -345,6 +345,10 @@ function DPSMate.DB:OnEvent(event)
 						barbg = false,
 						totopacity = 1,
 						cbtdisplay = false,
+						borderopacity = 1.0,
+						contentbordercolor = {0,0,0},
+						borderstrata = 1,
+						bordertexture = "UI-Tooltip-Border",
 					}
 				},
 				lock = false,
@@ -704,6 +708,22 @@ function DPSMate.DB:OnEvent(event)
 				[1] = true,
 				[2] = true,
 			}
+		end
+		
+		-- Settings for each window
+		for num, val in pairs(DPSMateSettings["windows"]) do
+			if not val["contentbordercolor"] then
+				DPSMateSettings["windows"][num]["contentbordercolor"] = {0,0,0}
+			end
+			if not val["borderstrata"] then
+				DPSMateSettings["windows"][num]["borderstrata"] = 1
+			end
+			if not val["bordertexture"] then
+				DPSMateSettings["windows"][num]["bordertexture"] = "UI-Tooltip-Border"
+			end
+			if not val["borderopacity"] then
+				DPSMateSettings["windows"][num]["borderopacity"] = 1
+			end
 		end
 		
 		DPSMate:OnLoad()
