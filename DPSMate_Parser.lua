@@ -87,6 +87,7 @@ DPSMate.Parser.procs = {
 	[GetSpellInfo(12472)] = true, -- Cold Snap
 	[GetSpellInfo(12043)] = true, -- Presence of Mind
 	[GetSpellInfo(11958)] = true, -- Ice Block
+	[GetSpellInfo(12051)] = true, -- Evoacation
 	
 	-- Priest
 	[GetSpellInfo(10060)] = true, -- Power Infusion
@@ -132,6 +133,7 @@ DPSMate.Parser.procs = {
 	[GetSpellInfo(28839)] = true, -- Vampirism
 	[GetSpellInfo(18095)] = true, -- Nightfall
 	[GetSpellInfo(19028)] = true, -- Soul Link
+	[GetSpellInfo(1454)] = true, -- Life Tap
 	
 	-- Warrior
 	[GetSpellInfo(28846)] = true, -- Cheat Death
