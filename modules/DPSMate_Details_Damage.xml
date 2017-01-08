@@ -294,7 +294,7 @@
 								GameTooltip:Hide()
 							</OnLeave>
 							<OnLoad>
-								UIDropDownMenu_SetWidth(this,200)
+								UIDropDownMenu_SetWidth(this,200,nil)
 								getglobal(this:GetName().."_Text"):SetText(DPSMate.L["procs"])
 							</OnLoad>
 						</Scripts>
@@ -1117,7 +1117,7 @@
 								GameTooltip:Hide()
 							</OnLeave>
 							<OnLoad>
-								UIDropDownMenu_SetWidth(this,200)
+								UIDropDownMenu_SetWidth(this,200,nil)
 								getglobal(this:GetName().."_Text"):SetText(DPSMate.L["procs"])
 							</OnLoad>
 						</Scripts>
