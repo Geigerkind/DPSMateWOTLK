@@ -570,6 +570,21 @@ function DPSMate.Options:Logout()
 	DPSMate.Options.OldLogout()
 end
 Logout = function() 
+	-- Saving positions to prevent a potential crash
+	local point, _, _, xOfs, yOfs;
+	for key, val in DPSMateSettings["windows"] do
+		if _G("DPSMate_"..val["name"]) then
+			point, _, _, xOfs, yOfs = _G("DPSMate_"..val["name"]):GetPoint()
+			DPSMateSettings["windows"][key]["position"] = {}
+			DPSMateSettings["windows"][key]["position"][1] = point
+			DPSMateSettings["windows"][key]["position"][2] = xOfs
+			DPSMateSettings["windows"][key]["position"][3] = yOfs
+			DPSMateSettings["windows"][key]["savsize"] = {}
+			DPSMateSettings["windows"][key]["savsize"][1] = _G("DPSMate_"..val["name"]):GetWidth()
+			DPSMateSettings["windows"][key]["savsize"][2] = _G("DPSMate_"..val["name"]):GetHeight()
+		end
+	end
+
 	if DPSMateSettings["dataresetslogout"] == 3 then
 		DPSMate_Logout:Show() 
 	elseif DPSMateSettings["dataresetslogout"] == 2 then
@@ -696,17 +711,6 @@ function DPSMate.Options:OnEvent(event)
 		end
 	elseif event == "ZONE_CHANGED_NEW_AREA" then
 		DPSMate.DB:OnGroupUpdate()
-	elseif event == "PLAYER_LOGOUT" then
-		for key, val in DPSMateSettings["windows"] do
-			local point, _, _, xOfs, yOfs = _G("DPSMate_"..val["name"]):GetPoint()
-			DPSMateSettings["windows"][key]["position"] = {}
-			DPSMateSettings["windows"][key]["position"][1] = point
-			DPSMateSettings["windows"][key]["position"][2] = xOfs
-			DPSMateSettings["windows"][key]["position"][3] = yOfs
-			DPSMateSettings["windows"][key]["savsize"] = {}
-			DPSMateSettings["windows"][key]["savsize"][1] = _G("DPSMate_"..val["name"]):GetWidth()
-			DPSMateSettings["windows"][key]["savsize"][2] = _G("DPSMate_"..val["name"]):GetHeight()
-		end
 	end
 end
 
@@ -1449,7 +1453,11 @@ function DPSMate.Options:Report()
 	SendChatMessage(DPSMate.L["name"].." - "..DPSMate.L["reportfor"]..DPSMate:GetModeName(DPSMate_Report.PaKey or 1).." - ".._G("DPSMate_"..DPSMateSettings["windows"][DPSMate_Report.PaKey or 1]["name"].."_Head_Font"):GetText().." - "..b[1]..b[2], chn, nil, index)
 	for i=1, DPSMate_Report_Lines:GetValue() do
 		if (not value[i] or value[i] == 0) then break end
-		SendChatMessage(i..". "..name[i].." -"..value[i], chn, nil, index)
+		if DPSMateSettings["reportdelay"] then
+			tinsert(DPSMate.DelayMsg, {i..". "..name[i].." -"..value[i], chn, index})
+		else
+			SendChatMessage(i..". "..name[i].." -"..value[i], chn, nil, index)
+		end
 	end
 	DPSMate_Report:Hide()
 end
@@ -1488,18 +1496,38 @@ function DPSMate.Options:ReportUserDetails(obj, channel, name)
 			local type = " (HIT)"
 			if c[i][3]==1 then type=" (CRIT)" elseif c[i][3]==2 then type=" (CRUSH)" end
 			if c[i][2]==1 then
-				SendChatMessage(i..". |cFF8cff80"..DPSMate:GetAbilityById(a[i]).." => ".."+"..c[i][1]..type.."|r", chn, nil, index)
+				if DPSMateSettings["reportdelay"] then
+					tinsert(DPSMate.DelayMsg, {i..". |cFF8cff80"..DPSMate:GetAbilityById(a[i]).." => ".."+"..c[i][1]..type.."|r", chn, index})
+				else
+					SendChatMessage(i..". |cFF8cff80"..DPSMate:GetAbilityById(a[i]).." => ".."+"..c[i][1]..type.."|r", chn, nil, index)
+				end
 			else
-				SendChatMessage(i..". |cFFFF8080"..DPSMate:GetAbilityById(a[i]).." => ".."-"..c[i][1]..type.."|r", chn, nil, index)
+				if DPSMateSettings["reportdelay"] then
+					tinsert(DPSMate.DelayMsg, {i..". |cFFFF8080"..DPSMate:GetAbilityById(a[i]).." => ".."-"..c[i][1]..type.."|r", chn, index})
+				else
+					SendChatMessage(i..". |cFFFF8080"..DPSMate:GetAbilityById(a[i]).." => ".."-"..c[i][1]..type.."|r", chn, nil, index)
+				end
 			end
 		else
 			if DPSMateSettings["windows"][Key]["CurMode"] == "fails" then
-				SendChatMessage(i..". "..DPSMate.Modules.Fails:Type(a[i]).." - "..p, chn, nil, index)
+				if DPSMateSettings["reportdelay"] then
+					tinsert(DPSMate.DelayMsg, {i..". "..DPSMate.Modules.Fails:Type(a[i]).." - "..p, chn, index})
+				else
+					SendChatMessage(i..". "..DPSMate.Modules.Fails:Type(a[i]).." - "..p, chn, nil, index)
+				end
 			else
 				if DPSMate:TContains(AbilityModes, DPSMateSettings["windows"][Key]["CurMode"]) then
-					SendChatMessage(i..". "..DPSMate:GetAbilityById(a[i]).." - "..p, chn, nil, index)
+					if DPSMateSettings["reportdelay"] then
+						tinsert(DPSMate.DelayMsg, {i..". "..DPSMate:GetAbilityById(a[i]).." - "..p, chn, index})
+					else
+						SendChatMessage(i..". "..DPSMate:GetAbilityById(a[i]).." - "..p, chn, nil, index)
+					end
 				else
-					SendChatMessage(i..". "..DPSMate:GetUserById(a[i]).." - "..p, chn, nil, index)
+					if DPSMateSettings["reportdelay"] then
+						tinsert(DPSMate.DelayMsg, {i..". "..DPSMate:GetUserById(a[i]).." - "..p, chn, index})
+					else
+						SendChatMessage(i..". "..DPSMate:GetUserById(a[i]).." - "..p, chn, nil, index)
+					end
 				end
 			end
 		end
