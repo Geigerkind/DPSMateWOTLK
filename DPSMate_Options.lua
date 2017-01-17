@@ -1492,6 +1492,7 @@ function DPSMate.Options:ReportUserDetails(obj, channel, name)
 		if (not a[i]) then break end
 		local p
 		if type(c[i])=="table" then p = strformat("%.2f", c[i][1]).." ("..strformat("%.2f", 100*c[i][1]/b).."%)" else p = strformat("%.2f", c[i]).." ("..strformat("%.2f", 100*c[i]/b).."%)" end
+		if DPSMateSettings["windows"][Key]["CurMode"] == "aurasuptime" then p = strformat("%.2f%%", c[i]) end
 		if DPSMateSettings["windows"][Key]["CurMode"] == "deaths" then
 			local type = " (HIT)"
 			if c[i][3]==1 then type=" (CRIT)" elseif c[i][3]==2 then type=" (CRUSH)" end
