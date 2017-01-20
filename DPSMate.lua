@@ -365,17 +365,6 @@ function DPSMate:GetSpellIcon(abname)
 	return "Interface\\Icons\\inv_misc_questionmark"
 end
 
-function DPSMate:PlayerExist(arr, name)
-	if DPSMateSettings["mergepets"] then
-		for cat, val in pairs(arr) do
-			if (cat == name) then
-				return true
-			end
-		end
-	end
-	return false
-end
-
 function DPSMate:GetMaxValue(arr, key)
 	local max = 0
 	for _, val in pairs(arr) do
