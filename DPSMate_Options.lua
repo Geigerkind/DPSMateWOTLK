@@ -818,8 +818,8 @@ function DPSMate.Options:PopUpAccept(bool, bypass)
 				Rezz = {}
 			}
 			DPSMateCombatTime = {
-				total = 1,
-				current = 1,
+				total = 0.00001,
+				current = 0.00001,
 				segments = {},
 				effective = {
 					[1] = {},
@@ -2053,11 +2053,12 @@ function DPSMate.Options:ShowTooltip()
 		elseif DPSMateSettings["tooltipanchor"] == 5 then
 			GameTooltip:SetOwner(this:GetParent():GetParent():GetParent(), "TOPRIGHT")
 		end
-		GameTooltip:AddLine(this.user.."'s ".._G(this:GetParent():GetParent():GetParent():GetName().."_Head_Font"):GetText(), 1,1,1)
+		local _, cbt = DPSMate:GetMode(DPSMate_Details.PaKey)
+		GameTooltip:AddLine(this.user.." ["..strformat("%0.1f", cbt).."s]", 1,0.82,0,1)
 		DPSMate.RegistredModules[DPSMateSettings["windows"][DPSMate_Details.PaKey]["CurMode"]]:ShowTooltip(this.user, DPSMate_Details.PaKey)
 		GameTooltip:AddLine(" ")
-		GameTooltip:AddLine(DPSMate.L["leftclickopend"])
-		GameTooltip:AddLine(DPSMate.L["rightclickopenm"])
+		GameTooltip:AddLine(DPSMate.L["leftclickopend"], 0,1,0,1)
+		GameTooltip:AddLine(DPSMate.L["rightclickopenm"], 0,1,0,1)
 		GameTooltip:Show()
 	end
 end

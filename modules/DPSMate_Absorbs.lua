@@ -189,15 +189,17 @@ function DPSMate.Modules.Absorbs:EvalTable(user, k)
 end
 
 function DPSMate.Modules.Absorbs:GetSettingValues(arr, cbt, k,ecbt)
+	local pt = ""
+
 	local name, value, perc, sortedTable, total, a, p, strt = {}, {}, {}, {}, 0, 0, "", {[1]="",[2]=""}
-	if DPSMateSettings["windows"][k]["numberformat"] == 2 or DPSMateSettings["windows"][k]["numberformat"] == 4 then p = "K" end
+	if DPSMateSettings["windows"][k]["numberformat"] == 2 or DPSMateSettings["windows"][k]["numberformat"] == 4 then p = "K"; pt="K" end
 	sortedTable, total, a = DPSMate.Modules.Absorbs:GetSortedTable(arr, k)
 	for cat, val in pairs(sortedTable) do
 		local va, tot, sort, varea, totr, sortr = DPSMate:FormatNumbers(val, total, sortedTable[1], k)
-		if varea==0 then break end; if varea<=10000 then p="" end
+		if varea==0 then break end; if totr<=10000 then pt="" end; if varea<=10000 then p="" end
 		local str = {[1]="",[2]="",[3]="",[4]=""}
 		local pname = DPSMate:GetUserById(a[cat])
-		if DPSMateSettings["columnsabsorbs"][1] then str[1] = " "..DPSMate:Commas(va, k)..p; strt[2] = " "..DPSMate:Commas(tot, k)..p end
+		if DPSMateSettings["columnsabsorbs"][1] then str[1] = " "..DPSMate:Commas(va, k)..p; strt[2] = " "..DPSMate:Commas(tot, k)..pt end
 		if DPSMateSettings["columnsabsorbs"][2] then str[2] = " ("..strformat("%.1f", 100*varea/totr).."%)" end
 		if DPSMateSettings["columnsabsorbs"][3] then str[3] = " ("..strformat("%.1f", va/cbt)..p..")" end
 		if DPSMateSettings["columnsabsorbs"][4] then str[4] = " ("..strformat("%.1f", va/(ecbt[pname] or cbt))..p..")" end
@@ -209,15 +211,51 @@ function DPSMate.Modules.Absorbs:GetSettingValues(arr, cbt, k,ecbt)
 end
 
 function DPSMate.Modules.Absorbs:ShowTooltip(user, k)
-	local a,b,c = DPSMate.Modules.Absorbs:EvalTable(DPSMateUser[user], k)
 	if DPSMateSettings["informativetooltips"] then
+		local a,b,c = DPSMate.Modules.Absorbs:EvalTable(DPSMateUser[user], k)
+		local ab, abn, p, i = {}, {}, 1, 1
+		
+		while a[i] do
+			p = 1
+			while c[i][2][p] do
+				if ab[c[i][2][p]] then
+					ab[c[i][2][p]] = ab[c[i][2][p]] + c[i][3][p][1]
+				else
+					ab[c[i][2][p]] = c[i][3][p][1]
+				end
+				p = p + 1
+			end
+			i = i + 1
+		end
+		for cat, val in pairs(ab) do
+			if val>0 then
+				i = 1
+				while true do
+					if (not abn[i]) then
+						tinsert(abn, i, {cat, val})
+						break
+					else
+						if (abn[i][2] < val) then
+							tinsert(abn, i, {cat, val})
+							break
+						end
+					end
+					i = i + 1
+				end
+			end
+		end
+		ab = nil
+		
+		GameTooltip:AddLine(DPSMate.L["tttop"]..DPSMateSettings["subviewrows"]..DPSMate.L["ttabsorb"]..DPSMate.L["ttabilities"])
+		for i=1, DPSMateSettings["subviewrows"] do
+			if not abn[i] then break end
+			GameTooltip:AddDoubleLine(i..". "..DPSMate:GetAbilityById(abn[i][1]), abn[i][2].." ("..strformat("%.2f", 100*abn[i][2]/b).."%)", 1,1,1,1,1,1)
+		end
+		
+		GameTooltip:AddLine(DPSMate.L["tttop"]..DPSMateSettings["subviewrows"]..DPSMate.L["ttabsorbed"])
 		for i=1, DPSMateSettings["subviewrows"] do
 			if not a[i] then break end
-			GameTooltip:AddDoubleLine(i..". "..DPSMate:GetUserById(a[i]),c[i][1].." ("..strformat("%2.f", 100*c[i][1]/b).."%)",1,1,1,1,1,1)
-			for p=1, 3 do
-				if not c[i][2][p] then break end
-				GameTooltip:AddDoubleLine("      "..p..". "..DPSMate:GetAbilityById(c[i][2][p]),c[i][3][p][1].." ("..strformat("%.2f", 100*c[i][3][p][1]/c[i][1]).."%)",0.5,0.5,0.5,0.5,0.5,0.5)
-			end
+			GameTooltip:AddDoubleLine(i..". "..DPSMate:GetUserById(a[i]),c[i][1].." ("..strformat("%.2f", 100*c[i][1]/b).."%)",1,1,1,1,1,1)
 		end
 	end
 end

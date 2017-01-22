@@ -70,14 +70,17 @@ function DPSMate.Modules.Deaths:EvalTable(user, k, id)
 end
 
 function DPSMate.Modules.Deaths:GetSettingValues(arr, cbt, k)
+	local pt = ""
+
 	local name, value, perc, sortedTable, total, a, p, strt = {}, {}, {}, {}, 0, 0, "", {[1]="",[2]=""}
-	
+
+	if DPSMateSettings["windows"][k]["numberformat"] == 2 or DPSMateSettings["windows"][k]["numberformat"] == 4 then p = "K"; pt="K" end
 	sortedTable, total, a = DPSMate.Modules.Deaths:GetSortedTable(arr,k)
 	for cat, val in pairs(sortedTable) do
 		local dmg, tot, sort = val, total, sortedTable[1]
-		if dmg==0 then break end
+		if dmg==0 then break end; if tot<=10000 then pt="" end
 		local str = {[1]="",[2]="",[3]=""}
-		if DPSMateSettings["columnsdeaths"][1] then str[1] = " "..DPSMate:Commas(dmg, k)..p; strt[2] = DPSMate:Commas(tot, k)..p end
+		if DPSMateSettings["columnsdeaths"][1] then str[1] = " "..DPSMate:Commas(dmg, k)..p; strt[2] = DPSMate:Commas(tot, k)..pt end
 		if DPSMateSettings["columnsdeaths"][2] then str[3] = " ("..strformat("%.1f", 100*dmg/tot).."%)" end
 		tinsert(name, DPSMate:GetUserById(a[cat]))
 		tinsert(value, str[1]..str[3])
@@ -87,8 +90,9 @@ function DPSMate.Modules.Deaths:GetSettingValues(arr, cbt, k)
 end
 
 function DPSMate.Modules.Deaths:ShowTooltip(user,k)
-	local a,b,c = DPSMate.Modules.Deaths:EvalTable(DPSMateUser[user], k)
 	if DPSMateSettings["informativetooltips"] then
+		local a,b,c = DPSMate.Modules.Deaths:EvalTable(DPSMateUser[user], k)
+		GameTooltip:AddLine(DPSMate.L["tttop"]..DPSMateSettings["subviewrows"]..DPSMate.L["ttabilities"])
 		for i=1, DPSMateSettings["subviewrows"] do
 			if not a[i] then break end
 			local type = " (HIT)"

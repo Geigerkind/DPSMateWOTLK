@@ -64,12 +64,15 @@ function DPSMate.Modules.Activity:EvalTable(user, k)
 end
 
 function DPSMate.Modules.Activity:GetSettingValues(arr, cbt, k)
+	local pt = ""
+
 	local name, value, perc, sortedTable, total, a, p, strt = {}, {}, {}, {}, 0, 0, "", {[1]="",[2]=""}
-	
+
+	if DPSMateSettings["windows"][k]["numberformat"] == 2 or DPSMateSettings["windows"][k]["numberformat"] == 4 then p = "K"; pt="K" end
 	sortedTable, a, total = DPSMate.Modules.Activity:GetSortedTable(arr, k)
 	for cat, val in pairs(sortedTable) do
 		local dmg, tot, sort = val, total, sortedTable[1]
-		if dmg==0 then break end
+		if dmg==0 then break end; if tot<=10000 then pt="" end
 		local str = {[1]="",[2]="",[3]=""}
 		str[1] = strformat("%.2f", val).."s"; strt[2] = strformat("%.2f", total).."s"
 		tinsert(name, a[cat])

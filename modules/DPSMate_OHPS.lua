@@ -69,17 +69,19 @@ function DPSMate.Modules.OHPS:EvalTable(user, k, cbt)
 end
 
 function DPSMate.Modules.OHPS:GetSettingValues(arr, cbt, k,ecbt)
+	local pt = ""
+
 	local name, value, perc, sortedTable, total, a, p, strt = {}, {}, {}, {}, 0, 0, "", {[1]="",[2]=""}
-	if DPSMateSettings["windows"][k]["numberformat"] == 2 or DPSMateSettings["windows"][k]["numberformat"] == 4 then p = "K" end
+	if DPSMateSettings["windows"][k]["numberformat"] == 2 or DPSMateSettings["windows"][k]["numberformat"] == 4 then p = "K"; pt="K" end
 	sortedTable, total, a = self:GetSortedTable(arr,k)
 	for cat, val in pairs(sortedTable) do
 		local va, tot, sort, varea, totr, sortr = DPSMate:FormatNumbers(val, total, sortedTable[1], k)
-		if varea==0 then break end; if varea<=10000 then p="" end
+		if varea==0 then break end; if totr<=10000 then pt="" end; if varea<=10000 then p="" end
 		local str = {[1]="",[2]="",[3]="",[4]=""}
 		local pname = DPSMate:GetUserById(a[cat])
-		if DPSMateSettings["columnsohps"][2] then str[1] = " "..strformat("%.1f", va/cbt)..p; strt[2] = " "..strformat("%.1f", tot/cbt)..p end
+		if DPSMateSettings["columnsohps"][2] then str[1] = " "..strformat("%.1f", va/cbt)..p; strt[2] = " "..strformat("%.1f", tot/cbt)..pt end
 		if DPSMateSettings["columnsohps"][3] then str[2] = " ("..strformat("%.1f", 100*varea/totr).."%)" end
-		if DPSMateSettings["columnsohps"][1] then str[3] = "("..DPSMate:Commas(va, k)..p..")"; strt[1] = "("..DPSMate:Commas(tot, k)..p..")" end
+		if DPSMateSettings["columnsohps"][1] then str[3] = "("..DPSMate:Commas(va, k)..p..")"; strt[1] = "("..DPSMate:Commas(tot, k)..pt..")" end
 		if DPSMateSettings["columnsohps"][4] then str[4] = " ("..strformat("%.1f", va/(ecbt[pname] or cbt))..p..")" end
 		tinsert(name, pname)
 		tinsert(value, str[3]..str[1]..str[4]..str[2])
@@ -89,11 +91,45 @@ function DPSMate.Modules.OHPS:GetSettingValues(arr, cbt, k,ecbt)
 end
 
 function DPSMate.Modules.OHPS:ShowTooltip(user, k)
-	local a,b,c = DPSMate.Modules.OHPS:EvalTable(DPSMateUser[user], k)
 	if DPSMateSettings["informativetooltips"] then
+		local a,b,c = DPSMate.Modules.OHPS:EvalTable(DPSMateUser[user], k)
+		local db, cbt = DPSMate:GetModeByArr(DPSMateOverhealingTaken, k, "OHealingTaken")
+		local abn, p, i = {}, 1, 1
+		
+		for cat, val in pairs(db) do
+			if val[DPSMateUser[user][1]] then
+				p = 0
+				for _, va in pairs(val[DPSMateUser[user][1]]) do
+					p = p + va[1]
+				end
+				if p>0 then
+					i = 1
+					while true do
+						if (not abn[i]) then
+							tinsert(abn, i, {cat, p})
+							break
+						else
+							if (abn[i][2] < p) then
+								tinsert(abn, i, {cat, p})
+								break
+							end
+						end
+						i = i + 1
+					end
+				end
+			end
+		end
+		
+		GameTooltip:AddLine(DPSMate.L["tttop"]..DPSMateSettings["subviewrows"]..DPSMate.L["tthealing"]..DPSMate.L["ttabilities"])
 		for i=1, DPSMateSettings["subviewrows"] do
 			if not a[i] then break end
 			GameTooltip:AddDoubleLine(i..". "..DPSMate:GetAbilityById(a[i]),strformat("%.2f", c[i]).." ("..strformat("%.2f", 100*c[i]/b).."%)",1,1,1,1,1,1)
+		end
+		
+		GameTooltip:AddLine(DPSMate.L["tttop"]..DPSMateSettings["subviewrows"]..DPSMate.L["tthealed"])
+		for i=1, DPSMateSettings["subviewrows"] do
+			if not abn[i] then break end
+			GameTooltip:AddDoubleLine(i..". "..DPSMate:GetUserById(abn[i][1]), strformat("%.2f", abn[i][2]/cbt).." ("..strformat("%.2f", 100*(abn[i][2]/cbt)/b).."%)", 1,1,1,1,1,1)
 		end
 	end
 end
