@@ -1,0 +1,40 @@
+## Interface: 30300
+## Title: DPSMate |cFFFF8080-Shino-|r
+## Notes: DPSMate is an advanced combat analyzation tool, providing helpful graphs and statistics to evaluate the fight.
+## Notes-deDE: DPSMate ist ein Analysewerkzeug, das hilfreiche Graphen und Statistiken bereitstellt, um den Kampf zu evaluieren.
+## Author: Shino <Synced> - Kronos
+## SavedVariables: DPSMateSettings
+## SavedVariablesPerCharacter: DPSMateUser, DPSMateAbility, DPSMateDamageDone, DPSMateEDT, DPSMateEDD, DPSMateDamageTaken, DPSMateDispels, DPSMateInterrupts, DPSMateDeaths, DPSMateEHealing, DPSMateTHealing, DPSMateHealingTaken, DPSMateEHealingTaken, DPSMateOverhealing, DPSMateOverhealingTaken, DPSMateAbsorbs, DPSMateAurasGained, DPSMateCombatTime, DPSMateHistory, DPSMateAttempts, DPSMatePlayer, DPSMateLoot, DPSMateFails, DPSMateCCBreaker, DPSMateThreat, DPSMateRezz
+
+libs\AceLibrary\AceLibrary.lua
+libs\Dewdrop-2.0\Dewdrop-2.0.lua
+libs\GraphLib\Graph-1.0\Graph-1.0.lua
+libs\AceLocale\AceLocale-2.2.lua
+libs\Babble-Boss-2.3\Babble-Boss-2.3.lua
+
+DPSMate.lua
+
+localization\enUS.lua
+localization\deDE.lua
+localization\frFR.lua
+localization\ruRU.lua
+localization\esES.lua
+localization\zhCN.lua
+
+DPSMate_Parser.lua
+DPSMate_Options.lua
+DPSMate_Sync.lua
+DPSMate_Realmplayers.lua
+DPSMate_DataBuilder.lua
+
+Damage\DPSMate_DPS.lua
+Damage\DPSMate_Damage.lua
+
+Damage\DPSMate_Details_Damage.lua
+Damage\DPSMate_Details_Damage.xml
+Damage\DPSMate_Details_DamageTotal.lua
+Damage\DPSMate_Details_DamageTotal.xml
+
+DPSMate_Frame.xml
+DPSMate_Options.xml
+Bindings.xml

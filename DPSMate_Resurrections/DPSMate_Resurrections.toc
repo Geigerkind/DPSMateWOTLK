@@ -1,0 +1,11 @@
+## Interface: 30300
+## Title: DPSMate +|cFFFFFFFFResurrections|r
+## Notes: Adds the modules for the resurrections evaluation.
+## Author: Shino <Synced> - Kronos
+## Dependencies: DPSMate
+
+DPSMate_Resurrection.lua
+DPSMate_Details_Resurrections.lua
+DPSMate_Details_Resurrections.xml
+DPSMate_Details_ResurrectionsTotal.lua
+DPSMate_Details_ResurrectionsTotal.xml
