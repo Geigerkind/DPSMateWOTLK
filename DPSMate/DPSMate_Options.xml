@@ -6155,6 +6155,9 @@
 						<Scripts>
 							<OnLoad>
 								getglobal(this:GetName().."_Title"):SetText(DPSMate.L["thanksto"])
+								getglobal(this:GetName().."_Text"):SetHeight(90)
+								getglobal(this:GetName().."_Text"):ClearAllPoints()
+								getglobal(this:GetName().."_Text"):SetPoint("TOPLEFT", this, "TOPLEFT", 5, -5)
 								getglobal(this:GetName().."_Text"):SetText(DPSMate.L["thankstoText"])
 							</OnLoad>
 						</Scripts>

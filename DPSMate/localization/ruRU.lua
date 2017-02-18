@@ -280,7 +280,7 @@ if (GetLocale() == "ruRU") then
 	DPSMate.L["whocreateddpsmate"] = "Кто создал DPSMate?"
 	DPSMate.L["whocreateddpsmateText"] = "DPSMate был создан Shino (Albea) <Synced>, который разработал аддон на Kronos (Twinstar.cz). Он официально известный как Geigerkind в сообществе Twinstar."
 	DPSMate.L["thanksto"] = "Благодарность следующим сторонникам:"
-	DPSMate.L["thankstoText"] = "Weasel - за бета тестирование аддона и обеспечение обратной связи. \nBambustreppe - за перевод DPSMate на немецкий."
+	--DPSMate.L["thankstoText"] = "Weasel - за бета тестирование аддона и обеспечение обратной связи. \nBambustreppe - за перевод DPSMate на немецкий."
 	DPSMate.L["remove"] = "Удалить"
 	DPSMate.L["removeTooltip"] = "Нажмите здесь, чтобы удалить выбранное окно."
 	DPSMate.L["copy"] = "Копировать"
