@@ -46,7 +46,7 @@ local Arrays = {
 	[15] = {}, -- O Healing taken
 	[16] = {} -- Threat
 }
-local UpTime = 0
+--local UpTime = 0
 
 -- Beginn Functions
 
@@ -70,17 +70,10 @@ end
 
 local co, cou = 1, 1
 function DPSMate.Sync:SendAddonMessages(elapsed)
-	if DPSMateSettings["sync"] then
-		UpTime = UpTime + elapsed
-		if UpTime>1 then
-			for i=1,80 do
-				if not Buffer[co] then break end
-				SendAddonMessage(Buffer[co][1]..DPSMate.SYNCVERSION, Buffer[co][2], "RAID")
-				Buffer[co] = nil
-				co = co + 1
-			end
-			UpTime = 0
-		end
+	if DPSMateSettings["sync"] and self:GetMessageState() and Buffer[co] then
+		SendAddonMessage(Buffer[co][1]..DPSMate.SYNCVERSION, Buffer[co][2], "RAID")
+		Buffer[co] = nil
+		co = co + 1
 	end
 end
 
