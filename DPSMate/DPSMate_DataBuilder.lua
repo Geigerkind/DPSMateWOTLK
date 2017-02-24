@@ -597,6 +597,7 @@ function DPSMate.DB:OnEvent(event)
 				targetscale=0.58,
 				hideonlogin = false,
 				reportdelay = false,
+				legacylogs = false,
 			}
 		end
 		if DPSMateHistory == nil then 
@@ -837,6 +838,15 @@ function DPSMate.DB:OnGroupUpdate()
 				DPSMateUser[name][5] = pet
 				DPSMateUser[pet][6] = DPSMateUser[name][1]
 			end
+			if DPSMate.Parser.TargetParty[pet] then
+				DPSMateUser[pet][4] = false
+				DPSMateUser[pet][6] = ""
+				DPSMateUser[name][5] = ""
+			end
+			if DPSMateUser[name][4] then
+				DPSMateUser[name][4] = false
+				DPSMateUser[name][5] = ""
+			end
 			if fac == DPSMate.L["alliance"] then
 				DPSMateUser[name][3] = 1
 			elseif fac == DPSMate.L["horde"] then
@@ -907,6 +917,10 @@ function DPSMate.DB:PlayerTargetChanged()
 		end
 		if level and level>0 then
 			DPSMateUser[name][8] = level
+		end
+		if DPSMateUser[name][4] then
+			DPSMateUser[name][4] = false
+			DPSMateUser[name][5] = ""
 		end
 	end
 end
@@ -1195,6 +1209,7 @@ end
 -- Fall damage
 function DPSMate.DB:DamageTaken(Duser, Dname, Dhit, Dcrit, Dmiss, Dparry, Ddodge, Dresist, Damount, cause, Dcrush, Dblock)
 	if self:BuildUser(Duser, nil) or self:BuildUser(cause, nil) or self:BuildAbility(Dname, nil) then return end
+	if not DPSMateSettings["legacylogs"] and not DPSMate.ModuleNames["damagetaken"] then return end
 	for cat, val in pairs({[1]="total", [2]="current"}) do 
 		if not DPSMateDamageTaken[cat][DPSMateUser[Duser][1]] then
 			DPSMateDamageTaken[cat][DPSMateUser[Duser][1]] = {
@@ -1298,6 +1313,9 @@ function DPSMate.DB:EnemyDamage(mode, arr, Duser, Dname, Dhit, Dcrit, Dmiss, Dpa
 	ActiveMob[cause] = true
 	
 	if mode then
+		if not DPSMateSettings["legacylogs"] and not DPSMate.ModuleNames["enemydamagedone"] then
+			return
+		end
 		-- Part to take extra swings as abilities into account
 		if self.NextSwingEDD[Duser] then
 			if Dname == AAttack and self.NextSwingEDD[Duser][1]>0 then
@@ -1309,6 +1327,10 @@ function DPSMate.DB:EnemyDamage(mode, arr, Duser, Dname, Dhit, Dcrit, Dmiss, Dpa
 		else
 			--Dname = self:IsWindFuryAttack(WindfuryEDT, Dname, Duser)
 		end
+	--else
+		--if not DPSMateSettings["legacylogs"] and not DPSMate.ModuleNames["casts"] and not DPSMate.ModuleNames["enemydamagetaken"] and not DPSMate.ModuleNames["friendlyfire"] then
+		--	return
+		--end
 	end
 	
 	for cat, val in pairs({[1]="total", [2]="current"}) do 
@@ -1406,6 +1428,7 @@ end
 
 function DPSMate.DB:Healing(mode, arr, Duser, Dname, Dhit, Dcrit, Damount)
 	if self:BuildUser(Duser, nil) or self:BuildAbility(Dname, nil) then return end
+	if not DPSMateSettings["legacylogs"] and ((mode==0 and not DPSMate.ModuleNames["effectivehealing"] and not DPSMate.ModuleNames["healingandabsorbs"]) or (mode==1 and not DPSMate.ModuleNames["healing"]) or (mode==2 and not DPSMate.ModuleNames["overhealing"])) then return end
 	for cat, val in pairs({[1]="total", [2]="current"}) do 
 		if not arr[cat][DPSMateUser[Duser][1]] then
 			arr[cat][DPSMateUser[Duser][1]] = {
@@ -1470,8 +1493,9 @@ function DPSMate.DB:Healing(mode, arr, Duser, Dname, Dhit, Dcrit, Damount)
 	self.NeedUpdate = true
 end
 
-function DPSMate.DB:HealingTaken(arr, Duser, Dname, Dhit, Dcrit, Damount, target)
+function DPSMate.DB:HealingTaken(mode, arr, Duser, Dname, Dhit, Dcrit, Damount, target)
 	if self:BuildUser(Duser, nil) or self:BuildUser(target, nil) or self:BuildAbility(Dname, nil) then return end
+	if not DPSMateSettings["legacylogs"] and ((mode==0 and not DPSMate.ModuleNames["healingtaken"] and not DPSMate.ModuleNames["healing"]) or (mode==1 and not DPSMate.ModuleNames["effectivehealingtaken"] and not DPSMate.ModuleNames["effectivehealing"] and not DPSMate.ModuleNames["healingandabsorbs"]) or (mode==2 and not DPSMate.ModuleNames["OHealingTaken"] and not DPSMate.ModuleNames["overhealing"])) then return end
 	for cat, val in pairs({[1]="total", [2]="current"}) do 
 		if not arr[cat][DPSMateUser[Duser][1]] then
 			arr[cat][DPSMateUser[Duser][1]] = {
@@ -1543,6 +1567,7 @@ end
 
 function DPSMate.DB:RegisterAbsorb(owner, ability, abilityTarget)
 	if self:BuildUser(owner, nil) or self:BuildUser(abilityTarget, nil) or self:BuildAbility(ability, nil) then return end
+	if not DPSMateSettings["legacylogs"] and not DPSMate.ModuleNames["absorbs"] and not DPSMate.ModuleNames["absorbstaken"] then return end
 	for cat, val in pairs({[1]="total", [2]="current"}) do 
 		if not DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]] then
 			DPSMateAbsorbs[cat][DPSMateUser[abilityTarget][1]] = {}
@@ -1581,6 +1606,7 @@ function DPSMate.DB:SetUnregisterVariables(broAbsorb, ab, c)
 end
 
 function DPSMate.DB:UnregisterAbsorb(ability, abilityTarget)
+	if not DPSMateSettings["legacylogs"] and not DPSMate.ModuleNames["absorbs"] and not DPSMate.ModuleNames["absorbstaken"] then return end
 	for cat, val in pairs({[1]="total", [2]="current"}) do 
 		local AbsorbingAbility = self:GetActiveAbsorbAbilityByPlayer(ability, abilityTarget, cat)
 		if AbsorbingAbility[1] then
@@ -1711,6 +1737,7 @@ end
 function DPSMate.DB:Absorb(ability, abilityTarget, incTarget, amount)
 	if self:BuildUser(incTarget, nil) or self:BuildUser(abilityTarget, nil) or self:BuildAbility(ability, nil) then return end
 	--DPSMate:SendMessage("Absorb: "..ability.."/"..abilityTarget.."/"..incTarget)
+	if not DPSMateSettings["legacylogs"] and not DPSMate.ModuleNames["absorbs"] and not DPSMate.ModuleNames["absorbstaken"] then return end
 	for cat, val in pairs({[1]="total", [2]="current"}) do 
 		local AbsorbingAbility = self:GetAbsorbingShield(ability, abilityTarget, cat)
 		--DPSMate:SendMessage(AbsorbingAbility)
@@ -1751,6 +1778,7 @@ end
 function DPSMate.DB:Dispels(cause, Dname, target, ability)
 	if self:BuildUser(cause, nil) or self:BuildUser(target, nil) or self:BuildAbility(Dname, nil) or self:BuildAbility(ability, nil) then return end
 	--DPSMate:SendMessage("Cause: "..cause.." Dname: "..Dname.." Target: "..target.." Ability: "..ability)
+	if not DPSMateSettings["legacylogs"] and not DPSMate.ModuleNames["decurses"] and not DPSMate.ModuleNames["curepoison"] and not DPSMate.ModuleNames["liftmagic"] and not DPSMate.ModuleNames["curedisease"] and not DPSMate.ModuleNames["dispels"] then return end
 	for cat, val in pairs({[1]="total", [2]="current"}) do 
 		if not DPSMateDispels[cat][DPSMateUser[cause][1]] then
 			DPSMateDispels[cat][DPSMateUser[cause][1]] = {
@@ -1778,6 +1806,7 @@ end
 
 function DPSMate.DB:UnregisterDeath(target)
 	if self:BuildUser(target, nil) then return end
+	if not DPSMateSettings["legacylogs"] and not DPSMate.ModuleNames["deaths"] then return end
 	for cat, val in pairs({[1]="total", [2]="current"}) do 
 		if DPSMateDeaths[cat][DPSMateUser[target][1]] then
 			DPSMateDeaths[cat][DPSMateUser[target][1]][1]["i"][1]=1
@@ -1792,6 +1821,7 @@ end
 
 function DPSMate.DB:DeathHistory(target, cause, ability, amount, hit, crit, type, crush)
 	if self:BuildUser(target, nil) or self:BuildUser(cause, nil) or self:BuildAbility(ability, nil) then return end
+	if not DPSMateSettings["legacylogs"] and not DPSMate.ModuleNames["deaths"] then return end
 	for cat, val in pairs({[1]="total", [2]="current"}) do 
 		if not DPSMateDeaths[cat][DPSMateUser[target][1]] then
 			DPSMateDeaths[cat][DPSMateUser[target][1]] = {}
@@ -1895,6 +1925,7 @@ end
 
 function DPSMate.DB:Kick(cause, target, causeAbility, targetAbility)
 	if self:BuildUser(target, nil) or self:BuildUser(cause, nil) or self:BuildAbility(causeAbility, nil) or self:BuildAbility(targetAbility, nil) then return end
+	if not DPSMateSettings["legacylogs"] and not DPSMate.ModuleNames["interrupts"] then return end
 	for cat, val in pairs({[1]="total", [2]="current"}) do 
 		if not DPSMateInterrupts[cat][DPSMateUser[cause][1]] then
 			DPSMateInterrupts[cat][DPSMateUser[cause][1]] = {
@@ -1921,6 +1952,7 @@ end
 
 function DPSMate.DB:BuildBuffs(cause, target, ability, bool)
 	if self:BuildUser(target, nil) or self:BuildUser(cause, nil) or self:BuildAbility(ability, nil) then return end
+	if not DPSMateSettings["legacylogs"] and not DPSMate.ModuleNames["aurasgained"] then return end
 	for cat, val in pairs({[1]="total", [2]="current"}) do 
 		if not DPSMateAurasGained[cat][DPSMateUser[target][1]] then
 			DPSMateAurasGained[cat][DPSMateUser[target][1]] = {}
@@ -1952,6 +1984,7 @@ end
 
 function DPSMate.DB:DestroyBuffs(target, ability)
 	if self:BuildUser(target, nil) or self:BuildAbility(ability, nil) then return end
+	if not DPSMateSettings["legacylogs"] and not DPSMate.ModuleNames["aurasgained"] then return end
 	for cat, val in pairs({[1]="total", [2]="current"}) do 
 		if not DPSMateAurasGained[cat][DPSMateUser[target][1]] then
 			DPSMateAurasGained[cat][DPSMateUser[target][1]] = {}
@@ -2146,7 +2179,7 @@ RepopMe = NewRepopMe
 function DPSMate.DB:Attempt(mode, check, tar)
 	local zone = GetRealZoneText()
 	local difficulty = GetInstanceDifficulty()
-	if self.Zones[zone] then -- Need to find a solution for world bosses.
+	if self.Zones[zone] and DPSMateSettings["legacylogs"] then -- Need to find a solution for world bosses.
 		zone = zone.."x"..difficulty
 		if not DPSMateAttempts[zone] then DPSMateAttempts[zone] = {} end
 		if mode then
@@ -2229,7 +2262,7 @@ local banedItems = {
 	[40753] = true,
 }
 function DPSMate.DB:Loot(user, quality, itemid)
-	if quality>3 and not banedItems[itemid] then
+	if not DPSMateSettings["legacylogs"] and quality>3 and not banedItems[itemid] then
 		local zone = GetRealZoneText()
 		if not DPSMateLoot[zone] then DPSMateLoot[zone] = {} end
 		if self.Zones[zone] then -- Need to find a solution for world bosses.
@@ -2248,6 +2281,7 @@ function DPSMate.DB:BuildFail(type, user, cause, ability, amount)
 	self:BuildUser(user)
 	self:BuildUser(cause)
 	self:BuildAbility(ability)
+	if not DPSMateSettings["legacylogs"] and not DPSMate.ModuleNames["fails"] then return end
 	for cat, val in pairs({[1] = "total", [2] = "current"}) do
 		if not DPSMateFails[cat][DPSMateUser[cause][1]] then
 			DPSMateFails[cat][DPSMateUser[cause][1]] = {}
@@ -2294,6 +2328,7 @@ function DPSMate.DB:CCBreaker(target, ability, cause, spellName)
 	self:BuildAbility(spellName)
 	self:BuildUser(target)
 	self:BuildUser(cause)
+	if not DPSMateSettings["legacylogs"] and not DPSMate.ModuleNames["ccbreaker"] then return end
 	for cat, val in pairs({[1]="total",[2]="current"}) do
 		if not DPSMateCCBreaker[cat][DPSMateUser[cause][1]] then
 			DPSMateCCBreaker[cat][DPSMateUser[cause][1]] = {}
@@ -2532,6 +2567,7 @@ function DPSMate.DB:Resurrection(srcName, dstName, spellName)
 	self:BuildAbility(spellName)
 	self:BuildUser(dstName)
 	self:BuildUser(srcName)
+	if not DPSMateSettings["legacylogs"] and not DPSMate.ModuleNames["ressurection"] then return end
 	for cat, val in pairs({[1]="total", [2]="current"}) do
 		if not DPSMateRezz[cat][DPSMateUser[srcName][1]] then
 			DPSMateRezz[cat][DPSMateUser[srcName][1]] = {}

@@ -1007,14 +1007,14 @@ function DPSMate.Parser:SpellHeal(timestamp, eventtype, srcGUID, srcName, srcFla
 		end
 		lastheal[dstName] = srcName
 		DB:UnregisterPotentialKick(srcName, spellName, GetTime())
-		DB:HealingTaken(DPSMateHealingTaken, dstName, spellName, t[1] or 1, t[2] or 0, amount, srcName)
-		DB:HealingTaken(DPSMateEHealingTaken, dstName, spellName, t[1] or 1, t[2] or 0, amount-overheal, srcName)
+		DB:HealingTaken(0, DPSMateHealingTaken, dstName, spellName, t[1] or 1, t[2] or 0, amount, srcName)
+		DB:HealingTaken(1, DPSMateEHealingTaken, dstName, spellName, t[1] or 1, t[2] or 0, amount-overheal, srcName)
 		DB:Healing(0, DPSMateEHealing, srcName, spellName, t[1] or 1, t[2] or 0, amount-overheal, dstName)
 		DB:Healing(1, DPSMateTHealing, srcName, spellName, t[1] or 1, t[2] or 0, amount, dstName)
 		DB:DeathHistory(dstName, srcName, spellName, amount, t[1] or 1, t[2] or 0, 1, 0)
 		if overheal>0 then
 			DB:Healing(2, DPSMateOverhealing, srcName, spellName, t[1] or 1, t[2] or 0, overheal, dstName)
-			DB:HealingTaken(DPSMateOverhealingTaken, dstName, spellName, t[1] or 1, t[2] or 0, overheal, srcName)
+			DB:HealingTaken(2, DPSMateOverhealingTaken, dstName, spellName, t[1] or 1, t[2] or 0, overheal, srcName)
 		end
 		DB:AddSpellSchool(spellName,spellSchoolToString[spellSchool],spellId)
 		DB:SetNpcID(srcName, srcGUID)
