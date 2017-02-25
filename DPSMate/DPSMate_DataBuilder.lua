@@ -236,7 +236,15 @@ local AbilityFlags = {
 	["schatten"] = 5,
 	["natur"] = 4,
 	["frost"] = 2,
-	["physisch"] = 1
+	["physisch"] = 1,
+	
+	["火焰"] = 3,
+	["神圣"] = 7,
+	["奥术"] = 6,
+	["暗影"] = 5,
+	["自然"] = 4,
+	["冰霜"] = 2,
+	["物理"] = 1,
 }
 DPSMate.DB.NeedUpdate = false
 DPSMate.DB.UserData = {}

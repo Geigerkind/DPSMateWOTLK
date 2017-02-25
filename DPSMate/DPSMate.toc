@@ -18,7 +18,6 @@ localization\enUS.lua
 localization\deDE.lua
 localization\frFR.lua
 localization\ruRU.lua
-localization\esES.lua
 localization\zhCN.lua
 
 DPSMate_Parser.lua

@@ -237,6 +237,8 @@ function DPSMate:InitializeFrames()
 	DPSMate.Options:HideWhenSolo()
 	if not DPSMateSettings["enable"] then
 		self:Disable()
+	else
+		self:Enable()
 	end
 	
 	-- Report delay button
@@ -611,22 +613,13 @@ function DPSMate:Enable()
 		if DPSMateSettings["legacylogs"] then
 			DPSMate_Options:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 			DPSMate_Options:RegisterEvent("CHAT_MSG_LOOT")
-			for _, event in pairs(DPSMate.Events) do
-				if not DPSMate_Options:IsEventRegistred(event) then
-					DPSMate_Options:RegisterEvent(event)
-				end
-			end
 		else
 			DPSMate_Options:UnregisterEvent("ZONE_CHANGED_NEW_AREA")
 			DPSMate_Options:UnregisterEvent("CHAT_MSG_LOOT")
-			for _, val in pairs(DPSMate.RegistredModules) do
-				if val.Events then
-					for _, event in pairs(val.Events) do
-						if not DPSMate_Options:IsEventRegistred(event) then
-							DPSMate_Options:RegisterEvent(event)
-						end
-					end
-				end
+		end
+		for _, event in pairs(DPSMate.Events) do
+			if not DPSMate_Options:IsEventRegistred(event) then
+				DPSMate_Options:RegisterEvent(event)
 			end
 		end
 		DPSMate.Registered = true
