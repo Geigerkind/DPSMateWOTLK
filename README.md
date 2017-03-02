@@ -51,7 +51,7 @@ It looks like this: [(Link)](http://legacy-logs.com/#)
 ![img](https://gyazo.com/31527f36b405dcd131ff495a4f96201b.png)  
 
 #**Support me!**   
-1. [Report bugs](https://github.com/Geigerkind/DPSMateTBC/issues) that you found.
+1. [Report bugs](https://github.com/Geigerkind/DPSMateWOTLK/issues) that you found.
 2. Suggest improvements. 
 3. You can also [donate](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=57SWBZ3B7RTTQ) for my projects if you like.
 
