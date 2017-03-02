@@ -26,11 +26,10 @@ Some of them are:
 Misc:   
 - Several Segments (Total, Current, and previous fights)   
 - Synchronizing, to guarantee accurate data   
-- Report function for every mode and everys player data   
-- An own evaluation site to compare to revamp the raid and compare to other guilds: Legacy Logs (http://legacy-logs.com/#)  
+- Report function for every mode and everys player data    
 - And many more...   
 
-#But pictures tell more than words:#  
+#But pictures tell more than words:   
 ![img](http://i.imgur.com/gG3fHSR.png)  
 ![img](https://gyazo.com/df71a4bb0cdf5cb51cd51d96296177a6.png)  
 ![img](http://i.imgur.com/acsgyPb.gif)  
@@ -39,24 +38,22 @@ Misc:
 ![img](http://i.imgur.com/Uezcowg.png)  
 ![img](http://i.imgur.com/Ine09Kp.png)  
 ![img](http://i.imgur.com/eEIL8i5.png)  
-![img](https://gyazo.com/a045046b53246a133461939067a0dbc6.png)  
 
-#**Download and install:**# (only english/german clients supported currently)
+#**Download and install:** 
 1. Download the addon folder here.
-2. Rename the folder to "DPSMate"
+2. Put the contents of the folder into your Interface/AddOn folder.  
 3. I recommend to increase the addon memory to 150 mb.
-4. Remove DPSMate.lua and DPSMate.lua.bak in your WTF/Account/YOUR ACC NAME/Kronos/YOUR CHAR NAME/SavedVariables/ (if you had DPSMate installed before)
-5. I recommend to disable SW_Stats.
+4. Remove DPSMate.lua and DPSMate.lua.bak in your WTF/Account/YOUR ACC NAME/Kronos/YOUR CHAR NAME/SavedVariables/
 
-#**Legacy Logs!**#   http://legacy-logs.com/#
+#**Legacy Logs!**  
 Legacy Logs is an world of logs-like evaluation site, using DPSMate to give you an indeph analyzation of your raid.   
-It looks like this: (Link)   
+It looks like this: [(Link)](http://legacy-logs.com/#)
 ![img](https://gyazo.com/31527f36b405dcd131ff495a4f96201b.png)  
 
-#**Support me!**#   
-1. https://bitbucket.org/tomdy/dpsmate/issues?status=new&status=open (report) bugs that you found.
-2. Suggest improvements in this thread. 
-3. You can also https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=57SWBZ3B7RTTQ (donate) for my projects if you like.
+#**Support me!**   
+1. [Report bugs](https://github.com/Geigerkind/DPSMateTBC/issues) that you found.
+2. Suggest improvements. 
+3. You can also [donate](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=57SWBZ3B7RTTQ) for my projects if you like.
 
 cheers!  
 Shino
