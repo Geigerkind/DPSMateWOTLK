@@ -145,7 +145,7 @@
 		<Scripts>
 			<OnLoad>
 				this:SetClampedToScreen()
-				getglobal(this:GetName().."_Title"):SetFont("Fonts\\FRIZQT__.TTF", 20)
+				getglobal(this:GetName().."_Title"):SetFont(UNIT_NAME_FONT, 20)
 			</OnLoad>
 			<OnMouseDown>
 				this:StartMoving()
