@@ -127,6 +127,7 @@ function DPSMate.Modules.Dispels:ShowTooltip(user,k)
 						break
 					end
 				end
+				i = i + 1
 			end
 		end
 		for cat, val in pairs(b) do
@@ -141,6 +142,7 @@ function DPSMate.Modules.Dispels:ShowTooltip(user,k)
 						break
 					end
 				end
+				i = i + 1
 			end
 			sum = sum + val
 		end
