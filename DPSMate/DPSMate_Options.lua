@@ -1919,7 +1919,7 @@ function DPSMate.Options:Lock()
 	end
 	-- Saving positions to prevent a potential crash
 	local point, _, _, xOfs, yOfs;
-	for key, val in DPSMateSettings["windows"] do
+	for key, val in pairs(DPSMateSettings["windows"]) do
 		if _G("DPSMate_"..val["name"]) then
 			point, _, _, xOfs, yOfs = _G("DPSMate_"..val["name"]):GetPoint()
 			DPSMateSettings["windows"][key]["position"] = {}
