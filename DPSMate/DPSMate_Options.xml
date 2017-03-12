@@ -2077,11 +2077,7 @@
 								getglobal(this:GetName().."_Title"):SetText(DPSMate.L["ranks"])
 							</OnLoad>
 							<OnClick>
-								if DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["ranks"] then
-									DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["ranks"] = false
-								else
-									DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["ranks"] = true
-								end
+								DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["ranks"] = not DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["ranks"]
 								DPSMate:SetStatusBarValue()
 							</OnClick>
 						</Scripts>
@@ -2356,11 +2352,7 @@
 										getglobal(this:GetName().."_Title"):SetText(DPSMate.L["report"])
 									</OnLoad>
 									<OnClick>
-										if DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarreport"] then
-											DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarreport"] = false
-										else
-											DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarreport"] = true
-										end
+										DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarreport"] = not DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarreport"]
 										DPSMate.Options:ToggleTitleBarButtonState()
 									</OnClick>
 								</Scripts>
@@ -2375,11 +2367,7 @@
 										getglobal(this:GetName().."_Title"):SetText(DPSMate.L["mode"])
 									</OnLoad>
 									<OnClick>
-										if DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarsegments"] then
-											DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarsegments"] = false
-										else
-											DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarsegments"] = true
-										end
+										DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarsegments"] = not DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarsegments"]
 										DPSMate.Options:ToggleTitleBarButtonState()
 									</OnClick>
 								</Scripts>
@@ -2396,11 +2384,7 @@
 										getglobal(this:GetName().."_Title"):SetText(DPSMate.L["reset"])
 									</OnLoad>
 									<OnClick>
-										if DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarreset"] then
-											DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarreset"] = false
-										else
-											DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarreset"] = true
-										end
+										DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarreset"] = not DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarreset"]
 										DPSMate.Options:ToggleTitleBarButtonState()
 									</OnClick>
 								</Scripts>
@@ -2417,11 +2401,7 @@
 										getglobal(this:GetName().."_Title"):SetText(DPSMate.L["config"])
 									</OnLoad>
 									<OnClick>
-										if DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarconfig"] then
-											DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarconfig"] = false
-										else
-											DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarconfig"] = true
-										end
+										DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarconfig"] = not DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarconfig"]
 										DPSMate.Options:ToggleTitleBarButtonState()
 									</OnClick>
 								</Scripts>
@@ -2438,11 +2418,7 @@
 										getglobal(this:GetName().."_Title"):SetText(DPSMate.L["sync"])
 									</OnLoad>
 									<OnClick>
-										if DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarsync"] then
-											DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarsync"] = false
-										else
-											DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarsync"] = true
-										end
+										DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarsync"] = not DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarsync"]
 										DPSMate.Options:ToggleTitleBarButtonState()
 									</OnClick>
 								</Scripts>
@@ -2459,11 +2435,7 @@
 										getglobal(this:GetName().."_Title"):SetText(DPSMate.L["enabledisable"])
 									</OnLoad>
 									<OnClick>
-										if DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarenable"] then
-											DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarenable"] = false
-										else
-											DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarenable"] = true
-										end
+										DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarenable"] = not DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarenable"]
 										DPSMate.Options:ToggleTitleBarButtonState()
 									</OnClick>
 								</Scripts>
@@ -2478,11 +2450,7 @@
 										getglobal(this:GetName().."_Title"):SetText(DPSMate.L["filter"])
 									</OnLoad>
 									<OnClick>
-										if DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarfilter"] then
-											DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarfilter"] = false
-										else
-											DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarfilter"] = true
-										end
+										DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarfilter"] = not DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarfilter"]
 										DPSMate.Options:ToggleTitleBarButtonState()
 									</OnClick>
 								</Scripts>
@@ -2952,11 +2920,7 @@
 								getglobal(this:GetName().."_Title"):SetText(DPSMate.L["loginhide"])
 							</OnLoad>
 							<OnClick>
-								if DPSMateSettings["hideonlogin"] then
-									DPSMateSettings["hideonlogin"] = false
-								else
-									DPSMateSettings["hideonlogin"] = true
-								end
+								DPSMateSettings["hideonlogin"] = not DPSMateSettings["hideonlogin"]
 							</OnClick>
 						</Scripts>
 					</CheckButton>
@@ -2972,11 +2936,7 @@
 								getglobal(this:GetName().."_Title"):SetText(DPSMate.L["bossfights"])
 							</OnLoad>
 							<OnClick>
-								if DPSMateSettings["onlybossfights"] then
-									DPSMateSettings["onlybossfights"] = false
-								else
-									DPSMateSettings["onlybossfights"] = true
-								end
+								DPSMateSettings["onlybossfights"] = not DPSMateSettings["onlybossfights"]
 							</OnClick>
 						</Scripts>
 					</CheckButton>
@@ -5792,11 +5752,7 @@
 								getglobal(this:GetName().."_Title"):SetText(DPSMate.L["showtooltips"])
 							</OnLoad>
 							<OnClick>
-								if DPSMateSettings["showtooltips"] then
-									DPSMateSettings["showtooltips"] = false
-								else
-									DPSMateSettings["showtooltips"] = true
-								end
+								DPSMateSettings["showtooltips"] = not DPSMateSettings["showtooltips"]
 							</OnClick>
 						</Scripts>
 					</CheckButton>
@@ -5812,11 +5768,7 @@
 								getglobal(this:GetName().."_Title"):SetText(DPSMate.L["informativetooltips"])
 							</OnLoad>
 							<OnClick>
-								if DPSMateSettings["informativetooltips"] then
-									DPSMateSettings["informativetooltips"] = false
-								else
-									DPSMateSettings["informativetooltips"] = true
-								end
+								DPSMateSettings["informativetooltips"] = not DPSMateSettings["informativetooltips"]
 							</OnClick>
 						</Scripts>
 					</CheckButton>
@@ -6027,11 +5979,7 @@
 								getglobal(this:GetName().."_Title"):SetText(DPSMate.L["enable"])
 							</OnLoad>
 							<OnClick>
-								if DPSMateSettings["broadcasting"] then
-									DPSMateSettings["broadcasting"] = false
-								else
-									DPSMateSettings["broadcasting"] = true
-								end
+								DPSMateSettings["broadcasting"] = not DPSMateSettings["broadcasting"]
 							</OnClick>
 						</Scripts>
 					</CheckButton>
@@ -6047,11 +5995,7 @@
 								getglobal(this:GetName().."_Title"):SetText(DPSMate.L["useraidwarning"])
 							</OnLoad>
 							<OnClick>
-								if DPSMateSettings["bcrw"] then
-									DPSMateSettings["bcrw"] = false
-								else
-									DPSMateSettings["bcrw"] = true
-								end
+								DPSMateSettings["bcrw"] = not DPSMateSettings["bcrw"]
 							</OnClick>
 						</Scripts>
 					</CheckButton>
@@ -6065,11 +6009,7 @@
 								getglobal(this:GetName().."_Title"):SetText(DPSMate.L["relevantcds"])
 							</OnLoad>
 							<OnClick>
-								if DPSMateSettings["bccd"] then
-									DPSMateSettings["bccd"] = false
-								else
-									DPSMateSettings["bccd"] = true
-								end
+								DPSMateSettings["bccd"] = not DPSMateSettings["bccd"]
 							</OnClick>
 						</Scripts>
 					</CheckButton>
@@ -6083,11 +6023,7 @@
 								getglobal(this:GetName().."_Title"):SetText(DPSMate.L["ress"])
 							</OnLoad>
 							<OnClick>
-								if DPSMateSettings["bcress"] then
-									DPSMateSettings["bcress"] = false
-								else
-									DPSMateSettings["bcress"] = true
-								end
+								DPSMateSettings["bcress"] = not DPSMateSettings["bcress"]
 							</OnClick>
 						</Scripts>
 					</CheckButton>
@@ -6101,11 +6037,7 @@
 								getglobal(this:GetName().."_Title"):SetText(DPSMate.L["killingblows"])
 							</OnLoad>
 							<OnClick>
-								if DPSMateSettings["bckb"] then
-									DPSMateSettings["bckb"] = false
-								else
-									DPSMateSettings["bckb"] = true
-								end
+								DPSMateSettings["bckb"] = not DPSMateSettings["bckb"]
 							</OnClick>
 						</Scripts>
 					</CheckButton>
@@ -6119,11 +6051,7 @@
 								getglobal(this:GetName().."_Title"):SetText(DPSMate.L["fails"])
 							</OnLoad>
 							<OnClick>
-								if DPSMateSettings["bcfail"] then
-									DPSMateSettings["bcfail"] = false
-								else
-									DPSMateSettings["bcfail"] = true
-								end
+								DPSMateSettings["bcfail"] = not DPSMateSettings["bcfail"]
 							</OnClick>
 						</Scripts>
 					</CheckButton>
