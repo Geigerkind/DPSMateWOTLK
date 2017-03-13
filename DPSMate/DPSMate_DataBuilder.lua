@@ -1348,10 +1348,11 @@ function DPSMate.DB:EnemyDamage(mode, arr, Duser, Dname, Dhit, Dcrit, Dmiss, Dpa
 	if self:BuildUser(Duser, nil) or self:BuildUser(cause, nil) or self:BuildAbility(Dname, nil) then return end
 	ActiveMob[cause] = true
 	
-	if mode then
+	if not mode then
 		if not DPSMateSettings["legacylogs"] and not DPSMate.RegistredModules["enemydamagedone"] then
 			return
 		end
+	else
 		-- Part to take extra swings as abilities into account
 		if self.NextSwingEDD[Duser] then
 			if Dname == AAttack and self.NextSwingEDD[Duser][1]>0 then
