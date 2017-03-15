@@ -689,17 +689,17 @@ end
 DPSMate.Options.PLAYER_ENTERING_WORLD = function()
 	if DPSMate.DB.loaded then
 		if DPSMateSettings["dataresetsworld"] == 3 then
-			if (GetTime()-LastPopUp) > TimeToNextPopUp and (DPSMate:TableLength(DPSMateUser) ~= 0 or DPSMate:TableLength(DPSMateUserCurrent) ~= 0) then
-				this:ShowResetPopUp()
+			if (GetTime()-LastPopUp) > TimeToNextPopUp then
+				DPSMate.Options:ShowResetPopUp()
 				LastPopUp = GetTime()
 			end
-		elseif DPSMateSettings["dataresetsworld"] == 1 and not this:IsInParty() then
-			this:PopUpAccept(true)
+		elseif DPSMateSettings["dataresetsworld"] == 1 and not DPSMate.Options:IsInParty() then
+			DPSMate.Options:PopUpAccept(true)
 		end
-		this:HideInPvP()
+		DPSMate.Options:HideInPvP()
 		if DPSMateSettings["hideonlogin"] then
 			for _, val in pairs(DPSMateSettings["windows"]) do
-				this:Hide(_G("DPSMate_"..val["name"]))
+				DPSMate.Options:Hide(_G("DPSMate_"..val["name"]))
 			end
 		end
 	end
