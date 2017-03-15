@@ -812,6 +812,7 @@ DPSMate.DB.VARIABLES_LOADED = function()
 
 		DPSMate:SendMessage("DPSMate build "..DPSMate.VERSION.." has been loaded!")
 		this.loaded = true
+		DPSMate.Options.PLAYER_ENTERING_WORLD()
 	end
 end
 
