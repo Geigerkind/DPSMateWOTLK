@@ -6113,43 +6113,4 @@
 			</Frame>
 		</Frames>
 	</Frame>
-	
-	<Frame name="DPSMate_Options">
-		<Scripts>
-			<OnLoad>
-				this:RegisterEvent("ADDON_LOADED")
-				this:RegisterEvent("PLAYER_ENTERING_WORLD")
-				this:RegisterEvent("CHAT_MSG_LOOT")
-				this:RegisterEvent("PLAYER_PET_CHANGED")
-				this:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-				
-				this:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
-				this:RegisterEvent("PARTY_MEMBERS_CHANGED")
-				this:RegisterEvent("RAID_ROSTER_UPDATE")
-				
-				this:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-				
-				this:RegisterEvent("CHAT_MSG_ADDON")
-				
-				this:RegisterEvent("PLAYER_REGEN_DISABLED")
-				this:RegisterEvent("PLAYER_REGEN_ENABLED")
-				
-				this:RegisterEvent("PLAYER_AURAS_CHANGED")
-				this:RegisterEvent("UNIT_AURA")
-				this:RegisterEvent("PLAYER_TARGET_CHANGED")
-				--this:RegisterEvent("PLAYER_LOGOUT")
-				this:RegisterEvent("PET_STABLE_CLOSED")
-				this:RegisterEvent("PET_STABLE_SHOW")
-				this:RegisterEvent("PET_STABLE_UPDATE")
-				this:RegisterEvent("PET_STABLE_UPDATE_PAPERDOLL")
-			</OnLoad>
-			<OnEvent>
-				DPSMate.DB:OnEvent(event)
-				DPSMate.Parser:OnEvent(event)
-				DPSMate.Options:OnEvent(event)
-				DPSMate.Sync:OnEvent(event)
-			</OnEvent>
-		</Scripts>
-	</Frame>
-	
 </Ui>

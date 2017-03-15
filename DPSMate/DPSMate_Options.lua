@@ -414,6 +414,7 @@ function DPSMate.Options:SelectRealtime(obj, kind)
 			g:SetToplevel(true)
 			f:Show()
 			g:Show()
+			DPSMate.DB:HookGraphEvents()
 		else
 			 _G(obj:GetName().."_RealTime"):Show()
 		end
@@ -637,62 +638,70 @@ function DPSMate.Options:SimpleToggle(key, opt)
 	DPSMate:SetStatusBarValue()
 end
 
-function DPSMate.Options:OnEvent(event)
-	if event == "PARTY_MEMBERS_CHANGED" or event == "RAID_ROSTER_UPDATE" then
-		DPSMate.Options:HideWhenSolo()
-		if DPSMate.Options:IsInParty() then
-			if LastPartyNum == 0 then
-				if DPSMateSettings["dataresetsjoinparty"] == 3 then
-					if (GetTime()-LastPopUp) > TimeToNextPopUp and (DPSMate:TableLength(DPSMateUser) ~= 0 or DPSMate:TableLength(DPSMateUserCurrent) ~= 0) then
-						DPSMate.Options:ShowResetPopUp()
-						LastPopUp = GetTime()
-					end
-				elseif DPSMateSettings["dataresetsjoinparty"] == 1 then
-					DPSMate.Options:PopUpAccept(true, true)
+function DPSMate.Options:RosterUpdate()
+	self:HideWhenSolo()
+	if self:IsInParty() then
+		if LastPartyNum == 0 then
+			if DPSMateSettings["dataresetsjoinparty"] == 3 then
+				if (GetTime()-LastPopUp) > TimeToNextPopUp then
+					self:ShowResetPopUp()
+					LastPopUp = GetTime()
 				end
-				SendAddonMessage("DPSMate_HelloWorld", "NaN", "RAID")
-				DPSMate.DB:OnGroupUpdate()
-			elseif LastPartyNum ~= PartyNum	then
-				if DPSMateSettings["dataresetspartyamount"] == 3 then
-					if (GetTime()-LastPopUp) > TimeToNextPopUp and (DPSMate:TableLength(DPSMateUser) ~= 0 or DPSMate:TableLength(DPSMateUserCurrent) ~= 0) then
-						DPSMate.Options:ShowResetPopUp()
-						LastPopUp = GetTime()
-					end
-				elseif DPSMateSettings["dataresetspartyamount"] == 1 then
-					DPSMate.Options:PopUpAccept(true)
-				end
-				DPSMate.DB:OnGroupUpdate()
+			elseif DPSMateSettings["dataresetsjoinparty"] == 1 then
+				self:PopUpAccept(true, true)
 			end
-		else
-			if LastPartyNum > PartyNum then
-				if DPSMateSettings["dataresetsleaveparty"] == 3 then
-					if (GetTime()-LastPopUp) > TimeToNextPopUp and (DPSMate:TableLength(DPSMateUser) ~= 0 or DPSMate:TableLength(DPSMateUserCurrent) ~= 0) then
-						DPSMate.Options:ShowResetPopUp()
-						LastPopUp = GetTime()
-					end
-				elseif DPSMateSettings["dataresetsleaveparty"] == 1 then
-					DPSMate.Options:PopUpAccept(true)
+			SendAddonMessage("DPSMate_HelloWorld", "NaN", "RAID")
+			DPSMate.DB:OnGroupUpdate()
+		elseif LastPartyNum ~= PartyNum	then
+			if DPSMateSettings["dataresetspartyamount"] == 3 then
+				if (GetTime()-LastPopUp) > TimeToNextPopUp then
+					self:ShowResetPopUp()
+					LastPopUp = GetTime()
 				end
-				DPSMate.DB:OnGroupUpdate()
+			elseif DPSMateSettings["dataresetspartyamount"] == 1 then
+				self:PopUpAccept(true)
 			end
+			DPSMate.DB:OnGroupUpdate()
 		end
-	elseif event == "PLAYER_ENTERING_WORLD" then
+	else
+		if LastPartyNum > PartyNum then
+			if DPSMateSettings["dataresetsleaveparty"] == 3 then
+				if (GetTime()-LastPopUp) > TimeToNextPopUp then
+					self:ShowResetPopUp()
+					LastPopUp = GetTime()
+				end
+			elseif DPSMateSettings["dataresetsleaveparty"] == 1 then
+				self:PopUpAccept(true)
+			end
+			DPSMate.DB:OnGroupUpdate()
+		end
+	end
+end
+
+DPSMate.Options.PARTY_MEMBERS_CHANGED = function()
+	this:RosterUpdate()
+end
+
+DPSMate.Options.RAID_ROSTER_UPDATE = function()
+	this:RosterUpdate()
+end
+
+DPSMate.Options.PLAYER_ENTERING_WORLD = function()
+	if DPSMate.DB.loaded then
 		if DPSMateSettings["dataresetsworld"] == 3 then
 			if (GetTime()-LastPopUp) > TimeToNextPopUp and (DPSMate:TableLength(DPSMateUser) ~= 0 or DPSMate:TableLength(DPSMateUserCurrent) ~= 0) then
-				self:ShowResetPopUp()
+				this:ShowResetPopUp()
 				LastPopUp = GetTime()
 			end
-		elseif DPSMateSettings["dataresetsworld"] == 1 and not self:IsInParty() then
-			self:PopUpAccept(true)
+		elseif DPSMateSettings["dataresetsworld"] == 1 and not this:IsInParty() then
+			this:PopUpAccept(true)
 		end
-		self:HideInPvP()
+		this:HideInPvP()
 		if DPSMateSettings["hideonlogin"] then
 			for _, val in pairs(DPSMateSettings["windows"]) do
-				DPSMate.Options:Hide(_G("DPSMate_"..val["name"]))
+				this:Hide(_G("DPSMate_"..val["name"]))
 			end
 		end
-	elseif event == "ZONE_CHANGED_NEW_AREA" then
-		DPSMate.DB:OnGroupUpdate()
 	end
 end
 
@@ -764,7 +773,7 @@ end
 
 function DPSMate.Options:PopUpAccept(bool, bypass)
 	DPSMate_PopUp:Hide()
-	if DPSMate.DB:InPartyOrRaid() and not bypass and DPSMateSettings["sync"] and bool then
+	if (GetNumPartyMembers()>0 or UnitInRaid("player")) and not bypass and DPSMateSettings["sync"] and bool then
 		if IsPartyLeader() or IsRaidOfficer() or IsRaidLeader() then
 			DPSMate.Sync:StartVote()
 		else
@@ -943,7 +952,7 @@ function DPSMate.Options:OpenMenu(b, obj)
 end
 
 function DPSMate.Options:ToggleDrewDrop(i, obj, pa)
-	if not DPSMate:WindowsExist() then return end
+	if not DPSMateSettings["windows"][1] then return end
 	for cat, _ in pairs(DPSMateSettings["windows"][pa.Key]["options"][i]) do
 		DPSMateSettings["windows"][pa.Key]["options"][i][cat] = false
 	end
@@ -1656,7 +1665,7 @@ function DPSMate.Options:NewSegment(segname)
 			extra = " - CBT: "..self:FormatTime(DPSMateCombatTime["current"])
 		end
 		if DPSMateSettings["onlybossfights"] then
-			if DPSMate.BabbleBoss:Contains(name) then
+			if DPSMate.BabbleBoss[name] then
 				DPSMate.Options:CreateSegment(name..extra)
 			end
 		else
@@ -2120,7 +2129,17 @@ function DPSMate.Options:ToggleSync()
 			_G("DPSMate_"..val["name"].."_Head_Sync"):GetNormalTexture():SetVertexColor(0.67,0.83,0.45,1)
 		end
 	end
-	DPSMate.Sync.synckey = ""
 end
 
-
+local reportdelay = 0.5
+local reportuptime = 0
+function DPSMate.Options:OnUpdate()
+	if DPSMateSettings["reportdelay"] and DPSMate.DelayMsg[1] then
+		reportuptime = reportuptime + arg1
+		if reportuptime>reportdelay then
+			SendChatMessage(DPSMate.DelayMsg[1][1], DPSMate.DelayMsg[1][2], nil, DPSMate.DelayMsg[1][3])
+			tremove(DPSMate.DelayMsg, 1)
+			reportuptime = 0
+		end
+	end
+end
