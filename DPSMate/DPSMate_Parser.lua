@@ -386,7 +386,6 @@ DPSMate.Parser.DmgProcs = {
 	[GetSpellInfo(71904)] = true, -- Chaos Bane
 }
 local DmgProcs = DPSMate.Parser.DmgProcs
-DPSMate.Parser.TargetParty = {}
 DPSMate.Parser.RCD = {
 	[GetSpellInfo(15062)] = true, -- Shield Wall
 	[GetSpellInfo(13847)] = true, -- Recklessness
@@ -593,6 +592,7 @@ local Kicks = DPSMate.Parser.Kicks
 DPSMate.Parser.player = UnitName("player")
 DPSMate.Parser.playerclass = nil
 DPSMate.Parser.SubGroups = {}
+DPSMate.Parser.TargetParty = {}
 
 -- Local Variables
 local Execute = {}
@@ -789,7 +789,7 @@ function DPSMate.Parser:GetPlayerValues()
 	self.playerclass = playerclass
 	DPSMatePlayer[1] = self.player
 	DPSMatePlayer[2] = playerclass
-	local _, fac = UnitFactionGroup("player")
+	local fac = UnitFactionGroup("player")
 	if fac == "Alliance" then
 		DPSMatePlayer[3] = 1
 	elseif fac == "Horde" then
@@ -813,7 +813,7 @@ local function OnEvent(event)
 end
 
 function DPSMate.Parser:GetUnitByName(target)
-	local unit = self.TargetParty[target]
+	local unit = DPSMate.Parser.TargetParty[target]
 	if not unit then
 		if target==player then
 			unit="player"
@@ -1235,6 +1235,8 @@ Execute = {
 	["SPELL_PERIODIC_ENERGIZE"] = Energize,
 	["SPELL_EXTRA_ATTACKS"] = ExtraAttacks,
 	["CHAT_MSG_LOOT"] = Loot,
+	["PLAYER_LOGOUT"] = DPSMate.Parser.GetPlayerValues,
+	["PLAYER_ENTERING_WORLD"] = DPSMate.Parser.GetPlayerValues,
 	
 	["SPELL_SUMMON"] = Summon,
 	
@@ -1274,3 +1276,5 @@ DPSMate.Parser:SetScript("OnEvent", OnEvent)
 --DPSMate.Parser:SetScript("OnUpdate", UnitDiedHackFix)
 DPSMate.Parser:RegisterEvent("CHAT_MSG_LOOT")
 DPSMate.Parser:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+DPSMate.Parser:RegisterEvent("PLAYER_LOGOUT")
+DPSMate.Parser:RegisterEvent("PLAYER_ENTERING_WORLD")

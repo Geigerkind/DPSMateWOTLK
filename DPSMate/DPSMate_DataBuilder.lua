@@ -978,46 +978,52 @@ end
 
 -- Performance
 function DPSMate.DB:BuildUser(Dname, Dclass)
-	if (not DPSMateUser[Dname] and Dname) then
-		if not Dclass then
-			local _, en = UnitClass(Dname)
-			if en then
-				Dclass = strlower(Dclass)
+	if Dname then
+		if (not DPSMateUser[Dname]) then
+			if not Dclass then
+				local _, en = UnitClass(Dname)
+				if en then
+					Dclass = strlower(Dclass)
+				end
 			end
+			self.userlen = self.userlen + 1
+			DPSMateUser[Dname] = {
+				[1] = self.userlen,
+				[2] = Dclass or "",
+				[3] = 0,
+				[4] = false,
+				[5] = 0,
+				[6] = 0,
+				[7] = "",
+				[8] = 80,
+				[9] = 0, -- NPCID
+			}
+			DPSMate.UserId = nil
+			return self.userlen
 		end
-		self.userlen = self.userlen + 1
-		DPSMateUser[Dname] = {
-			[1] = self.userlen,
-			[2] = Dclass or "",
-			[3] = 0,
-			[4] = false,
-			[5] = 0,
-			[6] = 0,
-			[7] = "",
-			[8] = 80,
-			[9] = 0, -- NPCID
-		}
-		DPSMate.UserId = nil
-		return self.userlen
+		return DPSMateUser[Dname][1]
 	end
-	return DPSMateUser[Dname][1]
+	return nil
 end
 
 -- Performance
 function DPSMate.DB:BuildAbility(name, kind, school, sid, buffOrDebuff)
-	if not DPSMateAbility[name] then
-		self.abilitylen = self.abilitylen + 1
-		DPSMateAbility[name] = {
-			[1] = self.abilitylen,
-			[2] = kind or "None",
-			[3] = school or "None",
-			[4] = sid or 0,
-			[5] = buffOrDebuff or false,
-		}
-		DPSMate.AbilityId = nil
-		return self.abilitylen
+	if name then
+		if not DPSMateAbility[name] then
+			self.abilitylen = self.abilitylen + 1
+			DPSMateAbility[name] = {
+				[1] = self.abilitylen,
+				[2] = kind or "None",
+				[3] = school or "None",
+				[4] = sid or 0,
+				[5] = buffOrDebuff or false,
+			}
+			DPSMate.AbilityId = nil
+			return self.abilitylen
+		end
+		return DPSMateAbility[name][1]
 	end
-	return DPSMateAbility[name][1]
+	return nil
 end
 
 function DPSMate.DB:InCombat()
@@ -1578,7 +1584,6 @@ function DPSMate.DB:UnregisterAbsorb(ability, abilityTarget)
 end
 
 function DPSMate.DB:GetActiveAbsorbAbilityByPlayer(ability, abilityTarget, cate)
-	if self:BuildAbility(ability, nil) or self:BuildUser(abilityTarget, nil) then return end
 	local ActiveShield = {}
 	if DPSMateAbsorbs[cate][abilityTarget] then
 		for cat, val in pairs(DPSMateAbsorbs[cate][abilityTarget]) do

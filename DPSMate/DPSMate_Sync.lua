@@ -149,7 +149,9 @@ local function ReceiveGreet(arg2, arg4)
 	end
 end
 local function OnEvent(event)
-	Exec[arg1](arg2, arg4)
+	if Exec[arg1] then
+		Exec[arg1](arg2, arg4)
+	end
 end
 
 Exec = {
