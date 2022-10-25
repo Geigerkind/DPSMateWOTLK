@@ -25,22 +25,22 @@ DPSMate.Options.fontflags = {
 	["Tick outlined"] = "THICKOUTLINE",
 }
 DPSMate.Options.statusbars = {
-	["Aluminium"] = "Interface\\AddOns\\DPSMate\\images\\statusbar\\Aluminium", 
-	["Armory"] = "Interface\\AddOns\\DPSMate\\images\\statusbar\\Armory", 
-	["BantoBar"] = "Interface\\AddOns\\DPSMate\\images\\statusbar\\BantoBar", 
-	["Glaze2"] = "Interface\\AddOns\\DPSMate\\images\\statusbar\\Glaze2", 
-	["Gloss"] = "Interface\\AddOns\\DPSMate\\images\\statusbar\\Gloss", 
-	["Graphite"] = "Interface\\AddOns\\DPSMate\\images\\statusbar\\Graphite", 
-	["Grid"] = "Interface\\AddOns\\DPSMate\\images\\statusbar\\Grid", 
-	["Healbot"] = "Interface\\AddOns\\DPSMate\\images\\statusbar\\Healbot", 
-	["LiteStep"] = "Interface\\AddOns\\DPSMate\\images\\statusbar\\LiteStep", 
-	["Minimalist"] = "Interface\\AddOns\\DPSMate\\images\\statusbar\\Minimalist", 
-	["normTex"] = "Interface\\AddOns\\DPSMate\\images\\statusbar\\normTex", 
-	["Otravi"] = "Interface\\AddOns\\DPSMate\\images\\statusbar\\Otravi", 
-	["Outline"] = "Interface\\AddOns\\DPSMate\\images\\statusbar\\Outline", 
-	["Perl"] = "Interface\\AddOns\\DPSMate\\images\\statusbar\\Perl", 
-	["Round"] = "Interface\\AddOns\\DPSMate\\images\\statusbar\\Round", 
-	["Smooth"] = "Interface\\AddOns\\DPSMate\\images\\statusbar\\Smooth", 
+	["Aluminium"] = "Interface\\AddOns\\DPSMate\\images\\statusbar\\Aluminium",
+	["Armory"] = "Interface\\AddOns\\DPSMate\\images\\statusbar\\Armory",
+	["BantoBar"] = "Interface\\AddOns\\DPSMate\\images\\statusbar\\BantoBar",
+	["Glaze2"] = "Interface\\AddOns\\DPSMate\\images\\statusbar\\Glaze2",
+	["Gloss"] = "Interface\\AddOns\\DPSMate\\images\\statusbar\\Gloss",
+	["Graphite"] = "Interface\\AddOns\\DPSMate\\images\\statusbar\\Graphite",
+	["Grid"] = "Interface\\AddOns\\DPSMate\\images\\statusbar\\Grid",
+	["Healbot"] = "Interface\\AddOns\\DPSMate\\images\\statusbar\\Healbot",
+	["LiteStep"] = "Interface\\AddOns\\DPSMate\\images\\statusbar\\LiteStep",
+	["Minimalist"] = "Interface\\AddOns\\DPSMate\\images\\statusbar\\Minimalist",
+	["normTex"] = "Interface\\AddOns\\DPSMate\\images\\statusbar\\normTex",
+	["Otravi"] = "Interface\\AddOns\\DPSMate\\images\\statusbar\\Otravi",
+	["Outline"] = "Interface\\AddOns\\DPSMate\\images\\statusbar\\Outline",
+	["Perl"] = "Interface\\AddOns\\DPSMate\\images\\statusbar\\Perl",
+	["Round"] = "Interface\\AddOns\\DPSMate\\images\\statusbar\\Round",
+	["Smooth"] = "Interface\\AddOns\\DPSMate\\images\\statusbar\\Smooth",
 }
 DPSMate.Options.bgtexture = {
 	["Solid Background"] = "Interface\\CHATFRAME\\CHATFRAMEBACKGROUND",
@@ -259,7 +259,7 @@ DPSMate.Options.Options = {
 				name = DPSMate.L["comparewith"],
 				desc = DPSMate.L["comparewithdesc"],
 				args = {
-				
+
 				},
 			}
 		},
@@ -338,7 +338,7 @@ DPSMate.Options.Options = {
 						get = function() return DPSMateSettings["windows"][(DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key]["filterclasses"]["paladin"] end,
 						set = function() DPSMate.Options:ToggleFilterClass((DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key, "paladin") end,
 					},
-					shamen = {
+					shaman = {
 						order = 90,
 						type = 'toggle',
 						name = DPSMate.L["shaman"],
@@ -346,7 +346,7 @@ DPSMate.Options.Options = {
 						get = function() return DPSMateSettings["windows"][(DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key]["filterclasses"]["shaman"] end,
 						set = function() DPSMate.Options:ToggleFilterClass((DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate).Key, "shaman") end,
 					},
-					shamen = {
+					deathknight = {
 						order = 100,
 						type = 'toggle',
 						name = DPSMate.L["deathknight"],
@@ -405,10 +405,10 @@ function DPSMate.Options:SelectRealtime(obj, kind)
 			g:SetXAxis(-11,-1)
 			g:SetFilterRadius(1)
 			g:SetBarColors({0.2,0.0,0.0,0.4},{1.0,0.0,0.0,1.0})
-			g:SetScript("OnUpdate",function() 
+			g:SetScript("OnUpdate",function()
 				if DPSMate.DB.loaded and DPSMateSettings["windows"][key]["realtime"] then
 					g:OnUpdate(g)
-					g:AddTimeData(DPSMate.DB:GetAlpha(key)) 
+					g:AddTimeData(DPSMate.DB:GetAlpha(key))
 				end
 			end)
 			g:SetToplevel(true)
@@ -447,10 +447,10 @@ function DPSMate.Options:InitializeConfigMenu()
 		DPSMate_ConfigMenu_Menu_Button2:ClearAllPoints()
 		DPSMate_ConfigMenu_Menu_Button2:SetPoint("TOP", _G("DPSMate_ConfigMenu_Menu_Button"..(9+TL)), "BOTTOM")
 	end
-		
+
 	-- Tab Window
 	DPSMate_ConfigMenu_Tab_Window_Lock:SetChecked(DPSMateSettings["lock"])
-	
+
 	-- Tab Bars
 	if not DPSMate_ConfigMenu_Tab_Bars_BarTexture.tex then
 		DPSMate_ConfigMenu_Tab_Bars_BarTexture.tex = DPSMate_ConfigMenu_Tab_Bars_BarTexture:CreateTexture("BG", "ARTWORK")
@@ -458,7 +458,7 @@ function DPSMate.Options:InitializeConfigMenu()
 		DPSMate_ConfigMenu_Tab_Bars_BarTexture.tex:SetHeight(15)
 		DPSMate_ConfigMenu_Tab_Bars_BarTexture.tex:SetPoint("TOPLEFT", DPSMate_ConfigMenu_Tab_Bars_BarTexture, "TOPLEFT", 23, -7)
 	end
-	
+
 	-- Tab Title bar
 	if not DPSMate_ConfigMenu_Tab_TitleBar_BarTexture.tex then
 		DPSMate_ConfigMenu_Tab_TitleBar_BarTexture.tex = DPSMate_ConfigMenu_Tab_TitleBar_BarTexture:CreateTexture("BG", "ARTWORK")
@@ -466,7 +466,7 @@ function DPSMate.Options:InitializeConfigMenu()
 		DPSMate_ConfigMenu_Tab_TitleBar_BarTexture.tex:SetHeight(15)
 		DPSMate_ConfigMenu_Tab_TitleBar_BarTexture.tex:SetPoint("TOPLEFT", DPSMate_ConfigMenu_Tab_TitleBar_BarTexture, "TOPLEFT", 23, -7)
 	end
-	
+
 	-- Tab General Options
 	DPSMate_ConfigMenu_Tab_GeneralOptions_Minimap:SetChecked(DPSMateSettings["showminimapbutton"])
 	if not DPSMateSettings["showminimapbutton"] then
@@ -482,7 +482,7 @@ function DPSMate.Options:InitializeConfigMenu()
 	DPSMate_ConfigMenu_Tab_GeneralOptions_MergePets:SetChecked(DPSMateSettings["mergepets"])
 	DPSMate_ConfigMenu_Tab_GeneralOptions_Segments:SetValue(DPSMateSettings["datasegments"])
 	DPSMate_ConfigMenu_Tab_GeneralOptions_TargetScale:SetValue(DPSMateSettings["targetscale"])
-	
+
 	-- Tab Columns
 	for i=1, 4 do
 		_G("DPSMate_ConfigMenu_Tab_Columns_Child_DPS_Check"..i):SetChecked(DPSMateSettings["columnsdps"][i])
@@ -531,12 +531,12 @@ function DPSMate.Options:InitializeConfigMenu()
 		_G("DPSMate_ConfigMenu_Tab_Columns_Child_CCBreaker_Check"..i):SetChecked(DPSMateSettings["columnsccbreaker"][i])
 		_G("DPSMate_ConfigMenu_Tab_Columns_Child_Rezz_Check"..i):SetChecked(DPSMateSettings["columnsrezz"][i])
 	end
-	
+
 	-- Tab Tooltips
 	DPSMate_ConfigMenu_Tab_Tooltips_Tooltips:SetChecked(DPSMateSettings["showtooltips"])
 	DPSMate_ConfigMenu_Tab_Tooltips_InformativeTooltips:SetChecked(DPSMateSettings["informativetooltips"])
 	DPSMate_ConfigMenu_Tab_Tooltips_Rows:SetValue(DPSMateSettings["subviewrows"])
-	
+
 	-- Tab Broadcasting
 	DPSMate_ConfigMenu_Tab_Broadcasting_Enable:SetChecked(DPSMateSettings["broadcasting"])
 	DPSMate_ConfigMenu_Tab_Broadcasting_Cooldowns:SetChecked(DPSMateSettings["bccd"])
@@ -544,10 +544,10 @@ function DPSMate.Options:InitializeConfigMenu()
 	DPSMate_ConfigMenu_Tab_Broadcasting_KillingBlows:SetChecked(DPSMateSettings["bckb"])
 	DPSMate_ConfigMenu_Tab_Broadcasting_Fails:SetChecked(DPSMateSettings["bcfail"])
 	DPSMate_ConfigMenu_Tab_Broadcasting_RaidWarning:SetChecked(DPSMateSettings["bcrw"])
-	
+
 	-- Tab Raidleader options
 	DPSMate_ConfigMenu_Tab_RaidLeader_LegacyLogs:SetChecked(DPSMateSettings["legacylogs"])
-	
+
 	-- Mode menu
 	for cat, _ in pairs(DPSMateSettings["hiddenmodes"]) do
 		DPSMate.Options.Options[1]["args"][cat] = nil
@@ -567,9 +567,9 @@ function DPSMate.Options:Logout()
 	end
 	DPSMate.Options.OldLogout()
 end
-Logout = function() 
+Logout = function()
 	if DPSMateSettings["dataresetslogout"] == 3 then
-		DPSMate_Logout:Show() 
+		DPSMate_Logout:Show()
 	elseif DPSMateSettings["dataresetslogout"] == 2 then
 		--DPSMate.Options:SumGraphData()
 		DPSMate.Options.OldLogout()
@@ -604,15 +604,15 @@ function DPSMate.Options:ActivateTestMode()
 			for i=1, 40 do
 				local statusbar, name, value, texture, p = _G("DPSMate_"..c["name"].."_ScrollFrame_Child_StatusBar"..i), _G("DPSMate_"..c["name"].."_ScrollFrame_Child_StatusBar"..i.."_Name"), _G("DPSMate_"..c["name"].."_ScrollFrame_Child_StatusBar"..i.."_Value"), _G("DPSMate_"..c["name"].."_ScrollFrame_Child_StatusBar"..i.."_Icon"), ""
 				_G("DPSMate_"..c["name"].."_ScrollFrame_Child"):SetHeight((i+1)*(c["barheight"]+c["barspacing"]))
-				
+
 				statusbar:SetStatusBarColor(0.78,0.61,0.43, 1)
-				
+
 				if c["ranks"] then p=i..". " else p="" end
 				name:SetText(p.."Test "..i)
 				value:SetText("100000")
 				texture:SetTexture("Interface\\AddOns\\DPSMate\\images\\class\\warrior")
 				statusbar:SetValue(100)
-				
+
 				statusbar.user = nil
 				statusbar:Show()
 			end
@@ -834,7 +834,7 @@ function DPSMate.Options:PopUpAccept(bool, bypass)
 			}
 			DPSMateAttempts = {}
 			DPSMateLoot = {}
-			
+
 			-- Get buffs of people after reset
 			local type = "party"
 			local num = GetNumPartyMembers()
@@ -941,8 +941,9 @@ function DPSMate.Options:OpenMenu(b, obj)
 		if DPSMate.Options.Dewdrop:IsRegistered(_G("DPSMate_"..val["name"])) then DPSMate.Options.Dewdrop:Unregister(_G("DPSMate_"..val["name"])) end
 	end
 	DPSMate.Options.Dewdrop:Register(obj,
-		'children', function() 
-			DPSMate.Options.Dewdrop:FeedAceOptionsTable(DPSMate.Options.Options[b]) 
+		'children', function()
+			print(b)
+			DPSMate.Options.Dewdrop:FeedAceOptionsTable(DPSMate.Options.Options[b])
 		end,
 		'cursorX', true,
 		'cursorY', true,
@@ -1003,9 +1004,9 @@ function DPSMate.Options:DropDownStyleReset()
 				  GameTooltip_AddNewbieTip(this, this.tooltipTitle, 1.0, 1.0, 1.0, this.tooltipText, 1);
 				end
 			end)
-			_G("DropDownList1Backdrop"):SetBackdrop({ 
-				bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background", 
-				edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", tile = true, tileSize = 32, edgeSize = 32, 
+			_G("DropDownList1Backdrop"):SetBackdrop({
+				bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+				edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", tile = true, tileSize = 32, edgeSize = 32,
 				insets = { left = 11, right = 12, top = 12, bottom = 11 }
 			})
 			if button.tex then
@@ -1015,7 +1016,7 @@ function DPSMate.Options:DropDownStyleReset()
 	end
 end
 
-function DPSMate.Options:UpdateConfigModes(obj, o, p) 
+function DPSMate.Options:UpdateConfigModes(obj, o, p)
 	local line, lineplusoffset
 	local TL = DPSMate:TableLength(DPSMate.ModuleNames)
 	local path, t = obj:GetName().."_Button", {}
@@ -1033,7 +1034,7 @@ function DPSMate.Options:UpdateConfigModes(obj, o, p)
 		end
 	end
 	local TL = DPSMate:TableLength(t)
-	obj.offset = (obj.offset or 0) - o 
+	obj.offset = (obj.offset or 0) - o
 	if obj.offset > (TL-15) then obj.offset = (TL-15) end
 	if obj.offset < 0 then obj.offset = 0 end
 	for line=1, 15 do
@@ -1064,11 +1065,11 @@ end
 
 function DPSMate.Options:ChannelDropDown()
 	local channel, i = DPSMate.L["reportchannel"], 1
-	
+
     local function on_click()
         UIDropDownMenu_SetSelectedValue(DPSMate_Report_Channel, this.value)
     end
-	
+
 	-- Adding dynamic channel
 	for i=0,25 do
 		local id, name = GetChannelName(i);
@@ -1078,7 +1079,7 @@ function DPSMate.Options:ChannelDropDown()
 			end
 		end
 	end
-	
+
 	-- Initializing channel
 	for cat, val in pairs(channel) do
 		UIDropDownMenu_AddButton{
@@ -1087,20 +1088,20 @@ function DPSMate.Options:ChannelDropDown()
 			func = on_click,
 		}
 	end
-	
+
 	UIDropDownMenu_SetSelectedValue(DPSMate_Report_Channel, SelectedChannel)
 end
 
 function DPSMate.Options:WindowDropDown()
 	DPSMate_ConfigMenu.Selected = "None"
-	
+
 	local function on_click()
         UIDropDownMenu_SetSelectedValue(_G(UIDROPDOWNMENU_OPEN_MENU), this.value)
 		if UIDROPDOWNMENU_OPEN_MENU == "DPSMate_ConfigMenu_Tab_Window_Remove" then
 			DPSMate_ConfigMenu.Selected = this.value
 		end
     end
-	
+
 	UIDropDownMenu_AddButton{
 		text = "None",
 		value = "None",
@@ -1114,7 +1115,7 @@ function DPSMate.Options:WindowDropDown()
 			func = on_click,
 		}
 	end
-	
+
 	if not DPSMate_ConfigMenu.vis then
 		UIDropDownMenu_SetSelectedValue(DPSMate_ConfigMenu_Tab_Window_Remove, "None")
 		UIDropDownMenu_SetSelectedValue(DPSMate_ConfigMenu_Tab_Window_ConfigFrom, "None")
@@ -1125,7 +1126,7 @@ end
 
 function DPSMate.Options:BarFontDropDown()
 	local i = 1
-	
+
 	local function on_click()
         UIDropDownMenu_SetSelectedValue(DPSMate_ConfigMenu_Tab_Bars_BarFont, this.value)
 		DPSMate_ConfigMenu_Tab_Bars_BarFontText:SetFont(DPSMate.Options.fonts[this.value], 12)
@@ -1137,7 +1138,7 @@ function DPSMate.Options:BarFontDropDown()
 			_G("DPSMate_"..DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["name"].."_ScrollFrame_Child_StatusBar"..i.."_Value"):SetFont(DPSMate.Options.fonts[this.value], DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["barfontsize"], DPSMate.Options.fontflags[DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["barfontflag"]])
 		end
     end
-	
+
 	for name, path in pairs(DPSMate.Options.fonts) do
 		UIDropDownMenu_AddButton{
 			text = name,
@@ -1151,7 +1152,7 @@ end
 
 function DPSMate.Options:BarFontFlagsDropDown()
 	local i = 1
-	
+
 	local function on_click()
         UIDropDownMenu_SetSelectedValue(DPSMate_ConfigMenu_Tab_Bars_BarFontFlag, this.value)
 		DPSMate_ConfigMenu_Tab_Bars_BarFontFlagText:SetFont(DPSMate.Options.fonts["FRIZQT"], 12, DPSMate.Options.fontflags[this.value])
@@ -1163,7 +1164,7 @@ function DPSMate.Options:BarFontFlagsDropDown()
 			_G("DPSMate_"..DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["name"].."_ScrollFrame_Child_StatusBar"..i.."_Value"):SetFont(DPSMate.Options.fonts[DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["barfont"]], DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["barfontsize"], DPSMate.Options.fontflags[DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["barfontflag"]])
 		end
     end
-	
+
 	for name, flag in pairs(DPSMate.Options.fontflags) do
 		UIDropDownMenu_AddButton{
 			text = name,
@@ -1177,7 +1178,7 @@ end
 
 function DPSMate.Options:BarTextureDropDown()
 	local i = 1
-	
+
 	local function on_click()
         UIDropDownMenu_SetSelectedValue(DPSMate_ConfigMenu_Tab_Bars_BarTexture, this.value)
 		DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["bartexture"] = this.value
@@ -1190,7 +1191,7 @@ function DPSMate.Options:BarTextureDropDown()
 			_G("DPSMate_"..DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["name"].."_ScrollFrame_Child_StatusBar"..i.."_BG"):SetTexture(DPSMate.Options.statusbars[this.value])
 		end
 	end
-	
+
 	for name, path in pairs(DPSMate.Options.statusbars) do
 		UIDropDownMenu_AddButton{
 			text = name,
@@ -1212,7 +1213,7 @@ end
 
 function DPSMate.Options:TitleBarTextureDropDown()
 	local i = 1
-	
+
 	local function on_click()
         UIDropDownMenu_SetSelectedValue(DPSMate_ConfigMenu_Tab_TitleBar_BarTexture, this.value)
 		DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebartexture"] = this.value
@@ -1220,7 +1221,7 @@ function DPSMate.Options:TitleBarTextureDropDown()
 		DPSMate_ConfigMenu_Tab_TitleBar_BarTexture.tex:Show()
 		_G("DPSMate_"..DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["name"].."_Head_Background"):SetTexture(DPSMate.Options.statusbars[this.value])
     end
-	
+
 	for name, path in pairs(DPSMate.Options.statusbars) do
 		UIDropDownMenu_AddButton{
 			text = name,
@@ -1242,14 +1243,14 @@ end
 
 function DPSMate.Options:TitleBarFontDropDown()
 	local i = 1
-	
+
 	local function on_click()
         UIDropDownMenu_SetSelectedValue(DPSMate_ConfigMenu_Tab_TitleBar_BarFont, this.value)
 		DPSMate_ConfigMenu_Tab_TitleBar_BarFontText:SetFont(DPSMate.Options.fonts[this.value], 12)
 		DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarfont"] = this.value
 		_G("DPSMate_"..DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["name"].."_Head_Font"):SetFont(DPSMate.Options.fonts[this.value], DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarfontsize"], DPSMate.Options.fontflags[DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarfontflag"]])
     end
-	
+
 	for name, path in pairs(DPSMate.Options.fonts) do
 		UIDropDownMenu_AddButton{
 			text = name,
@@ -1263,14 +1264,14 @@ end
 
 function DPSMate.Options:TitleBarFontFlagsDropDown()
 	local i = 1
-	
+
 	local function on_click()
         UIDropDownMenu_SetSelectedValue(DPSMate_ConfigMenu_Tab_TitleBar_BarFontFlag, this.value)
 		DPSMate_ConfigMenu_Tab_TitleBar_BarFontFlagText:SetFont(DPSMate.Options.fonts["FRIZQT"], 12, DPSMate.Options.fontflags[this.value])
 		DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarfontflag"] = this.value
 		_G("DPSMate_"..DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["name"].."_Head_Font"):SetFont(DPSMate.Options.fonts[DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["titlebarfont"]], 12, DPSMate.Options.fontflags[this.value])
     end
-	
+
 	for name, flag in pairs(DPSMate.Options.fontflags) do
 		UIDropDownMenu_AddButton{
 			text = name,
@@ -1284,19 +1285,19 @@ end
 
 function DPSMate.Options:ContentBGTextureDropDown()
 	local i = 1
-	
+
 	local function on_click()
         UIDropDownMenu_SetSelectedValue(DPSMate_ConfigMenu_Tab_Content_BGDropDown, this.value)
 		DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["contentbgtexture"] = this.value
-		_G("DPSMate_ConfigMenu_Tab_Content_BGDropDown_Texture"):SetBackdrop({ 
-			bgFile = DPSMate.Options.bgtexture[this.value], 
-			edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", tile = true, tileSize = 12, edgeSize = 12, 
+		_G("DPSMate_ConfigMenu_Tab_Content_BGDropDown_Texture"):SetBackdrop({
+			bgFile = DPSMate.Options.bgtexture[this.value],
+			edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", tile = true, tileSize = 12, edgeSize = 12,
 			insets = { left = 4, right = 4, top = 4, bottom = 4 }
 		})
 		_G("DPSMate_ConfigMenu_Tab_Content_BGDropDown_Texture"):SetBackdropColor(DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["contentbgcolor"][1], DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["contentbgcolor"][2], DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["contentbgcolor"][3])
 		_G("DPSMate_"..DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["name"].."_ScrollFrame_Background"):SetTexture(DPSMate.Options.bgtexture[this.value])
     end
-	
+
 	for name, path in pairs(DPSMate.Options.bgtexture) do
 		UIDropDownMenu_AddButton{
 			text = name,
@@ -1308,9 +1309,9 @@ function DPSMate.Options:ContentBGTextureDropDown()
 		button.i = i
 		button:SetScript("OnEnter", function()
 			_G(this:GetName().."Highlight"):Show()
-			_G("DropDownList1Backdrop"):SetBackdrop({ 
-				bgFile = this.path, 
-				edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", tile = true, tileSize = 32, edgeSize = 32, 
+			_G("DropDownList1Backdrop"):SetBackdrop({
+				bgFile = this.path,
+				edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", tile = true, tileSize = 32, edgeSize = 32,
 				insets = { left = 11, right = 12, top = 12, bottom = 11 }
 			})
 			_G("DropDownList1Backdrop"):SetBackdropColor(DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["contentbgcolor"][1], DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["contentbgcolor"][2], DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["contentbgcolor"][3])
@@ -1327,11 +1328,11 @@ end
 
 function DPSMate.Options:DataResetsDropDown()
 	local btns = {DPSMate.L["yes"], DPSMate.L["no"], DPSMate.L["ask"]}
-	
+
 	local function on_click()
 		DPSMate.Options:SelectDataResets(_G(UIDROPDOWNMENU_OPEN_MENU), this.value)
 	end
-	
+
 	for val, name in pairs(btns) do
 		UIDropDownMenu_AddButton{
 			text = name,
@@ -1339,7 +1340,7 @@ function DPSMate.Options:DataResetsDropDown()
 			func = on_click,
 		}
 	end
-	
+
 	if not DPSMate_ConfigMenu.visBars8 then
 		UIDropDownMenu_SetSelectedValue(DPSMate_ConfigMenu_Tab_DataResets_EnteringWorld, DPSMateSettings["dataresetsworld"])
 		UIDropDownMenu_SetSelectedValue(DPSMate_ConfigMenu_Tab_DataResets_JoinParty, DPSMateSettings["dataresetsjoinparty"])
@@ -1353,13 +1354,13 @@ end
 
 function DPSMate.Options:NumberFormatDropDown()
 	local btns = {DPSMate.L["normal"], DPSMate.L["condensed"], DPSMate.L["commas"], DPSMate.L["semicondensed"]}
-	
+
 	local function on_click()
 		DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["numberformat"] = this.value
 		UIDropDownMenu_SetSelectedValue(DPSMate_ConfigMenu_Tab_Content_NumberFormat, DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["numberformat"])
 		DPSMate:SetStatusBarValue()
 	end
-	
+
 	for val, name in pairs(btns) do
 		UIDropDownMenu_AddButton{
 			text = name,
@@ -1371,13 +1372,13 @@ end
 
 function DPSMate.Options:BorderStrataDropDown()
 	local btns = {"Background", "Low", "High"}
-	
+
 	local function on_click()
 		DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["borderstrata"] = this.value
 		UIDropDownMenu_SetSelectedValue(DPSMate_ConfigMenu_Tab_Content_BorderStrata, DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["borderstrata"])
 		_G("DPSMate_"..DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["name"].."_Border"):SetFrameStrata(DPSMate.Options.stratas[this.value])
 	end
-	
+
 	for val, name in pairs(btns) do
 		UIDropDownMenu_AddButton{
 			text = name,
@@ -1391,14 +1392,14 @@ function DPSMate.Options:BorderTextureDropDown()
 	local function on_click()
 		DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["bordertexture"] = this.value
 		UIDropDownMenu_SetSelectedValue(DPSMate_ConfigMenu_Tab_Content_BorderTexture, DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["bordertexture"])
-		_G("DPSMate_"..DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["name"].."_Border"):SetBackdrop({ 
-																												  bgFile = "", 
-																												  edgeFile = DPSMate.Options.bordertextures[this.value], tile = true, tileSize = 12, edgeSize = 10, 
+		_G("DPSMate_"..DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["name"].."_Border"):SetBackdrop({
+																												  bgFile = "",
+																												  edgeFile = DPSMate.Options.bordertextures[this.value], tile = true, tileSize = 12, edgeSize = 10,
 																												  insets = { left = 5, right = 5, top = 3, bottom = 1 }
 																												})
 		_G("DPSMate_"..DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["name"].."_Border"):SetBackdropBorderColor(DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["contentbordercolor"][1], DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["contentbordercolor"][2], DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key]["contentbordercolor"][3])
 	end
-	
+
 	for val, _ in pairs(DPSMate.Options.bordertextures) do
 		UIDropDownMenu_AddButton{
 			text = val,
@@ -1410,12 +1411,12 @@ end
 
 function DPSMate.Options:TooltipPositionDropDown()
 	local btns = {DPSMate.L["default"], DPSMate.L["topright"], DPSMate.L["topleft"], DPSMate.L["left"], DPSMate.L["top"]}
-	
+
 	local function on_click()
 		DPSMateSettings["tooltipanchor"] = this.value
 		UIDropDownMenu_SetSelectedValue(DPSMate_ConfigMenu_Tab_Tooltips_Position, DPSMateSettings["tooltipanchor"])
 	end
-	
+
 	for val, name in pairs(btns) do
 		UIDropDownMenu_AddButton{
 			text = name,
@@ -1423,7 +1424,7 @@ function DPSMate.Options:TooltipPositionDropDown()
 			func = on_click,
 		}
 	end
-	
+
 	if not DPSMate_ConfigMenu.visBars10 then
 		UIDropDownMenu_SetSelectedValue(DPSMate_ConfigMenu_Tab_Tooltips_Position, DPSMateSettings["tooltipanchor"])
 	end
@@ -1562,7 +1563,7 @@ function DPSMate.Options:InializePlayerDewDrop(obj)
 		desc = DPSMate.L["opendetails"],
 		func = function() DPSMate.Options:UpdateDetails(obj); DPSMate.Options.Dewdrop:Close() end,
 	}
-	
+
 	-- Report channel
 	for i=0, 25 do
 		local id, name = GetChannelName(i);
@@ -1572,7 +1573,7 @@ function DPSMate.Options:InializePlayerDewDrop(obj)
 			end
 		end
 	end
-	
+
 	for cat, val in pairs(channel) do
 		path["a"..cat] = {
 			order = 10*cat+10,
@@ -1582,7 +1583,7 @@ function DPSMate.Options:InializePlayerDewDrop(obj)
 			func = loadstring('DPSMate.Options:ReportUserDetails((DPSMate.Options.Dewdrop:GetOpenedParent() or DPSMate), "'..val..'"); DPSMate.Options.Dewdrop:Close()'),
 		}
 	end
-	
+
 	-- Compare with player
 	DPSMate.Options.Options[4]["args"]["compare"]["args"] = {}
 	path = DPSMate.Options.Options[4]["args"]["compare"]["args"]
@@ -1612,9 +1613,9 @@ function DPSMate.Options:InializePlayerDewDrop(obj)
 	-- No clue what is wrong here. Fuck it
 	temp = assert(loadstring('return {'..temp..'}')) ();
 	sort(temp)
-	
+
 	local mode = _G(obj:GetParent():GetParent():GetParent():GetName().."_Head_Font"):GetText()
-	
+
 	for cat, val in pairs(temp) do
 		if cat>100 then break end
 		if not strfind(val, "%s") or CompareExcept[mode] then
@@ -1671,7 +1672,7 @@ function DPSMate.Options:NewSegment(segname)
 		else
 			DPSMate.Options:CreateSegment(name..extra)
 		end
-		
+
 		DPSMateDamageDone[2] = {}
 		DPSMateDamageTaken[2] = {}
 		DPSMateEDD[2] = {}
@@ -1701,7 +1702,7 @@ end
 function DPSMate.Options:CreateSegment(name)
 	-- Need to add a new check
 	local modes = {["DMGDone"] = DPSMateDamageDone[2], ["DMGTaken"] = DPSMateDamageTaken[2], ["EDDone"] = DPSMateEDD[2], ["EDTaken"] = DPSMateEDT[2], ["THealing"] = DPSMateTHealing[2], ["EHealing"] = DPSMateEHealing[2], ["OHealing"] = DPSMateOverhealing[2], ["EHealingTaken"] = DPSMateEHealingTaken[2], ["THealingTaken"] = DPSMateHealingTaken[2], ["Absorbs"] = DPSMateAbsorbs[2], ["Deaths"] = DPSMateDeaths[2], ["Interrupts"] = DPSMateInterrupts[2], ["Dispels"] = DPSMateDispels[2], ["Auras"] = DPSMateAurasGained[2]}
-	
+
 	tinsert(DPSMateHistory["names"], 1, name.." - "..GameTime_GetTime())
 	for cat, val in pairs(modes) do
 		tinsert(DPSMateHistory[cat], 1, DPSMate:CopyTable(val))
@@ -2014,9 +2015,9 @@ function DPSMate.Options:SetColor()
 	frame.r = r
 	frame.g = g
 	frame.b = b
-	
+
 	DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key][ColorPickerFrame.var] = {r,g,b}
-	
+
 	ColorPickerFrame.rfunc()
 end
 
@@ -2031,28 +2032,28 @@ function DPSMate.Options:CancelColor()
 	frame.r = r
 	frame.g = g
 	frame.b = b
-	
+
 	DPSMateSettings["windows"][DPSMate_ConfigMenu_Menu.Key][ColorPickerFrame.var] = {r,g,b}
-	
+
 	ColorPickerFrame.rfunc()
 end
 
 function DPSMate.Options:OpenColorPicker(obj, var, func)
 	CloseMenus()
-	
+
 	button = _G(obj:GetName().."_SwatchBg")
-	
+
 	ColorPickerFrame.obj = obj
 	ColorPickerFrame.var = var
 	ColorPickerFrame.rfunc = func
-	
+
 	ColorPickerFrame.func = DPSMate.Options.SetColor
 	ColorPickerFrame:SetColorRGB(button.r, button.g, button.b)
 	ColorPickerFrame.previousValues = {r = button.r, g = button.g, b = button.b, opacity = button.opacity}
 	ColorPickerFrame.cancelFunc = DPSMate.Options.CancelColor
 
 	ColorPickerFrame:SetPoint("TOPLEFT", obj, "TOPRIGHT", 0, 0)
-	
+
 	ColorPickerFrame:SetFrameStrata("TOOLTIP")
 
 	ColorPickerFrame:Show()
